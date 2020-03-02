@@ -65,14 +65,23 @@ class CanvasTriangle
       float gradLeft = (vertices[1].x - vertices[0].x) / (vertices[1].y - vertices[0].y);
       float gradRight = (vertices[2].x - vertices[0].x) / (vertices[2].y - vertices[0].y);
 
+      float depthGradLeft = (vertices[1].depth - vertices[0].depth) / (vertices[1].y - vertices[0].y);
+      float depthGradRight = (vertices[1].depth - vertices[0].depth) / (vertices[1].y - vertices[0].y);
+
       float xLeft = vertices[0].x;
       float xRight = vertices[0].x;
 
+      float depthRight = vertices[0].depth;
+      float depthLeft = vertices[0].depth;
+
       for (int fillY = vertices[0].y; fillY <= vertices[1].y; fillY++)
       {
-        CanvasLine(CanvasPoint(xLeft, fillY), CanvasPoint(xRight, fillY), colour).display(window);
+        CanvasLine(CanvasPoint(xLeft, fillY, depthLeft), CanvasPoint(xRight, fillY, depthRight), colour).display(window);
         xLeft += gradLeft;
         xRight += gradRight;
+
+        depthLeft += depthGradLeft;
+        depthRight += depthGradRight;
       }
     }
 
@@ -81,14 +90,23 @@ class CanvasTriangle
       float gradLeft = (vertices[2].x - vertices[0].x) / (vertices[2].y - vertices[0].y);
       float gradRight = (vertices[2].x - vertices[1].x) / (vertices[2].y - vertices[1].y);
 
+      float depthGradLeft = (vertices[2].depth - vertices[0].depth) / (vertices[2].y - vertices[0].y);
+      float depthGradRight = (vertices[2].depth - vertices[1].depth) / (vertices[2].y - vertices[1].y);
+
       float xLeft = vertices[2].x;
       float xRight = vertices[2].x;
 
+      float depthRight = vertices[2].depth;
+      float depthLeft = vertices[2].depth;
+
       for (int fillY = vertices[2].y; fillY > vertices[0].y; fillY--)
       {
-        CanvasLine(CanvasPoint(xLeft, fillY), CanvasPoint(xRight, fillY), colour).display(window);
+        CanvasLine(CanvasPoint(xLeft, fillY, depthLeft), CanvasPoint(xRight, fillY, depthRight), colour).display(window);
         xLeft -= gradLeft;
         xRight -= gradRight;
+
+        depthLeft -= depthGradLeft;
+        depthRight -= depthGradRight;
       }
     }
 
