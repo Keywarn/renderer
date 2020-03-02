@@ -103,7 +103,7 @@ class Model
         for(int i = 0; i < 3; i++){
           glm::vec3 camToP = (tri.vertices[i]) - cam.position;
           camToP = scale * cam.f * camToP / camToP.z;
-          CanvasPoint canP = CanvasPoint(camToP.x + window.width/2, window.height - (camToP.y + window.height/2), 1/canTri.z);
+          CanvasPoint canP = CanvasPoint(camToP.x + window.width/2, window.height - (camToP.y + window.height/2), 1/camToP.z);
           canTri.vertices[i] = canP;
         }
         canTri.fill(window);
