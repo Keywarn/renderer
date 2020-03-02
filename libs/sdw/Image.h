@@ -66,7 +66,7 @@ class Image
     {
       for(int y = 0; y < height; y++){
         for(int x = 0; x < width; x++){
-          window.setPixelColour(x,y,data[y][x].packed);
+          window.setPixelColour(x,y,data[y][x].packed, 1);
         }
       }
     }
