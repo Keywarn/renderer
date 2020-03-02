@@ -40,7 +40,7 @@ class CanvasLine
       for (int i=0; i<noSteps; i++) {
         float x = from.x + xSteps*i;
         float y = from.y + ySteps*i;
-        window.setPixelColour(x,y,colour.packed);
+        window.setPixelColour(x,y,colour.packed, 2);
       }
     }
 

@@ -127,7 +127,7 @@ class CanvasTriangle
 
         for (int fillX = std::round(xLeft); fillX <= std::round(xRight); fillX++)
         {
-          window.setPixelColour(fillX,fillY,texture.data[std::round(vals[fillX-xLeft].y)][std::round(vals[fillX-xLeft].x)].packed);
+          window.setPixelColour(fillX,fillY,texture.data[std::round(vals[fillX-xLeft].y)][std::round(vals[fillX-xLeft].x)].packed, 2);
         }
 
         xLeft += gradLeft;
@@ -161,7 +161,7 @@ class CanvasTriangle
 
         for (int fillX = std::round(xLeft); fillX <= std::round(xRight); fillX++)
         {
-          window.setPixelColour(fillX,fillY,texture.data[std::round(vals[fillX-xLeft].y)][std::round(vals[fillX-xLeft].x)].packed);
+          window.setPixelColour(fillX,fillY,texture.data[std::round(vals[fillX-xLeft].y)][std::round(vals[fillX-xLeft].x)].packed, 2);
         }
 
         xLeft -= gradLeft;
