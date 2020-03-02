@@ -16,7 +16,7 @@ DrawingWindow::DrawingWindow(int w, int h, bool fullscreen)
   height = h;
   pixelBuffer = new uint32_t[width*height];
   depthBuffer = new float[width*height];
-  std::fill_n(depthBuffer, width*height, std::numeric_limits<float>::infinity());
+  std::fill_n(depthBuffer, width*height, 0);
   clearPixels();
 
   uint32_t flags = SDL_WINDOW_OPENGL;
@@ -67,13 +67,17 @@ bool DrawingWindow::pollForInputEvents(SDL_Event *event)
   return false;
 }
 
-void DrawingWindow::setPixelColour(int x, int y, uint32_t colour)
+void DrawingWindow::setPixelColour(int x, int y, uint32_t colour, float depth)
 {
   if((x<0) || (x>=width) || (y<0) || (y>=height)) {
     std::cout << x << "," <<  y << " not on visible screen area" << std::endl;
   }
   else {
-    pixelBuffer[(y*width)+x] = colour;
+    if(depth > getDepth(x,y))
+    {
+      pixelBuffer[(y*width)+x] = colour;
+      depthBuffer[(y*width)+x] = depth;
+    }
   }
 }
 
@@ -86,7 +90,7 @@ uint32_t DrawingWindow::getPixelColour(int x, int y)
   else return pixelBuffer[(y*width)+x];
 }
 
-float getDepth(int x, int y)
+float DrawingWindow::getDepth(int x, int y)
 {
   if((x<0) || (x>=width) || (y<0) || (y>=height)) {
     std::cout << x << "," <<  y << " not on visible screen area" << std::endl;
