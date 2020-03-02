@@ -86,6 +86,15 @@ uint32_t DrawingWindow::getPixelColour(int x, int y)
   else return pixelBuffer[(y*width)+x];
 }
 
+float getDepth(int x, int y)
+{
+  if((x<0) || (x>=width) || (y<0) || (y>=height)) {
+    std::cout << x << "," <<  y << " not on visible screen area" << std::endl;
+    return -1;
+  }
+  else return depthBuffer[(y*width)+x];
+}
+
 void DrawingWindow::clearPixels()
 {
   memset(pixelBuffer, 0, width * height * sizeof(uint32_t));
