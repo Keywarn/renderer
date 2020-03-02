@@ -90,13 +90,6 @@ class Model
           CanvasPoint canP = CanvasPoint(camToP.x + window.width/2, window.height - (camToP.y + window.height/2));
           canTri.vertices[i] = canP;
         }
-
-        // CanvasPoint p0 = CanvasPoint(scale*cam.f*(tri.vertices[0].x-cam.position.x)/(tri.vertices[0].z-cam.position.z) + window.width/2, window.height-((scale*cam.f*(tri.vertices[0].y-cam.position.y))/(tri.vertices[0].z-cam.position.z) + window.height/2));
-        // CanvasPoint p1 = CanvasPoint(scale*cam.f*(tri.vertices[1].x-cam.position.x)/(tri.vertices[1].z-cam.position.z) + window.width/2, window.height-((scale*cam.f*(tri.vertices[1].y-cam.position.y))/(tri.vertices[1].z-cam.position.z) + window.height/2));
-        // CanvasPoint p2 = CanvasPoint(scale*cam.f*(tri.vertices[2].x-cam.position.x)/(tri.vertices[2].z-cam.position.z) + window.width/2, window.height-((scale*cam.f*(tri.vertices[2].y-cam.position.y))/(tri.vertices[2].z-cam.position.z) + window.height/2));
-        // canTri = CanvasTriangle(p0,p1,p2, tri.colour);
-        //canTri.fill(window);
-        //canTri.colour = Colour(255,255,255);
         canTri.outline(window);
       }
     }
@@ -110,7 +103,7 @@ class Model
         for(int i = 0; i < 3; i++){
           glm::vec3 camToP = (tri.vertices[i]) - cam.position;
           camToP = scale * cam.f * camToP / camToP.z;
-          CanvasPoint canP = CanvasPoint(camToP.x + window.width/2, window.height - (camToP.y + window.height/2));
+          CanvasPoint canP = CanvasPoint(camToP.x + window.width/2, window.height - (camToP.y + window.height/2), 1/canTri.z);
           canTri.vertices[i] = canP;
         }
         canTri.fill(window);
