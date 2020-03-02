@@ -37,10 +37,14 @@ class CanvasLine
 
       float xSteps = dx/noSteps;
       float ySteps = dy/noSteps;
+
+      float dDepth = to.depth - from.depth;
+      float depthSteps = dDepth/noSteps;
       for (int i=0; i<noSteps; i++) {
         float x = from.x + xSteps*i;
         float y = from.y + ySteps*i;
-        window.setPixelColour(x,y,colour.packed, 2);
+        float depth = from.depth + depthSteps*i;
+        window.setPixelColour(x,y,colour.packed, depth);
       }
     }
 
