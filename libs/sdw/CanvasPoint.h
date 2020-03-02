@@ -20,7 +20,7 @@ class CanvasPoint
     {
       x = xPos;
       y = yPos;
-      depth = 0.0;
+      depth = 1;
       brightness = 1.0;
       texturePoint = TexturePoint(-1,-1);
     }
