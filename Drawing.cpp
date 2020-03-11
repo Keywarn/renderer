@@ -21,13 +21,12 @@ void update();
 void handleEvent(SDL_Event event);
 
 DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false);
+Camera cam = Camera(glm::vec3(0,3,5), 200);
+Model model = Model("cornell-box", 1);
 
 int main(int argc, char* argv[])
 {
   SDL_Event event;
-  Model model = Model("cornell-box", 1);
-  Camera cam = Camera(glm::vec3(0,3,5), 200);
-  model.display(window, cam, false);
 
   while(true)
   {
@@ -42,21 +41,23 @@ int main(int argc, char* argv[])
 
 void draw()
 {
-  //window.clearPixels();
+  window.clearPixels();
+  model.display(window, cam, false);
 }
 
 void update()
 {
   // Function for performing animation (shifting artifacts or moving the camera)
+
 }
 
 void handleEvent(SDL_Event event)
 {
   if(event.type == SDL_KEYDOWN) {
-    if(event.key.keysym.sym == SDLK_LEFT) cout << "LEFT" << endl;
-    else if(event.key.keysym.sym == SDLK_RIGHT) cout << "RIGHT" << endl;
-    else if(event.key.keysym.sym == SDLK_UP) cout << "UP" << endl;
-    else if(event.key.keysym.sym == SDLK_DOWN) cout << "DOWN" << endl;
+    if(event.key.keysym.sym == SDLK_LEFT) cam.position.x -= 1; 
+    else if(event.key.keysym.sym == SDLK_RIGHT) cam.position.x += 1;
+    else if(event.key.keysym.sym == SDLK_UP) cam.position.y += 1;
+    else if(event.key.keysym.sym == SDLK_DOWN) cam.position.y -= 1;
     else if(event.key.keysym.sym == SDLK_u) CanvasTriangle(CanvasPoint(rand()%WIDTH, rand()%HEIGHT), CanvasPoint(rand()%WIDTH,rand()%HEIGHT), CanvasPoint(rand()%WIDTH, rand()%HEIGHT), Colour(rand()%WIDTH, rand()%HEIGHT, rand()%255)).outline(window);
     else if(event.key.keysym.sym == SDLK_f) CanvasTriangle(CanvasPoint(rand()%WIDTH, rand()%HEIGHT), CanvasPoint(rand()%WIDTH,rand()%HEIGHT), CanvasPoint(rand()%WIDTH, rand()%HEIGHT), Colour(rand()%WIDTH, rand()%HEIGHT, rand()%255)).fill(window);
 
