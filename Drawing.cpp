@@ -25,9 +25,9 @@ DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false);
 int main(int argc, char* argv[])
 {
   SDL_Event event;
-  Model model = Model("cornell-box", 20);
-  Camera cam = Camera(glm::vec3(0,2,-10), 5);
-  model.display(window, cam, true);
+  Model model = Model("cornell-box", 1);
+  Camera cam = Camera(glm::vec3(0,3,5), 200);
+  model.display(window, cam, false);
 
   while(true)
   {
