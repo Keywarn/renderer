@@ -65,7 +65,7 @@ class CanvasTriangle
     void fill(DrawingWindow window)
     {
       order();
-      int rows = vertices[2].y-vertices[0].y + 1;
+      int rows = std::max(int(vertices[2].y-vertices[0].y+1),1);
       std::vector<glm::vec2> leftPixels(rows); //x is the x value and y is the depth
       std::vector<glm::vec2> rightPixels(rows); //the same
 
@@ -79,9 +79,12 @@ class CanvasTriangle
       }
 
       for( int i = 0; i < 3; i++) {
-        int occRows = std::abs(vertices[i].y-vertices[(i+1)%3].y + 1);
+        //Get the number of rows occupied by an edge
+        int occRows = std::max(int(std::abs(vertices[i].y-vertices[(i+1)%3].y )+1),1);
+        
         std::vector<glm::vec2> points = inter2D(glm::vec2 (vertices[i].x, vertices[i].y), glm::vec2 (vertices[(i+1)%3].x,vertices[(i+1)%3].y), occRows + 1);
         std::vector<float> depths = inter(vertices[i].depth, vertices[(i+1)%3].depth, occRows + 1);
+        
         for(int j = 0; j < occRows; j++) {
           int rowsIndex = points[j].y - vertices[0].y;
           
