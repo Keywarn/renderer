@@ -71,8 +71,31 @@ class CanvasTriangle
 
       for( int i = 0; i < rows; ++i ) {
         leftPixels[i] = +std::numeric_limits<int>::max();
-        rightPixels[i] = -std::numeric_limits<int>::max(); }
+        rightPixels[i] = -std::numeric_limits<int>::max();
       }
+
+      for( int i = 0; i < 3; i++) {
+        int occRows = std::abs(vertices[i].y-vertices[(i+1)%3].y + 1);
+        std::vector<glm::vec2> points = inter2D(glm::vec2 (vertices[i].x, vertices[i].y), glm::vec2 (vertices[(i+1)%3].x,vertices[(i+1)%3].y), occRows + 1);
+        for(int j = 0; j < occRows; j++) {
+          int rowsIndex = points[j].y - vertices[0].y;
+          
+          if(leftPixels[rowsIndex] > points[j].x) {
+            leftPixels[rowsIndex] = points[j].x;
+          }
+
+          if(rightPixels[rowsIndex] < points[j].x) {
+            rightPixels[rowsIndex] = points[j].x;
+          }
+
+        }
+
+      }
+
+      for( int i = 0; i < rows; ++i ) {
+        CanvasLine(CanvasPoint(leftPixels[i], vertices[0].y + i), CanvasPoint(rightPixels[i], vertices[0].y + i), colour).display(window);
+      }
+    }
 
     void texTopTri(DrawingWindow window)
     {
