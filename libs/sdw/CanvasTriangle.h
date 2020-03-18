@@ -81,21 +81,24 @@ class CanvasTriangle
       for( int i = 0; i < 3; i++) {
         int occRows = std::abs(vertices[i].y-vertices[(i+1)%3].y + 1);
         std::vector<glm::vec2> points = inter2D(glm::vec2 (vertices[i].x, vertices[i].y), glm::vec2 (vertices[(i+1)%3].x,vertices[(i+1)%3].y), occRows + 1);
+        std::vector<float> depths = inter(vertices[i].depth, vertices[(i+1)%3].depth, occRows + 1);
         for(int j = 0; j < occRows; j++) {
           int rowsIndex = points[j].y - vertices[0].y;
           
           if(leftPixels[rowsIndex].x > points[j].x) {
             leftPixels[rowsIndex].x = points[j].x;
+            leftPixels[rowsIndex].y = depths[j];
           }
 
           if(rightPixels[rowsIndex].x < points[j].x) {
             rightPixels[rowsIndex].x = points[j].x;
+            rightPixels[rowsIndex].y = depths[j];
           }
         }
       }
 
       for( int i = 0; i < rows; ++i ) {
-        CanvasLine(CanvasPoint(leftPixels[i].x, vertices[0].y + i), CanvasPoint(rightPixels[i].x, vertices[0].y + i), colour).display(window);
+        CanvasLine(CanvasPoint(leftPixels[i].x, vertices[0].y + i, leftPixels[i].y), CanvasPoint(rightPixels[i].x, vertices[0].y + i, rightPixels[i].y), colour).display(window);
       }
     }
 
