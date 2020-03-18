@@ -33,7 +33,7 @@ class CanvasLine
     {
       float dx = to.x - from.x;
       float dy = to.y - from.y;
-      float noSteps = std::max(abs(dy),abs(dx));
+      float noSteps = std::max(abs(dy),abs(dx)) +1;
 
       float xSteps = dx/noSteps;
       float ySteps = dy/noSteps;
