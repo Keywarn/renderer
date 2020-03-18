@@ -87,9 +87,7 @@ class CanvasTriangle
           if(rightPixels[rowsIndex] < points[j].x) {
             rightPixels[rowsIndex] = points[j].x;
           }
-
         }
-
       }
 
       for( int i = 0; i < rows; ++i ) {
