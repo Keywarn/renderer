@@ -66,12 +66,16 @@ class CanvasTriangle
     {
       order();
       int rows = vertices[2].y-vertices[0].y + 1;
-      std::vector<int> leftPixels(rows);
-      std::vector<int> rightPixels(rows);
+      std::vector<glm::vec2> leftPixels(rows); //x is the x value and y is the depth
+      std::vector<glm::vec2> rightPixels(rows); //the same
 
       for( int i = 0; i < rows; ++i ) {
-        leftPixels[i] = +std::numeric_limits<int>::max();
-        rightPixels[i] = -std::numeric_limits<int>::max();
+        leftPixels[i].x = +std::numeric_limits<int>::max();
+        rightPixels[i].x = -std::numeric_limits<int>::max();
+
+        //Set 0 depth
+        leftPixels[i].y = 0;
+        rightPixels[i].y = 0;
       }
 
       for( int i = 0; i < 3; i++) {
@@ -80,18 +84,18 @@ class CanvasTriangle
         for(int j = 0; j < occRows; j++) {
           int rowsIndex = points[j].y - vertices[0].y;
           
-          if(leftPixels[rowsIndex] > points[j].x) {
-            leftPixels[rowsIndex] = points[j].x;
+          if(leftPixels[rowsIndex].x > points[j].x) {
+            leftPixels[rowsIndex].x = points[j].x;
           }
 
-          if(rightPixels[rowsIndex] < points[j].x) {
-            rightPixels[rowsIndex] = points[j].x;
+          if(rightPixels[rowsIndex].x < points[j].x) {
+            rightPixels[rowsIndex].x = points[j].x;
           }
         }
       }
 
       for( int i = 0; i < rows; ++i ) {
-        CanvasLine(CanvasPoint(leftPixels[i], vertices[0].y + i), CanvasPoint(rightPixels[i], vertices[0].y + i), colour).display(window);
+        CanvasLine(CanvasPoint(leftPixels[i].x, vertices[0].y + i), CanvasPoint(rightPixels[i].x, vertices[0].y + i), colour).display(window);
       }
     }
 
