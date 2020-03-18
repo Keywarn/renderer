@@ -60,64 +60,19 @@ class CanvasTriangle
       return CanvasPoint(vertices[0].x + ((vertices[1].y - vertices[0].y) / (vertices[2].y - vertices[0].y)) * (vertices[2].x - vertices[0].x), vertices[1].y, vertices[0].depth + ((vertices[1].y - vertices[0].y) / (vertices[2].y - vertices[0].y)) * (vertices[2].depth - vertices[0].depth));
     }
 
-    void fillTopTri(DrawingWindow window)
-    {
-      float gradLeft = (vertices[1].x - vertices[0].x) / (vertices[1].y - vertices[0].y);
-      float gradRight = (vertices[2].x - vertices[0].x) / (vertices[2].y - vertices[0].y);
-
-      float depthGradLeft = (vertices[1].depth - vertices[0].depth) / (vertices[1].y - vertices[0].y);
-      float depthGradRight = (vertices[1].depth - vertices[0].depth) / (vertices[1].y - vertices[0].y);
-
-      float xLeft = vertices[0].x;
-      float xRight = vertices[0].x;
-
-      float depthRight = vertices[0].depth;
-      float depthLeft = vertices[0].depth;
-
-      for (int fillY = vertices[0].y; fillY <= vertices[1].y; fillY++)
-      {
-        CanvasLine(CanvasPoint(xLeft, fillY, depthLeft), CanvasPoint(xRight, fillY, depthRight), colour).display(window);
-        xLeft += gradLeft;
-        xRight += gradRight;
-
-        depthLeft += depthGradLeft;
-        depthRight += depthGradRight;
-      }
-    }
-
-    void fillBotTri(DrawingWindow window)
-    {
-      float gradLeft = (vertices[2].x - vertices[0].x) / (vertices[2].y - vertices[0].y);
-      float gradRight = (vertices[2].x - vertices[1].x) / (vertices[2].y - vertices[1].y);
-
-      float depthGradLeft = (vertices[2].depth - vertices[0].depth) / (vertices[2].y - vertices[0].y);
-      float depthGradRight = (vertices[2].depth - vertices[1].depth) / (vertices[2].y - vertices[1].y);
-
-      float xLeft = vertices[2].x;
-      float xRight = vertices[2].x;
-
-      float depthRight = vertices[2].depth;
-      float depthLeft = vertices[2].depth;
-
-      for (int fillY = vertices[2].y; fillY > vertices[0].y; fillY--)
-      {
-        CanvasLine(CanvasPoint(xLeft, fillY, depthLeft), CanvasPoint(xRight, fillY, depthRight), colour).display(window);
-        xLeft -= gradLeft;
-        xRight -= gradRight;
-
-        depthLeft -= depthGradLeft;
-        depthRight -= depthGradRight;
-      }
-    }
+    
 
     void fill(DrawingWindow window)
     {
       order();
+      int rows = vertices[2].y-vertices[0].y + 1;
+      std::vector<int> leftPixels(rows);
+      std::vector<int> rightPixels(rows);
 
-      CanvasPoint mid = getMid();
-      CanvasTriangle(vertices[0], mid, vertices[1], colour).fillTopTri(window);
-      CanvasTriangle(vertices[1], mid, vertices[2], colour).fillBotTri(window);
-    }
+      for( int i = 0; i < rows; ++i ) {
+        leftPixels[i] = +std::numeric_limits<int>::max();
+        rightPixels[i] = -std::numeric_limits<int>::max(); }
+      }
 
     void texTopTri(DrawingWindow window)
     {

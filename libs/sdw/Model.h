@@ -109,7 +109,7 @@ class Model
         }
         canTri.fill(window);
         if(wf) {
-          canTri.colour = Colour(0,0,0);
+          canTri.colour = Colour(255,255,255);
           canTri.outline(window);
         }
       }

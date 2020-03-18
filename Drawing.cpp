@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
 void draw()
 {
   window.clearPixels();
-  model.display(window, cam, false);
+  model.display(window, cam, true);
 }
 
 void update()
