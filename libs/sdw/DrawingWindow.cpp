@@ -1,4 +1,5 @@
 #include "DrawingWindow.h"
+#include <fstream>
 
 // Simple constructor method
 DrawingWindow::DrawingWindow()
@@ -103,4 +104,16 @@ void DrawingWindow::clearPixels()
 {
   memset(pixelBuffer, 0, width * height * sizeof(uint32_t));
   memset(depthBuffer, 0, width * height * sizeof(float));
+}
+
+void DrawingWindow::writeImage(std::string fname) {
+  std::ofstream img;
+  img.open(fname + ".ppm", std::ios::binary);
+  img << "P6\n";
+  img << width << ' ' << height << '\n';
+  img << "255\n";
+
+  img.close();
+
+  std::cout << "Wrote image: " + fname + ".ppm" << std::endl;
 }

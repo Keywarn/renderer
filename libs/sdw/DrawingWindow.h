@@ -27,6 +27,7 @@ public:
   uint32_t getPixelColour(int x, int y);
   float getDepth(int x, int y);
   void clearPixels();
+  void writeImage(std::string fname);
 
   void printMessageAndQuit(const char* message, const char* error)
   {
