@@ -20,7 +20,7 @@ class Camera
 
     void lookAt(glm::vec3 target) {
       glm::vec3 forward = glm::normalize(position - target);
-      glm::vec3 right = glm::normalize(glm::cross(forward, glm::vec3(0,1,0)));
+      glm::vec3 right = glm::normalize(glm::cross(glm::vec3(0,1,0),forward));
       glm::vec3 up = glm::normalize(glm::cross(forward, right));
 
       rotation[0] = right;
