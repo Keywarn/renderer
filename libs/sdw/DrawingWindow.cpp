@@ -113,6 +113,16 @@ void DrawingWindow::writeImage(std::string fname) {
   img << width << ' ' << height << '\n';
   img << "255\n";
 
+  for (int y = 0; y < height; y++) {
+        for(int x = 0; x < width; x++){
+          uint32_t col = getPixelColour(x,y);
+          uint8_t r = (col >> 16) & 255;
+          uint8_t g = (col >> 8) & 255;
+          uint8_t b = col & 255;
+          img << r << g << b;
+        }
+      }
+
   img.close();
 
   std::cout << "Wrote image: " + fname + ".ppm" << std::endl;
