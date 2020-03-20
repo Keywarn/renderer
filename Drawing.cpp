@@ -49,9 +49,7 @@ void draw()
 void update()
 {
   cam.lookAt(model.position);
-  std::cout << cam << std::endl;
   // Function for performing animation (shifting artifacts or moving the camera)
-
 }
 
 void handleEvent(SDL_Event event)
