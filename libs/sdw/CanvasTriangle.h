@@ -60,63 +60,49 @@ class CanvasTriangle
       return CanvasPoint(vertices[0].x + ((vertices[1].y - vertices[0].y) / (vertices[2].y - vertices[0].y)) * (vertices[2].x - vertices[0].x), vertices[1].y, vertices[0].depth + ((vertices[1].y - vertices[0].y) / (vertices[2].y - vertices[0].y)) * (vertices[2].depth - vertices[0].depth));
     }
 
-    void fillTopTri(DrawingWindow window)
-    {
-      float gradLeft = (vertices[1].x - vertices[0].x) / (vertices[1].y - vertices[0].y);
-      float gradRight = (vertices[2].x - vertices[0].x) / (vertices[2].y - vertices[0].y);
-
-      float depthGradLeft = (vertices[1].depth - vertices[0].depth) / (vertices[1].y - vertices[0].y);
-      float depthGradRight = (vertices[1].depth - vertices[0].depth) / (vertices[1].y - vertices[0].y);
-
-      float xLeft = vertices[0].x;
-      float xRight = vertices[0].x;
-
-      float depthRight = vertices[0].depth;
-      float depthLeft = vertices[0].depth;
-
-      for (int fillY = vertices[0].y; fillY <= vertices[1].y; fillY++)
-      {
-        CanvasLine(CanvasPoint(xLeft, fillY, depthLeft), CanvasPoint(xRight, fillY, depthRight), colour).display(window);
-        xLeft += gradLeft;
-        xRight += gradRight;
-
-        depthLeft += depthGradLeft;
-        depthRight += depthGradRight;
-      }
-    }
-
-    void fillBotTri(DrawingWindow window)
-    {
-      float gradLeft = (vertices[2].x - vertices[0].x) / (vertices[2].y - vertices[0].y);
-      float gradRight = (vertices[2].x - vertices[1].x) / (vertices[2].y - vertices[1].y);
-
-      float depthGradLeft = (vertices[2].depth - vertices[0].depth) / (vertices[2].y - vertices[0].y);
-      float depthGradRight = (vertices[2].depth - vertices[1].depth) / (vertices[2].y - vertices[1].y);
-
-      float xLeft = vertices[2].x;
-      float xRight = vertices[2].x;
-
-      float depthRight = vertices[2].depth;
-      float depthLeft = vertices[2].depth;
-
-      for (int fillY = vertices[2].y; fillY > vertices[0].y; fillY--)
-      {
-        CanvasLine(CanvasPoint(xLeft, fillY, depthLeft), CanvasPoint(xRight, fillY, depthRight), colour).display(window);
-        xLeft -= gradLeft;
-        xRight -= gradRight;
-
-        depthLeft -= depthGradLeft;
-        depthRight -= depthGradRight;
-      }
-    }
+    
 
     void fill(DrawingWindow window)
     {
       order();
+      int rows = std::max(int(vertices[2].y-vertices[0].y+1),1);
+      std::vector<glm::vec2> leftPixels(rows); //x is the x value and y is the depth
+      std::vector<glm::vec2> rightPixels(rows); //the same
 
-      CanvasPoint mid = getMid();
-      CanvasTriangle(vertices[0], mid, vertices[1], colour).fillTopTri(window);
-      CanvasTriangle(vertices[1], mid, vertices[2], colour).fillBotTri(window);
+      for( int i = 0; i < rows; ++i ) {
+        leftPixels[i].x = +std::numeric_limits<int>::max();
+        rightPixels[i].x = -std::numeric_limits<int>::max();
+
+        //Set 0 depth
+        leftPixels[i].y = 0;
+        rightPixels[i].y = 0;
+      }
+
+      for( int i = 0; i < 3; i++) {
+        //Get the number of rows occupied by an edge
+        int occRows = std::max(int(std::abs(vertices[i].y-vertices[(i+1)%3].y )+1),1);
+        
+        std::vector<glm::vec2> points = inter2D(glm::vec2 (vertices[i].x, vertices[i].y), glm::vec2 (vertices[(i+1)%3].x,vertices[(i+1)%3].y), occRows + 1);
+        std::vector<float> depths = inter(vertices[i].depth, vertices[(i+1)%3].depth, occRows + 1);
+        
+        for(int j = 0; j < occRows; j++) {
+          int rowsIndex = points[j].y - vertices[0].y;
+          
+          if(leftPixels[rowsIndex].x > points[j].x) {
+            leftPixels[rowsIndex].x = points[j].x;
+            leftPixels[rowsIndex].y = depths[j];
+          }
+
+          if(rightPixels[rowsIndex].x < points[j].x) {
+            rightPixels[rowsIndex].x = points[j].x;
+            rightPixels[rowsIndex].y = depths[j];
+          }
+        }
+      }
+
+      for( int i = 0; i < rows; ++i ) {
+        CanvasLine(CanvasPoint(leftPixels[i].x, vertices[0].y + i, leftPixels[i].y), CanvasPoint(rightPixels[i].x, vertices[0].y + i, rightPixels[i].y), colour).display(window);
+      }
     }
 
     void texTopTri(DrawingWindow window)

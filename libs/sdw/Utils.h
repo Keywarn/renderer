@@ -32,18 +32,15 @@ std::vector<float> inter(float from, float to, float numberOfValues){
   return inter;
 }
 
-std::vector<glm::vec2> inter2D(glm::vec2 from, glm::vec2 to, float numberOfValues){
+std::vector<glm::vec2> inter2D(glm::vec2 from, glm::vec2 to, int numberOfValues){
 
   std::vector<glm::vec2> inter;
-  glm::vec2 step;
-  step.x = (to.x-from.x) / (numberOfValues-1);
-  step.y = (to.y-from.y) / (numberOfValues-1);
+  glm::vec2 step = (to - from) / float(std::max(numberOfValues-1,1));
+  glm::vec2 cur = from;
   
   for (int i = 0; i < numberOfValues; i++){
-    glm::vec2 vec;
-    vec.x = from.x + step.x * i;
-    vec.y = from.y + step.y * i;
-    inter.push_back(vec);
+    inter.push_back(cur);
+    cur += step;
   }
   return inter;
 }
