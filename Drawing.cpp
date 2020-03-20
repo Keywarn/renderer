@@ -27,6 +27,7 @@ Model model = Model("cornell-box",glm::vec3(0,0,0), 1);
 int main(int argc, char* argv[])
 {
   SDL_Event event;
+  cam.lookAt(model.position);
 
   while(true)
   {
@@ -47,6 +48,7 @@ void draw()
 
 void update()
 {
+  cam.lookAt(model.position);
   // Function for performing animation (shifting artifacts or moving the camera)
 
 }
@@ -54,10 +56,10 @@ void update()
 void handleEvent(SDL_Event event)
 {
   if(event.type == SDL_KEYDOWN) {
-    if(event.key.keysym.sym == SDLK_LEFT) cam.position.x -= 1; 
-    else if(event.key.keysym.sym == SDLK_RIGHT) cam.position.x += 1;
-    else if(event.key.keysym.sym == SDLK_UP) cam.position.y += 1;
-    else if(event.key.keysym.sym == SDLK_DOWN) cam.position.y -= 1;
+    if(event.key.keysym.sym == SDLK_LEFT) cam.position -= cam.rotation[0]; 
+    else if(event.key.keysym.sym == SDLK_RIGHT) cam.position += cam.rotation[0];
+    else if(event.key.keysym.sym == SDLK_UP) cam.position += cam.rotation[1];
+    else if(event.key.keysym.sym == SDLK_DOWN) cam.position -= cam.rotation[1];
     else if(event.key.keysym.sym == SDLK_u) CanvasTriangle(CanvasPoint(rand()%WIDTH, rand()%HEIGHT), CanvasPoint(rand()%WIDTH,rand()%HEIGHT), CanvasPoint(rand()%WIDTH, rand()%HEIGHT), Colour(rand()%WIDTH, rand()%HEIGHT, rand()%255)).outline(window);
     else if(event.key.keysym.sym == SDLK_f) CanvasTriangle(CanvasPoint(rand()%WIDTH, rand()%HEIGHT), CanvasPoint(rand()%WIDTH,rand()%HEIGHT), CanvasPoint(rand()%WIDTH, rand()%HEIGHT), Colour(rand()%WIDTH, rand()%HEIGHT, rand()%255)).fill(window);
 
