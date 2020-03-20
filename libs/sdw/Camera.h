@@ -32,9 +32,9 @@ class Camera
 std::ostream& operator<<(std::ostream& os, const Camera& camera)
 {
     os << "Camera Position: " << "[" << camera.position.x << "," << camera.position.y << "," << camera.position.z << "]"<< std::endl;
-    os << "Camera Rotation: " << "|" << camera.rotation[0].x << "," << camera.rotation[1].x << "," << camera.rotation[1].x << "|"<< std::endl;
-                           os << "|" << camera.rotation[0].y << "," << camera.rotation[1].y << "," << camera.rotation[1].y << "|"<< std::endl;
-                           os << "|" << camera.rotation[0].z << "," << camera.rotation[1].z << "," << camera.rotation[1].z << "|"<< std::endl;
+    os << "Camera Rotation: " << "|" << camera.rotation[0].x << "," << camera.rotation[1].x << "," << camera.rotation[2].x << "|"<< std::endl;
+          os << "                 |" << camera.rotation[0].y << "," << camera.rotation[1].y << "," << camera.rotation[2].y << "|"<< std::endl;
+          os << "                 |" << camera.rotation[0].z << "," << camera.rotation[1].z << "," << camera.rotation[2].z << "|"<< std::endl;
     os << "Camera Focal Length: " << camera.f;
     return os;
 }
