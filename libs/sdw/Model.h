@@ -104,7 +104,7 @@ class Model
         canTri.colour = tri.colour;
 
         for(int i = 0; i < 3; i++){
-          glm::vec3 camToP = cam.rotation * ((tri.vertices[i] + position) - cam.position);
+          glm::vec3 camToP = ((tri.vertices[i] + position) - cam.position) * cam.rotation;
           camToP.x = scale * cam.f * camToP.x / camToP.z;
           camToP.y = scale * cam.f * camToP.y / camToP.z;
           CanvasPoint canP = CanvasPoint(camToP.x + window.width/2,camToP.y + window.height/2, -1/camToP.z);
