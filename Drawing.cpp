@@ -22,7 +22,7 @@ void handleEvent(SDL_Event event);
 
 DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false);
 Camera cam = Camera(glm::vec3(0,3,5), 200);
-Model model = Model("cornell-box", 1);
+Model model = Model("cornell-box",glm::vec3(0,0,0), 1);
 
 int main(int argc, char* argv[])
 {

@@ -17,14 +17,16 @@ class Model
     std::vector<ModelTriangle> tris;
     std::unordered_map<std::string, Colour> mats;
     float scale;
+    glm::vec3 pos;
 
     Model(){
       scale = 1;
     }
 
-    Model(std::string mName, float sf){
+    Model(std::string mName,glm::vec3 position, float sf){
       
       scale = sf;
+      pos = position;
 
       std::ifstream matFile;
       matFile.open(mName + ".mtl", std::ios::binary);
@@ -85,9 +87,10 @@ class Model
         canTri.colour = tri.colour;
 
         for(int i = 0; i < 3; i++){
-          glm::vec3 camToP = (tri.vertices[i]) - cam.position;
-          camToP = scale * cam.f * camToP / camToP.z;
-          CanvasPoint canP = CanvasPoint(camToP.x + window.width/2,camToP.y + window.height/2);
+          glm::vec3 camToP = (tri.vertices[i] + pos) - cam.position;
+          camToP.x = scale * cam.f * camToP.x / camToP.z;
+          camToP.y = scale * cam.f * camToP.y / camToP.z;
+          CanvasPoint canP = CanvasPoint(camToP.x + window.width/2, camToP.y + window.height/2, -1/camToP.z);
           canTri.vertices[i] = canP;
         }
         canTri.outline(window);
@@ -101,7 +104,7 @@ class Model
         canTri.colour = tri.colour;
 
         for(int i = 0; i < 3; i++){
-          glm::vec3 camToP = (tri.vertices[i]) - cam.position;
+          glm::vec3 camToP = (tri.vertices[i] + pos) - cam.position;
           camToP.x = scale * cam.f * camToP.x / camToP.z;
           camToP.y = scale * cam.f * camToP.y / camToP.z;
           CanvasPoint canP = CanvasPoint(camToP.x + window.width/2, camToP.y + window.height/2, -1/camToP.z);
