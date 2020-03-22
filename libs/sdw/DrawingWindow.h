@@ -12,7 +12,7 @@ private:
   SDL_Texture *texture;
   uint32_t *pixelBuffer;
   float *depthBuffer;
-  std::string mode;
+  int mode;
 
 public:
   int height;
@@ -20,7 +20,7 @@ public:
 
   // Constructor method
   DrawingWindow();
-  DrawingWindow(int w, int h, bool fullscreen, std::string m);
+  DrawingWindow(int w, int h, bool fullscreen, int m);
   void destroy();
   void renderFrame();
   bool pollForInputEvents(SDL_Event *event);
@@ -42,8 +42,8 @@ public:
     }
   }
 
-  void setMode(std::string m);
+  void setMode(int m);
 
-  std::string getMode();
+  int getMode();
 
 };

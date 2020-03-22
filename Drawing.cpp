@@ -20,7 +20,7 @@ void draw();
 void update();
 void handleEvent(SDL_Event event);
 
-DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false, "wireframe");
+DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false, 1);
 Camera cam = Camera(glm::vec3(0,0,5), 200);
 Model model = Model("cornell-box",glm::vec3(0,0,0), 1);
 
@@ -43,7 +43,7 @@ int main(int argc, char* argv[])
 void draw()
 {
   window.clearPixels();
-  model.display(window, cam, false);
+  model.display(window, cam);
 }
 
 void update()
@@ -59,8 +59,11 @@ void handleEvent(SDL_Event event)
     else if(event.key.keysym.sym == SDLK_RIGHT) cam.position.x += 1;
     else if(event.key.keysym.sym == SDLK_UP) cam.position.y += 1;
     else if(event.key.keysym.sym == SDLK_DOWN) cam.position.y -= 1;
-    else if(event.key.keysym.sym == SDLK_u) CanvasTriangle(CanvasPoint(rand()%WIDTH, rand()%HEIGHT), CanvasPoint(rand()%WIDTH,rand()%HEIGHT), CanvasPoint(rand()%WIDTH, rand()%HEIGHT), Colour(rand()%WIDTH, rand()%HEIGHT, rand()%255)).outline(window);
-    else if(event.key.keysym.sym == SDLK_f) CanvasTriangle(CanvasPoint(rand()%WIDTH, rand()%HEIGHT), CanvasPoint(rand()%WIDTH,rand()%HEIGHT), CanvasPoint(rand()%WIDTH, rand()%HEIGHT), Colour(rand()%WIDTH, rand()%HEIGHT, rand()%255)).fill(window);
+    else if(event.key.keysym.sym == SDLK_1) window.setMode(1);
+    else if(event.key.keysym.sym == SDLK_2) window.setMode(2);
+    else if(event.key.keysym.sym == SDLK_3) window.setMode(3);
+    //else if(event.key.keysym.sym == SDLK_u) CanvasTriangle(CanvasPoint(rand()%WIDTH, rand()%HEIGHT), CanvasPoint(rand()%WIDTH,rand()%HEIGHT), CanvasPoint(rand()%WIDTH, rand()%HEIGHT), Colour(rand()%WIDTH, rand()%HEIGHT, rand()%255)).outline(window);
+    //else if(event.key.keysym.sym == SDLK_f) CanvasTriangle(CanvasPoint(rand()%WIDTH, rand()%HEIGHT), CanvasPoint(rand()%WIDTH,rand()%HEIGHT), CanvasPoint(rand()%WIDTH, rand()%HEIGHT), Colour(rand()%WIDTH, rand()%HEIGHT, rand()%255)).fill(window);
     else if(event.key.keysym.sym == SDLK_e) window.writeImage("test");
 
   }

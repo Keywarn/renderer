@@ -80,42 +80,10 @@ class Model
       }
     }
 
-    void wireframe(DrawingWindow window, Camera cam) {
+    void display(DrawingWindow window, Camera cam) {
       for (auto &tri : tris) // access by reference to avoid copying
       {  
-        CanvasTriangle canTri;
-        canTri.colour = tri.colour;
-
-        for(int i = 0; i < 3; i++){
-          glm::vec3 camToP = cam.rotation * ((tri.vertices[i] + position) - cam.position);
-          camToP.x = scale * cam.f * camToP.x / camToP.z;
-          camToP.y = scale * cam.f * camToP.y / camToP.z;
-          //TODO Holy shit the - on camToP.x seems hacky as fuck
-          CanvasPoint canP = CanvasPoint(- camToP.x + window.width/2,camToP.y + window.height/2, -1/camToP.z);
-          canTri.vertices[i] = canP;
-        }
-        canTri.outline(window);
-      }
-    }
-
-    void display(DrawingWindow window, Camera cam, bool wf) {
-      for (auto &tri : tris) // access by reference to avoid copying
-      {  
-        CanvasTriangle canTri;
-        canTri.colour = tri.colour;
-
-        for(int i = 0; i < 3; i++){
-          glm::vec3 camToP = ((tri.vertices[i] + position) - cam.position) * cam.rotation;
-          camToP.x = scale * cam.f * camToP.x / camToP.z;
-          camToP.y = scale * cam.f * camToP.y / camToP.z;
-          CanvasPoint canP = CanvasPoint(- camToP.x + window.width/2,camToP.y + window.height/2, -1/camToP.z);
-          canTri.vertices[i] = canP;
-        }
-        canTri.fill(window);
-        if(wf) {
-          canTri.colour = Colour(255,255,255);
-          canTri.outline(window);
-        }
+        tri.display(window, cam, scale, position);
       }
     }
 
