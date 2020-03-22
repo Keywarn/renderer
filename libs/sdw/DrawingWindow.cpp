@@ -7,7 +7,7 @@ DrawingWindow::DrawingWindow()
 }
 
 // Complex constructor method
-DrawingWindow::DrawingWindow(int w, int h, bool fullscreen)
+DrawingWindow::DrawingWindow(int w, int h, bool fullscreen, std::string m)
 {
   if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) !=0) {
     printMessageAndQuit("Could not initialise SDL: ", SDL_GetError());
@@ -15,6 +15,7 @@ DrawingWindow::DrawingWindow(int w, int h, bool fullscreen)
 
   width = w;
   height = h;
+  mode = m;
   pixelBuffer = new uint32_t[width*height];
   depthBuffer = new float[width*height];
   std::fill_n(depthBuffer, width*height, 0);
@@ -104,6 +105,15 @@ void DrawingWindow::clearPixels()
 {
   memset(pixelBuffer, 0, width * height * sizeof(uint32_t));
   memset(depthBuffer, 0, width * height * sizeof(float));
+}
+
+void DrawingWindow::setMode(std::string m) {
+    mode = m;
+  }
+
+
+std::string DrawingWindow::getMode() {
+  return(mode);
 }
 
 void DrawingWindow::writeImage(std::string fname) {

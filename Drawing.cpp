@@ -20,7 +20,7 @@ void draw();
 void update();
 void handleEvent(SDL_Event event);
 
-DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false);
+DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false, "wireframe");
 Camera cam = Camera(glm::vec3(0,0,5), 200);
 Model model = Model("cornell-box",glm::vec3(0,0,0), 1);
 
