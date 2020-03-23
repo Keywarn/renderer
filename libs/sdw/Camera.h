@@ -32,6 +32,23 @@ class Camera
       rotation[2] = forward;
     }
 
+    void raytrace(const std::vector<ModelTriangle> tris, DrawingWindow window) {
+      
+      for (int y = 0; y < window.height; y++) {
+        for(int x = 0; x < window.width; x++){
+
+          glm::vec3 dir = glm::normalize(glm::vec3(x-window.width/2, y-window.height/2, f));
+          
+          RayTriangleIntersection closest;
+          if(closestIntersection(position, dir, tris, closest)) {
+            std::cout<<"pixel"<<std::endl;
+            window.setPixelColour(x,y,closest.intersectedTriangle.colour.packed, 1/closest.distanceFromCamera);
+          }
+        }
+      }
+    }
+
+
     bool closestIntersection(glm::vec3 start, glm::vec3 dir, const std::vector<ModelTriangle> tris, RayTriangleIntersection& closest) {
       bool result = false;
       closest.distanceFromCamera = std::numeric_limits<float>::max();
@@ -39,9 +56,6 @@ class Camera
 
       for (auto &tri : tris) // access by reference to avoid copying
       { 
-        glm::vec3 start;
-        glm::vec3 dir;
-
         if(intersectRay(tri, start, dir, currentInter)) {
           result = true;
 
