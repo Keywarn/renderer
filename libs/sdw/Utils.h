@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <TexturePoint.h>
 #include <CanvasPoint.h>
+#include <glm/glm.hpp>
 
 std::string* split(std::string line, char delim);
 

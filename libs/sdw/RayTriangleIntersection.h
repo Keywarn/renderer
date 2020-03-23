@@ -1,3 +1,5 @@
+#pragma once
+#include "ModelTriangle.h"
 #include <glm/glm.hpp>
 #include <iostream>
 
@@ -20,8 +22,8 @@ class RayTriangleIntersection
     }
 };
 
-std::ostream& operator<<(std::ostream& os, const RayTriangleIntersection& intersection)
-{
-    os << "Intersection is at " << intersection.intersectionPoint << " on triangle " << intersection.intersectedTriangle << " at a distance of " << intersection.distanceFromCamera << std::endl;
-    return os;
-}
+// std::ostream& operator<<(std::ostream& os, const RayTriangleIntersection& intersection)
+// {
+//     os << "Intersection is at " << intersection.intersectionPoint << " on triangle " << intersection.intersectedTriangle << " at a distance of " << intersection.distanceFromCamera << std::endl;
+//     return os;
+// }

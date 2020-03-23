@@ -1,6 +1,9 @@
 #pragma once
+#include "RayTriangleIntersection.h"
+#include "ModelTriangle.h"
 #include <glm/glm.hpp>
 #include <string>
+#include <limits>
 
 class Camera
 {
@@ -27,6 +30,28 @@ class Camera
       rotation[0] = right;
       rotation[1] = up;
       rotation[2] = forward;
+    }
+
+    bool closestIntersection(glm::vec3 start, glm::vec3 dir, const std::vector<ModelTriangle> tris, RayTriangleIntersection& closest) {
+      bool result = false;
+      closest.distanceFromCamera = std::numeric_limits<float>::max();
+      RayTriangleIntersection currentInter;
+
+      for (auto &tri : tris) // access by reference to avoid copying
+      { 
+        glm::vec3 start;
+        glm::vec3 dir;
+
+        if(tri.intersectRay(start, dir, currentInter)) {
+          result = true;
+
+          if(currentInter.distanceFromCamera < closest.distanceFromCamera) {
+            closest = currentInter;
+          }
+        }
+      }
+
+      return(result);
     }
 };
 
