@@ -37,12 +37,12 @@ class Camera
       for (int y = 0; y < window.height; y++) {
         for(int x = 0; x < window.width; x++){
 
-          glm::vec3 dir = glm::normalize(glm::vec3(x-window.width/2, y-window.height/2, f));
+          glm::vec3 dir = rotation * glm::normalize(glm::vec3(x-window.width/2, y-window.height/2, -f));
           
           RayTriangleIntersection closest;
           if(closestIntersection(position, dir, tris, closest)) {
             std::cout<<"pixel"<<std::endl;
-            window.setPixelColour(x,y,closest.intersectedTriangle.colour.packed, 1/closest.distanceFromCamera);
+            window.setPixelColour(x,window.height-y,closest.intersectedTriangle.colour.packed, 1/closest.distanceFromCamera);
           }
         }
       }
