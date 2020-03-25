@@ -13,7 +13,7 @@ class Light
     {
     }
 
-    Light(glm::vec3 pos, Colour ligthCol, float pow) {
+    Light(glm::vec3 pos, Colour lightCol, float pow) {
       position = pos;
       colour = lightCol;
       power = pow;
@@ -22,8 +22,8 @@ class Light
 
 std::ostream& operator<<(std::ostream& os, const Light& light)
 {
-    os << "Position (" << light.position[0].x << ", " << light.position[0].y << ", " << light.position[0].z << ")" << std::endl;
-    os << "Colour   (" << light.colour.r << ", " << light.colour.g << ", " << light.colour.b << ")" << std::endl;
+    os << "Position (" << light.position.x << ", " << light.position.y << ", " << light.position.z << ")" << std::endl;
+    os << "Colour   (" << light.colour.red << ", " << light.colour.green << ", " << light.colour.blue << ")" << std::endl;
     os << "Power    (" << light.power << ")" << std::endl;
     return os;
 }
