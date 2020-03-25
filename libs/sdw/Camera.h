@@ -44,8 +44,8 @@ class Camera
           if(closestIntersection(position, dir, tris, closest)) {
 
             Colour diffuseLight = light.calcLight(closest);
-
-            window.setPixelColour(x,window.height-y,closest.intersectedTriangle.colour.packed, 1/closest.distanceFromCamera);
+            
+            window.setPixelColour(x,window.height-y,diffuseLight.packed, 1/closest.distanceFromCamera);
           }
         }
       }

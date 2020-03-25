@@ -11,7 +11,6 @@ class ModelTriangle
   public:
     glm::vec3 vertices[3];
     Colour colour;
-    glm::vec3 normal;
 
     ModelTriangle()
     {
@@ -22,9 +21,11 @@ class ModelTriangle
       vertices[1] = v1;
       vertices[2] = v2;
       colour = trigColour;
+    }
 
-      normal = glm::normalize(glm::cross(vertices[1]-vertices[0], vertices[2]-vertices[0]));
-    }    
+    glm::vec3 getNormal() {
+      return (glm::normalize(glm::cross(vertices[2]-vertices[0], vertices[1]-vertices[0])));
+    }
 };
 
 std::ostream& operator<<(std::ostream& os, const ModelTriangle& triangle)
