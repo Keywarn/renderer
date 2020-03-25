@@ -43,9 +43,12 @@ class Camera
           RayTriangleIntersection closest;
           if(closestIntersection(position, dir, tris, closest)) {
 
+            Colour base = closest.intersectedTriangle.colour;
             Colour diffuseLight = light.calcLight(closest);
-            
-            window.setPixelColour(x,window.height-y,diffuseLight.packed, 1/closest.distanceFromCamera);
+
+            Colour lit = Colour(base.red * diffuseLight.red/255, base.green * diffuseLight.red/255, base.blue * diffuseLight.red/255);
+
+            window.setPixelColour(x,window.height-y,lit.packed, 1/closest.distanceFromCamera);
           }
         }
       }

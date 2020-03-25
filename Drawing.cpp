@@ -22,7 +22,7 @@ void update();
 void handleEvent(SDL_Event event);
 
 DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false, 1);
-Camera cam = Camera(glm::vec3(0,0,10), 200);
+Camera cam = Camera(glm::vec3(0,0,5), 200);
 Model model = Model("cornell-box",glm::vec3(0,0,0), 1);
 Light light = Light(glm::vec3(0, 3.8, -3), Colour(255,255,255), 20);
 
