@@ -48,7 +48,7 @@ void draw()
   model.display(window, cam);
   if(window.getMode() == 3) {
     std::cout << "New Frame" <<std::endl;
-    cam.raytrace(model.tris, window);
+    cam.raytrace(model.tris, light, window);
   }
 }
 

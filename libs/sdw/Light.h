@@ -1,6 +1,7 @@
 #pragma once
 #include <glm/glm.hpp>
 #include "Colour.h"
+#include "RayTriangleIntersection.h"
 
 class Light
 {
@@ -17,7 +18,11 @@ class Light
       position = pos;
       colour = lightCol;
       power = pow;
-    }    
+    }
+
+    Colour calcLight(const RayTriangleIntersection intersect)  {
+      return Colour();
+    }  
 };
 
 std::ostream& operator<<(std::ostream& os, const Light& light)

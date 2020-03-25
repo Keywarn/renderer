@@ -1,6 +1,7 @@
 #pragma once
 #include "RayTriangleIntersection.h"
 #include "ModelTriangle.h"
+#include "Light.h"
 #include <glm/glm.hpp>
 #include <string>
 #include <limits>
@@ -32,7 +33,7 @@ class Camera
       rotation[2] = forward;
     }
 
-    void raytrace(const std::vector<ModelTriangle> tris, DrawingWindow window) {
+    void raytrace(const std::vector<ModelTriangle> tris, Light light, DrawingWindow window) {
       
       for (int y = 0; y < window.height; y++) {
         for(int x = 0; x < window.width; x++){
@@ -41,7 +42,9 @@ class Camera
           
           RayTriangleIntersection closest;
           if(closestIntersection(position, dir, tris, closest)) {
-            std::cout<<"pixel"<<std::endl;
+
+            Colour diffuseLight = light.calcLight(closest);
+
             window.setPixelColour(x,window.height-y,closest.intersectedTriangle.colour.packed, 1/closest.distanceFromCamera);
           }
         }
