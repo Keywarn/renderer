@@ -70,15 +70,15 @@ class Camera
 
     bool intersectRay (ModelTriangle tri,glm::vec3 start, glm::vec3 dir, RayTriangleIntersection& intersect){
 
-      glm::vec3 e1 = glm::vec3(tri.vertices[1].x-tri.vertices[0].x,tri.vertices[1].y-tri.vertices[0].y,tri.vertices[1].z-tri.vertices[0].z);
-      glm::vec3 e2 = glm::vec3(tri.vertices[2].x-tri.vertices[0].x,tri.vertices[2].y-tri.vertices[0].y,tri.vertices[2].z-tri.vertices[0].z);
-      glm::vec3 b = glm::vec3(start.x-tri.vertices[0].x,start.y-tri.vertices[0].y,start.z-tri.vertices[0].z);
+      glm::vec3 e1 = glm::vec3(tri.vertices[1] - tri.vertices[0]);
+      glm::vec3 e2 = glm::vec3(tri.vertices[2] - tri.vertices[0]);
+      glm::vec3 b = glm::vec3(start-tri.vertices[0]);
 
       glm::mat3 A( -dir, e1, e2 );
       // x = (t,u,v)
       glm::vec3 x = glm::inverse( A ) * b;
 
-      if(x[1] > 0 && x[2] > 1 && x[1] + x[2] < 1 && x[0] >= 0) {
+      if(x[1] > 0 && x[2] > 0 && x[1] + x[2] < 1 && x[0] >= 0) {
         intersect.distanceFromCamera = x[0];
         intersect.intersectionPoint = tri.vertices[0] + (e1 * x[1]) + (e2 * x[2]);
         intersect.intersectedTriangle = tri;
