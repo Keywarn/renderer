@@ -50,7 +50,7 @@ class Model
       while (getline(vertFile, str)) {
         std::string* toks = split(str, ' ');
         if (toks[0] == "v") {
-          vertices.push_back(glm::vec3(std::stof(toks[1]),std::stof(toks[2]),std::stof(toks[3])));
+          vertices.push_back(glm::vec3(std::stof(toks[1]),std::stof(toks[2]),std::stof(toks[3])) + position);
         }
       }
 
@@ -87,7 +87,7 @@ class Model
         canTri.colour = tri.colour;
 
         for(int i = 0; i < 3; i++){
-          glm::vec3 camToP = ((tri.vertices[i] + position) - cam.position) * cam.rotation;
+          glm::vec3 camToP = ((tri.vertices[i]) - cam.position) * cam.rotation;
           camToP.x = scale * cam.f * camToP.x / camToP.z;
           camToP.y = scale * cam.f * camToP.y / camToP.z;
           CanvasPoint canP = CanvasPoint(- camToP.x + window.width/2,camToP.y + window.height/2, -1/camToP.z);
