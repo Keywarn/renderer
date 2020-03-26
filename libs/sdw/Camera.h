@@ -35,20 +35,26 @@ class Camera
 
     void raytrace(const std::vector<ModelTriangle> tris, Light light, DrawingWindow window) {
       
+      //For each pixel in the image, create a ray
       for (int y = 0; y < window.height; y++) {
         for(int x = 0; x < window.width; x++){
 
-          glm::vec3 dir = rotation * glm::normalize(glm::vec3(x-window.width/2, y-window.height/2, -f));
+          //Direction from the camera to the pixel in the image plane
+          glm::vec3 dir = rotation * glm::normalize(position - glm::vec3(x-window.width/2, y-window.height/2, f));
           
+          //Get the closest intersection of the ray
           RayTriangleIntersection closest;
           if(closestIntersection(position, dir, tris, closest)) {
 
+            //Get base colour of triangle
             Colour base = closest.intersectedTriangle.colour;
+            
+            //Check for object blocking direct illumination
             Colour diffuseLight = light.calcLight(closest);
 
             Colour lit = Colour(base.red * diffuseLight.red/255, base.green * diffuseLight.red/255, base.blue * diffuseLight.red/255);
 
-            window.setPixelColour(x,window.height-y,lit.packed, 1/closest.distanceFromCamera);
+            window.setPixelColour(window.width - x,y,lit.packed, 1/closest.distanceFromCamera);
           }
         }
       }
