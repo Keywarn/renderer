@@ -33,9 +33,7 @@ class Camera
       rotation[2] = forward;
     }
 
-    void raytrace(const std::vector<ModelTriangle> tris, Light light, DrawingWindow window) {
-
-      float shadowBias = 0.000f;
+    void raytrace(const std::vector<ModelTriangle> tris, Light diffuseLight, Light ambientLight, DrawingWindow window) {
       bool shadows = true;
       
       //For each pixel in the image, create a ray
@@ -53,21 +51,21 @@ class Camera
             Colour base = closest.intersectedTriangle.colour;
             
             //Check for object blocking direct illumination
-            Colour diffuseLight = light.calcLight(closest);
+            Colour diffuseCol = diffuseLight.calcLight(closest);
 
             RayTriangleIntersection lightBlock;
             glm::vec3 shadowStart = closest.intersectionPoint + closest.intersectedTriangle.getNormal() * shadowBias;
 
             if(shadows) {
-              if(closestIntersection(shadowStart,glm::normalize(light.position - closest.intersectionPoint), tris, lightBlock, 0.1f)){
+              if(closestIntersection(shadowStart,glm::normalize(diffuseLight.position - closest.intersectionPoint), tris, lightBlock, 0.1f)){
                 //If distance to other object is less than distance to light, in shadow
-                if(glm::length(lightBlock.intersectionPoint - closest.intersectionPoint) < glm::length(light.position - closest.intersectionPoint)){
-                  diffuseLight = Colour(0,0,0);
+                if(glm::length(lightBlock.intersectionPoint - closest.intersectionPoint) < glm::length(diffuseLight.position - closest.intersectionPoint)){
+                  diffuseCol = Colour(0,0,0);
                 }
               }
             }
 
-            Colour lit = Colour(base.red * diffuseLight.red/255, base.green * diffuseLight.green/255, base.blue * diffuseLight.blue/255);
+            Colour lit = Colour(base.red * diffuseCol.red/255, base.green * diffuseCol.green/255, base.blue * diffuseCol.blue/255);
             lit.fix();
 
             window.setPixelColour(window.width - x,y,lit.packed, 1/closest.distanceFromCamera);

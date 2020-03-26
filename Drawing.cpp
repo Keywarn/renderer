@@ -24,7 +24,8 @@ void handleEvent(SDL_Event event);
 DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false, 1);
 Camera cam = Camera(glm::vec3(0,0,5), 200);
 Model model = Model("cornell-box",glm::vec3(0,0,0), 1);
-Light light = Light(glm::vec3(0, 3.8, -3), Colour(255,255,255), 50);
+Light diffuseLight = Light(glm::vec3(0, 3.8, -3), Colour(255,255,255), 50);
+Light ambientLight = Light(glm::vec3(0,0,0), Colour(255,255,255), 5);
 
 int main(int argc, char* argv[])
 {
@@ -48,7 +49,7 @@ void draw()
   model.display(window, cam);
   if(window.getMode() == 3) {
     std::cout << "New Frame" <<std::endl;
-    cam.raytrace(model.tris, light, window);
+    cam.raytrace(model.tris, diffuseLight, ambientLight, window);
   }
 }
 
