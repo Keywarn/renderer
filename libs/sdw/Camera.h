@@ -36,6 +36,7 @@ class Camera
     void raytrace(const std::vector<ModelTriangle> tris, Light light, DrawingWindow window) {
 
       float shadowBias = 0.000f;
+      bool shadows = false;
       
       //For each pixel in the image, create a ray
       for (int y = 0; y < window.height; y++) {
@@ -57,10 +58,12 @@ class Camera
             RayTriangleIntersection lightBlock;
             glm::vec3 shadowStart = closest.intersectionPoint + closest.intersectedTriangle.getNormal() * shadowBias;
 
-            if(closestIntersection(shadowStart,glm::normalize(light.position - closest.intersectionPoint), tris, lightBlock)){
-              //If distance to other object is less than distance to light, in shadow
-              if(glm::length(lightBlock.intersectionPoint - closest.intersectionPoint) < glm::length(light.position - closest.intersectionPoint)){
-                diffuseLight = Colour(0,0,0);
+            if(shadows) {
+              if(closestIntersection(shadowStart,glm::normalize(light.position - closest.intersectionPoint), tris, lightBlock)){
+                //If distance to other object is less than distance to light, in shadow
+                if(glm::length(lightBlock.intersectionPoint - closest.intersectionPoint) < glm::length(light.position - closest.intersectionPoint)){
+                  diffuseLight = Colour(0,0,0);
+                }
               }
             }
 
