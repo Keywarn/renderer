@@ -17,7 +17,7 @@ The final grade awarded will depend upon the exact combination and features and 
 ### 50 - some of
 - [ ] Changing camera orientation (via orientation matrix)
 - [x] LookAt
-- [ ] Hard Shadow
+- [x] Hard Shadow
 - [ ] Some form of generative geometry
 - [ ] Ambient lighting
 - [x] Diffuse lighting (proximity and angle-of-incidence)
