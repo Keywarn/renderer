@@ -51,6 +51,13 @@ class Camera
             
             //Check for object blocking direct illumination
             Colour diffuseLight = light.calcLight(closest);
+            RayTriangleIntersection lightBlock;
+            if(closestIntersection(closest.intersectionPoint,glm::normalize(light.position - closest.intersectionPoint), tris, lightBlock)){
+              //If distance to other object is less than distance to light, in shadow
+              if(glm::length(lightBlock.intersectionPoint - closest.intersectionPoint) < glm::length(light.position - closest.intersectionPoint) && closest.intersectedTriangle != lightBlock.intersectedTriangle){
+                diffuseLight = Colour(0,0,0);
+              }
+            }
 
             Colour lit = Colour(base.red * diffuseLight.red/255, base.green * diffuseLight.red/255, base.blue * diffuseLight.red/255);
 
