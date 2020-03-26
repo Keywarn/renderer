@@ -30,6 +30,14 @@ class Colour
       red = r;
       green = g;
       blue = b;
+      
+      packed = (255<<24) + (red<<16) + (green<<8) + blue;
+    }
+
+    void fix(){
+      red = std::max(std::min(red, 255), 0);
+      green = std::max(std::min(green, 255), 0);
+      blue = std::max(std::min(blue, 255), 0);
 
       packed = (255<<24) + (red<<16) + (green<<8) + blue;
     }
