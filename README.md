@@ -20,7 +20,7 @@ The final grade awarded will depend upon the exact combination and features and 
 - [ ] Hard Shadow
 - [ ] Some form of generative geometry
 - [ ] Ambient lighting
-- [ ] Diffuse lighting (proximity and angle-of-incidence)
+- [x] Diffuse lighting (proximity and angle-of-incidence)
 
 ### 60 - some of
 - [ ] Gouraud shading
