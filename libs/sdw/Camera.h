@@ -36,7 +36,7 @@ class Camera
     void raytrace(const std::vector<ModelTriangle> tris, Light light, DrawingWindow window) {
 
       float shadowBias = 0.000f;
-      bool shadows = false;
+      bool shadows = true;
       
       //For each pixel in the image, create a ray
       for (int y = 0; y < window.height; y++) {
@@ -47,7 +47,7 @@ class Camera
           
           //Get the closest intersection of the ray
           RayTriangleIntersection closest;
-          if(closestIntersection(position, dir, tris, closest)) {
+          if(closestIntersection(position, dir, tris, closest, 0)) {
 
             //Get base colour of triangle
             Colour base = closest.intersectedTriangle.colour;
@@ -59,7 +59,7 @@ class Camera
             glm::vec3 shadowStart = closest.intersectionPoint + closest.intersectedTriangle.getNormal() * shadowBias;
 
             if(shadows) {
-              if(closestIntersection(shadowStart,glm::normalize(light.position - closest.intersectionPoint), tris, lightBlock)){
+              if(closestIntersection(shadowStart,glm::normalize(light.position - closest.intersectionPoint), tris, lightBlock, 0.1f)){
                 //If distance to other object is less than distance to light, in shadow
                 if(glm::length(lightBlock.intersectionPoint - closest.intersectionPoint) < glm::length(light.position - closest.intersectionPoint)){
                   diffuseLight = Colour(0,0,0);
@@ -77,7 +77,7 @@ class Camera
     }
 
 
-    bool closestIntersection(glm::vec3 start, glm::vec3 dir, const std::vector<ModelTriangle> tris, RayTriangleIntersection& closest) {
+    bool closestIntersection(glm::vec3 start, glm::vec3 dir, const std::vector<ModelTriangle> tris, RayTriangleIntersection& closest, float near) {
       bool result = false;
       closest.distanceFromCamera = std::numeric_limits<float>::max();
       RayTriangleIntersection currentInter;
@@ -87,7 +87,7 @@ class Camera
         if(intersectRay(tri, start, dir, currentInter)) {
           result = true;
 
-          if(currentInter.distanceFromCamera < closest.distanceFromCamera) {
+          if(currentInter.distanceFromCamera < closest.distanceFromCamera && currentInter.distanceFromCamera > near) {
             closest = currentInter;
           }
         }
