@@ -14,6 +14,7 @@ class Colour
     {
     }
 
+    //Simple RGB colour
     Colour(int r, int g, int b)
     {
       name = "";
@@ -22,6 +23,16 @@ class Colour
       blue = b;
 
       packed = (255<<24) + (red<<16) + (green<<8) + blue;
+    }
+
+    //Colour from base, diffuse and amibent pass
+    Colour(Colour base, Colour ambient, Colour diffuse) {
+      red = base.red * (ambient.red + diffuse.red)/255;
+      green = base.green * (ambient.green + diffuse.green)/255;
+      blue = base.blue * (ambient.blue + diffuse.blue)/255;
+
+      fix();
+      packed = packed = (255<<24) + (red<<16) + (green<<8) + blue;
     }
 
     Colour(std::string n, int r, int g, int b)

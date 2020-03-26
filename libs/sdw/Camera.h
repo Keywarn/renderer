@@ -67,8 +67,7 @@ class Camera
               }
             }
 
-            Colour lit = Colour(base.red * diffuseCol.red/255, base.green * diffuseCol.green/255, base.blue * diffuseCol.blue/255);
-            lit.fix();
+            Colour lit = Colour(base, ambientCol, diffuseCol);
 
             window.setPixelColour(window.width - x,y,lit.packed, 1/closest.distanceFromCamera);
           }

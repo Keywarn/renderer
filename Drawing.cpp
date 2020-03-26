@@ -25,7 +25,7 @@ DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false, 1);
 Camera cam = Camera(glm::vec3(0,0,5), 200);
 Model model = Model("cornell-box",glm::vec3(0,0,0), 1);
 Light diffuseLight = Light(glm::vec3(0, 3.8, -3), Colour(255,255,255), 50);
-Light ambientLight = Light(glm::vec3(0,0,0), Colour(255,255,255), 5);
+Light ambientLight = Light(glm::vec3(0,0,0), Colour(255,255,255), 0.5f);
 
 int main(int argc, char* argv[])
 {
