@@ -19,7 +19,7 @@ The final grade awarded will depend upon the exact combination and features and 
 - [x] LookAt
 - [x] Hard Shadow
 - [ ] Some form of generative geometry
-- [ ] Ambient lighting
+- [x] Ambient lighting
 - [x] Diffuse lighting (proximity and angle-of-incidence)
 
 ### 60 - some of
