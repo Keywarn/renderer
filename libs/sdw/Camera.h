@@ -34,6 +34,8 @@ class Camera
     }
 
     void raytrace(const std::vector<ModelTriangle> tris, Light light, DrawingWindow window) {
+
+      float shadowBias = 0.000f;
       
       //For each pixel in the image, create a ray
       for (int y = 0; y < window.height; y++) {
@@ -51,15 +53,18 @@ class Camera
             
             //Check for object blocking direct illumination
             Colour diffuseLight = light.calcLight(closest);
+
             RayTriangleIntersection lightBlock;
-            if(closestIntersection(closest.intersectionPoint,glm::normalize(light.position - closest.intersectionPoint), tris, lightBlock)){
+            glm::vec3 shadowStart = closest.intersectionPoint + closest.intersectedTriangle.getNormal() * shadowBias;
+
+            if(closestIntersection(shadowStart,glm::normalize(light.position - closest.intersectionPoint), tris, lightBlock)){
               //If distance to other object is less than distance to light, in shadow
-              if(glm::length(lightBlock.intersectionPoint - closest.intersectionPoint) < glm::length(light.position - closest.intersectionPoint) && closest.intersectedTriangle != lightBlock.intersectedTriangle){
+              if(glm::length(lightBlock.intersectionPoint - closest.intersectionPoint) < glm::length(light.position - closest.intersectionPoint)){
                 diffuseLight = Colour(0,0,0);
               }
             }
 
-            Colour lit = Colour(base.red * diffuseLight.red/255, base.green * diffuseLight.red/255, base.blue * diffuseLight.red/255);
+            Colour lit = Colour(base.red * diffuseLight.red/255, base.green * diffuseLight.green/255, base.blue * diffuseLight.blue/255);
 
             window.setPixelColour(window.width - x,y,lit.packed, 1/closest.distanceFromCamera);
           }
