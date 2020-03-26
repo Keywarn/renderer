@@ -21,13 +21,17 @@ class Light
       power = pow;
     }
 
-    Colour calcLight(RayTriangleIntersection intersect)  {
+    Colour calcDiffuse(RayTriangleIntersection intersect)  {
       glm::vec3 r = intersect.intersectionPoint - position;
       
       float val = power * std::max(glm::dot(glm::normalize(r), intersect.intersectedTriangle.getNormal()), 0.0f) / (4 * M_PI * std::pow(glm::length(r),2));
       
-      return (Colour(val * colour.red, val * colour.blue, val* colour.green));
-    }  
+      return (Colour(val * colour.red, val * colour.blue, val * colour.green));
+    }
+
+    Colour calcAmbient() {
+      return (Colour(power * colour.red, power * colour.blue, power * colour.green));
+    }
 };
 
 std::ostream& operator<<(std::ostream& os, const Light& light)

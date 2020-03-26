@@ -34,6 +34,7 @@ class Camera
     }
 
     void raytrace(const std::vector<ModelTriangle> tris, Light diffuseLight, Light ambientLight, DrawingWindow window) {
+      float shadowBias = 0;
       bool shadows = true;
       
       //For each pixel in the image, create a ray
@@ -51,7 +52,8 @@ class Camera
             Colour base = closest.intersectedTriangle.colour;
             
             //Check for object blocking direct illumination
-            Colour diffuseCol = diffuseLight.calcLight(closest);
+            Colour diffuseCol = diffuseLight.calcDiffuse(closest);
+            Colour ambientCol = ambientLight.calcAmbient();
 
             RayTriangleIntersection lightBlock;
             glm::vec3 shadowStart = closest.intersectionPoint + closest.intersectedTriangle.getNormal() * shadowBias;
