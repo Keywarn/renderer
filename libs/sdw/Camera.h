@@ -33,9 +33,51 @@ class Camera
       rotation[2] = forward;
     }
 
-    void raytrace(const std::vector<ModelTriangle> tris, Light diffuseLight, Light ambientLight, DrawingWindow window) {
+    void flat(const std::vector<ModelTriangle> tris, Light diffuseLight, Light ambientLight, DrawingWindow window) {
       float shadowBias = 0;
       bool shadows = true;
+      
+      //For each pixel in the image, create a ray
+      for (int y = 0; y < window.height; y++) {
+        for(int x = 0; x < window.width; x++){
+
+          //Direction from the camera to the pixel in the image plane
+          glm::vec3 dir = rotation * glm::normalize(position - glm::vec3(x-window.width/2, y-window.height/2, f));
+          
+          //Get the closest intersection of the ray
+          RayTriangleIntersection closest;
+          if(closestIntersection(position, dir, tris, closest, 0)) {
+
+            //Get base colour of triangle
+            Colour base = closest.intersectedTriangle.colour;
+            
+            //Check for object blocking direct illumination
+            Colour diffuseCol = diffuseLight.calcDiffuse(closest);
+            Colour ambientCol = ambientLight.calcAmbient();
+
+            RayTriangleIntersection lightBlock;
+            glm::vec3 shadowStart = closest.intersectionPoint + glm::normalize(closest.intersectedTriangle.normal) * shadowBias;
+
+            if(shadows) {
+              if(closestIntersection(shadowStart,glm::normalize(diffuseLight.position - closest.intersectionPoint), tris, lightBlock, 0.1f)){
+                //If distance to other object is less than distance to light, in shadow
+                if(glm::length(lightBlock.intersectionPoint - closest.intersectionPoint) < glm::length(diffuseLight.position - closest.intersectionPoint)){
+                  diffuseCol = Colour(0,0,0);
+                }
+              }
+            }
+
+            Colour lit = Colour(base, ambientCol, diffuseCol);
+
+            window.setPixelColour(window.width - x,y,lit.packed, 1/closest.distanceFromCamera);
+          }
+        }
+      }
+    }
+
+    void gouraud(const std::vector<ModelTriangle> tris, Light diffuseLight, Light ambientLight, DrawingWindow window) {
+      float shadowBias = 0;
+      bool shadows = false;
       
       //For each pixel in the image, create a ray
       for (int y = 0; y < window.height; y++) {

@@ -54,9 +54,8 @@ void draw(std::vector<ModelTriangle> tris)
   window.clearPixels();
   model.display(window, cam);
   sphere.display(window, cam);
-  if(window.getMode() == 3) {
-    cam.raytrace(tris, diffuseLight, ambientLight, window);
-  }
+  if(window.getMode() == 3) cam.flat(tris, diffuseLight, ambientLight, window);
+  else if(window.getMode() == 4) cam.gouraud(tris, diffuseLight, ambientLight, window);
 }
 
 void update()
@@ -75,6 +74,7 @@ void handleEvent(SDL_Event event)
     else if(event.key.keysym.sym == SDLK_1) window.setMode(1);
     else if(event.key.keysym.sym == SDLK_2) window.setMode(2);
     else if(event.key.keysym.sym == SDLK_3) window.setMode(3);
+    else if(event.key.keysym.sym == SDLK_4) window.setMode(4);
     //else if(event.key.keysym.sym == SDLK_u) CanvasTriangle(CanvasPoint(rand()%WIDTH, rand()%HEIGHT), CanvasPoint(rand()%WIDTH,rand()%HEIGHT), CanvasPoint(rand()%WIDTH, rand()%HEIGHT), Colour(rand()%WIDTH, rand()%HEIGHT, rand()%255)).outline(window);
     //else if(event.key.keysym.sym == SDLK_f) CanvasTriangle(CanvasPoint(rand()%WIDTH, rand()%HEIGHT), CanvasPoint(rand()%WIDTH,rand()%HEIGHT), CanvasPoint(rand()%WIDTH, rand()%HEIGHT), Colour(rand()%WIDTH, rand()%HEIGHT, rand()%255)).fill(window);
     else if(event.key.keysym.sym == SDLK_e) window.writeImage("test");
