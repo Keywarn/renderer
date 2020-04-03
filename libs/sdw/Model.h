@@ -75,6 +75,7 @@ class Model
           }
 
           tri.colour = curColour;
+          tri.setNormal();
           tris.push_back(tri);
         } 
       }

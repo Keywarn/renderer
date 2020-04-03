@@ -56,7 +56,7 @@ class Camera
             Colour ambientCol = ambientLight.calcAmbient();
 
             RayTriangleIntersection lightBlock;
-            glm::vec3 shadowStart = closest.intersectionPoint + closest.intersectedTriangle.getNormal() * shadowBias;
+            glm::vec3 shadowStart = closest.intersectionPoint + closest.intersectedTriangle.normal * shadowBias;
 
             if(shadows) {
               if(closestIntersection(shadowStart,glm::normalize(diffuseLight.position - closest.intersectionPoint), tris, lightBlock, 0.1f)){

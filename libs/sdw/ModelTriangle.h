@@ -10,6 +10,7 @@ class ModelTriangle
 {
   public:
     glm::vec3 vertices[3];
+    glm::vec3 normal;
     Colour colour;
 
     ModelTriangle()
@@ -23,8 +24,8 @@ class ModelTriangle
       colour = trigColour;
     }
 
-    glm::vec3 getNormal() {
-      return (glm::normalize(glm::cross(vertices[2]-vertices[0], vertices[1]-vertices[0])));
+    void setNormal() {
+      normal = glm::normalize(glm::cross(vertices[2]-vertices[0], vertices[1]-vertices[0]));
     }
 };
 
