@@ -17,13 +17,14 @@ using namespace glm;
 #define WIDTH 480
 #define HEIGHT 395
 
-void draw();
+void draw(std::vector<ModelTriangle> tris);
 void update();
 void handleEvent(SDL_Event event);
 
 DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false, 1);
 Camera cam = Camera(glm::vec3(0,0,5), 200);
 Model model = Model("cornell-box",glm::vec3(0,0,0), 1);
+Model sphere = Model("sphere", glm::vec3(0.7,2.5,-2), 1);
 Light diffuseLight = Light(glm::vec3(0, 3.8, -3), Colour(255,255,255), 50);
 Light ambientLight = Light(glm::vec3(0,0,0), Colour(255,255,255), 0.5f);
 
@@ -32,24 +33,29 @@ int main(int argc, char* argv[])
   SDL_Event event;
   cam.lookAt(model.position);
 
+  std::vector<ModelTriangle> tris;
+  tris.reserve(sphere.tris.size() + model.tris.size());
+  tris.insert(tris.end(), model.tris.begin(), model.tris.end());
+  tris.insert(tris.end(), sphere.tris.begin(), sphere.tris.end());
+
   while(true)
   {
     // We MUST poll for events - otherwise the window will freeze !
     if(window.pollForInputEvents(&event)) handleEvent(event);
     update();
-    draw();
+    draw(tris);
     // Need to render the frame at the end, or nothing actually gets shown on the screen !
     window.renderFrame();
   }
 }
 
-void draw()
+void draw(std::vector<ModelTriangle> tris)
 {
   window.clearPixels();
   model.display(window, cam);
+  sphere.display(window, cam);
   if(window.getMode() == 3) {
-    std::cout << "New Frame" <<std::endl;
-    cam.raytrace(model.tris, diffuseLight, ambientLight, window);
+    cam.raytrace(tris, diffuseLight, ambientLight, window);
   }
 }
 
