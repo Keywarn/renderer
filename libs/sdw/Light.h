@@ -24,7 +24,7 @@ class Light
     Colour calcDiffuse(RayTriangleIntersection intersect)  {
       glm::vec3 r = intersect.intersectionPoint - position;
       
-      float val = power * std::max(glm::dot(glm::normalize(r), intersect.intersectedTriangle.normal), 0.0f) / (4 * M_PI * std::pow(glm::length(r),2));
+      float val = power * std::max(glm::dot(glm::normalize(r), glm::normalize(intersect.intersectedTriangle.normal)), 0.0f) / (4 * M_PI * std::pow(glm::length(r),2));
       
       return (Colour(val * colour.red, val * colour.blue, val * colour.green));
     }
