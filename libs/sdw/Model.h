@@ -76,6 +76,14 @@ class Model
 
           tri.colour = curColour;
           tri.setNormal();
+          for (int i = 0; i < 3; i++) {
+            tri.vertices[i].normal += tri.normal;
+          }
+
+          for (int i = 0; i < vertices.size(); i++) {
+            glm::normalize(vertices[i].normal);
+          }
+          
           tris.push_back(tri);
         } 
       }
