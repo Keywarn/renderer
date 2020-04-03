@@ -71,19 +71,18 @@ class Model
 
           for (int i = 0; i < 3; i++) {
             std::string* index = split(toks[i+1], '/');
-            tri.vertices[i] = vertices[std::stoi(index[0])-1];
+            tri.vertices[i] = &vertices[std::stoi(index[0])-1];
           }
-
           tri.colour = curColour;
           tri.setNormal();
+
           for (int i = 0; i < 3; i++) {
-            tri.vertices[i].normal += tri.normal;
+            tri.vertices[i]->normal += tri.normal;
           }
 
           for (int i = 0; i < vertices.size(); i++) {
             glm::normalize(vertices[i].normal);
           }
-          
           tris.push_back(tri);
         } 
       }
@@ -96,7 +95,7 @@ class Model
         canTri.colour = tri.colour;
 
         for(int i = 0; i < 3; i++){
-          glm::vec3 camToP = ((tri.vertices[i].position) - cam.position) * cam.rotation;
+          glm::vec3 camToP = ((tri.vertices[i]->position) - cam.position) * cam.rotation;
           camToP.x = scale * cam.f * camToP.x / camToP.z;
           camToP.y = scale * cam.f * camToP.y / camToP.z;
           CanvasPoint canP = CanvasPoint(- camToP.x + window.width/2,camToP.y + window.height/2, -1/camToP.z);
