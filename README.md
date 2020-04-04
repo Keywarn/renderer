@@ -23,7 +23,7 @@ The final grade awarded will depend upon the exact combination and features and 
 - [x] Diffuse lighting (proximity and angle-of-incidence)
 
 ### 60 - some of
-- [ ] Gouraud shading
+- [x] Gouraud shading
 - [ ] Naive (non-perspective corrected) texture mapping
 - [ ] Simple animation (e.g. fly-through)
 - [ ] Some form of Physics (gravity, friction, bounce etc)
