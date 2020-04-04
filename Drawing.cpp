@@ -9,6 +9,7 @@
 #include <glm/glm.hpp>
 #include <fstream>
 #include <vector>
+#include <chrono>
 
 
 using namespace std;
@@ -38,14 +39,19 @@ int main(int argc, char* argv[])
   tris.insert(tris.end(), model.tris.begin(), model.tris.end());
   tris.insert(tris.end(), sphere.tris.begin(), sphere.tris.end());
 
+  std::cout.precision(5);
   while(true)
   {
+    auto start = std::chrono::system_clock::now();
     // We MUST poll for events - otherwise the window will freeze !
     if(window.pollForInputEvents(&event)) handleEvent(event);
     update();
     draw(tris);
     // Need to render the frame at the end, or nothing actually gets shown on the screen !
     window.renderFrame();
+    auto end = std::chrono::system_clock::now();
+    std::chrono::duration<double> fTime = end-start;
+    std::cout << "Frame Time: " << std::fixed <<fTime.count() << "s   FPS: " << std::fixed << 1/fTime.count()<< std::endl;
   }
 }
 
