@@ -9,16 +9,13 @@ class ModelVertex
   public:
     glm::vec3 position;
     glm::vec3 normal;
-    Colour colour;
 
     ModelVertex()
     {
     }
 
-    ModelVertex(glm::vec3 pos, Colour col) {
+    ModelVertex(glm::vec3 pos) {
       position = pos;
-      
-      colour = col;
       normal = glm::vec3(0,0,0);
     }
 };

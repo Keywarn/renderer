@@ -29,6 +29,14 @@ class Light
       return (Colour(val * colour.red, val * colour.blue, val * colour.green));
     }
 
+    Colour calcDiffuseVertex(ModelVertex* vertex)  {
+      glm::vec3 r = vertex->position - position;
+      
+      float val = power * std::max(glm::dot(glm::normalize(r), glm::normalize(vertex->normal)), 0.0f) / (4 * M_PI * std::pow(glm::length(r),2));
+      
+      return (Colour(val * colour.red, val * colour.blue, val * colour.green));
+    }
+
     Colour calcAmbient() {
       return (Colour(power * colour.red, power * colour.blue, power * colour.green));
     }

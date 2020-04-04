@@ -50,7 +50,7 @@ class Model
       while (getline(vertFile, str)) {
         std::string* toks = split(str, ' ');
         if (toks[0] == "v") {
-          vertices.push_back(ModelVertex(glm::vec3(std::stof(toks[1]),std::stof(toks[2]),std::stof(toks[3])) + position, Colour(255,255,255)));
+          vertices.push_back(ModelVertex(glm::vec3(std::stof(toks[1]),std::stof(toks[2]),std::stof(toks[3])) + position));
         }
       }
 

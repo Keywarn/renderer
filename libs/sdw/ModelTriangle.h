@@ -13,6 +13,7 @@ class ModelTriangle
     ModelVertex* vertices[3];
     glm::vec3 normal;
     Colour colour;
+    Colour vertColours[3];
 
     ModelTriangle() {
 

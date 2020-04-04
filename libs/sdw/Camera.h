@@ -117,6 +117,20 @@ class Camera
       }
     }
 
+    std::vector<ModelTriangle> preCompGouraud(std::vector<ModelTriangle> tris, Light diffuseLight, Light ambientLight) {
+      for (auto &tri : tris) {
+
+        Colour base = tri.colour;
+        Colour ambientCol = ambientLight.calcAmbient();
+        for(int i = 0; i < 3; i++) {
+          Colour diffuseCol = diffuseLight.calcDiffuseVertex(tri.vertices[i]);
+          tri.vertColours[i] = Colour(base,ambientCol, diffuseCol);
+        }
+      }
+
+      return tris;
+    }
+
 
     bool closestIntersection(glm::vec3 start, glm::vec3 dir, const std::vector<ModelTriangle> tris, RayTriangleIntersection& closest, float near) {
       bool result = false;

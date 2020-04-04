@@ -39,6 +39,8 @@ int main(int argc, char* argv[])
   tris.insert(tris.end(), model.tris.begin(), model.tris.end());
   tris.insert(tris.end(), sphere.tris.begin(), sphere.tris.end());
 
+  tris = cam.preCompGouraud(tris, diffuseLight, ambientLight);
+
   std::cout.precision(5);
   while(true)
   {
