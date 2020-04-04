@@ -87,7 +87,17 @@ class Camera
           RayTriangleIntersection closest;
           if(closestIntersection(position, dir, tris, closest, 0)) {
 
-            window.setPixelColour(window.width - x,y,closest.intersectedTriangle.vertColours[0].packed, 1/closest.distanceFromCamera);
+            Colour c0 = closest.intersectedTriangle.vertColours[0];
+            Colour c1 = closest.intersectedTriangle.vertColours[1];
+            Colour c2 = closest.intersectedTriangle.vertColours[2];
+
+            int red = c0.red + ((c1.red-c0.red) * closest.u) + ((c2.red-c0.red) * closest.v);
+            int green = c0.green + ((c1.green-c0.green) * closest.u) + ((c2.green-c0.green) * closest.v);
+            int blue = c0.blue + ((c1.blue-c0.blue) * closest.u) + ((c2.blue-c0.blue) * closest.v);
+
+            Colour lit = Colour(red, green, blue);
+
+            window.setPixelColour(window.width - x,y,lit.packed, 1/closest.distanceFromCamera);
           }
         }
       }
@@ -141,6 +151,8 @@ class Camera
         intersect.distanceFromCamera = x[0];
         intersect.intersectionPoint = tri.vertices[0]->position + (e1 * x[1]) + (e2 * x[2]);
         intersect.intersectedTriangle = tri;
+        intersect.u = x[1];
+        intersect.v = x[2];
         return true;
       }
       else {
