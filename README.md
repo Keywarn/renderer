@@ -1,6 +1,31 @@
 # renderer
 A rendering engine written in CPP.
 
+## Controls
+
+### Rendering Mode
+- 1 - Wireframe (Default)
+- 2 - Rasterised (No shdaing)
+- 3 - Raytraced (Flat)
+- 4 - Raytraced (Gouraud)
+- 5 - Raytraced (Phong)
+
+### Camera Controls
+- W - Forward
+- A - Left
+- S - Back
+- D - Right
+- E - Up
+- Q - Down
+- L/R arrow - Pan
+- Up/Down arrow - Tilt
+- Z/X - Roll
+
+- L - LookAt()
+
+### Other
+- P - export
+
 ## Indicative marking features
 
 The list below aims to provide an indication of the kinds of features required for each degree classification.
