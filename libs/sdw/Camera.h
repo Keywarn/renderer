@@ -21,6 +21,8 @@ class Camera
       position = pos;
       rotation = glm::mat3();
       f = foc;
+
+      lookAt(glm::vec3(0,0,0));
     }
 
     void lookAt(glm::vec3 target) {

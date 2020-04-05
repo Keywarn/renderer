@@ -74,14 +74,12 @@ void update()
 void handleEvent(SDL_Event event)
 {
   if(event.type == SDL_KEYDOWN) {
-    if(event.key.keysym.sym == SDLK_a) cam.position.x -= 1; 
-    else if(event.key.keysym.sym == SDLK_d) cam.position.x += 1;
-    else if(event.key.keysym.sym == SDLK_w) cam.position.z -= 1;
-    else if(event.key.keysym.sym == SDLK_s) cam.position.z += 1;
-    else if(event.key.keysym.sym == SDLK_q) cam.position.y -= 1;
-    else if(event.key.keysym.sym == SDLK_q) cam.position.y -= 1;
-    else if(event.key.keysym.sym == SDLK_e) cam.position.y += 1;
-    else if(event.key.keysym.sym == SDLK_q) cam.position.y -= 1;
+    if(event.key.keysym.sym == SDLK_a) cam.position -= cam.rotation[0]; 
+    else if(event.key.keysym.sym == SDLK_d) cam.position += cam.rotation[0];
+    else if(event.key.keysym.sym == SDLK_w) cam.position -= cam.rotation[2];
+    else if(event.key.keysym.sym == SDLK_s) cam.position += cam.rotation[2];
+    else if(event.key.keysym.sym == SDLK_e) cam.position += cam.rotation[1];
+    else if(event.key.keysym.sym == SDLK_q) cam.position -= cam.rotation[1];
     else if(event.key.keysym.sym == SDLK_l) cam.lookAt(model.position);
     else if(event.key.keysym.sym == SDLK_1) window.setMode(1);
     else if(event.key.keysym.sym == SDLK_2) window.setMode(2);
