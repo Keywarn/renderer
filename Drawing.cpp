@@ -68,17 +68,21 @@ void draw(std::vector<ModelTriangle> tris)
 
 void update()
 {
-  cam.lookAt(model.position);
   // Function for performing animation (shifting artifacts or moving the camera)
 }
 
 void handleEvent(SDL_Event event)
 {
   if(event.type == SDL_KEYDOWN) {
-    if(event.key.keysym.sym == SDLK_LEFT) cam.position.x -= 1; 
-    else if(event.key.keysym.sym == SDLK_RIGHT) cam.position.x += 1;
-    else if(event.key.keysym.sym == SDLK_UP) cam.position.y += 1;
-    else if(event.key.keysym.sym == SDLK_DOWN) cam.position.y -= 1;
+    if(event.key.keysym.sym == SDLK_a) cam.position.x -= 1; 
+    else if(event.key.keysym.sym == SDLK_d) cam.position.x += 1;
+    else if(event.key.keysym.sym == SDLK_w) cam.position.z -= 1;
+    else if(event.key.keysym.sym == SDLK_s) cam.position.z += 1;
+    else if(event.key.keysym.sym == SDLK_q) cam.position.y -= 1;
+    else if(event.key.keysym.sym == SDLK_q) cam.position.y -= 1;
+    else if(event.key.keysym.sym == SDLK_e) cam.position.y += 1;
+    else if(event.key.keysym.sym == SDLK_q) cam.position.y -= 1;
+    else if(event.key.keysym.sym == SDLK_l) cam.lookAt(model.position);
     else if(event.key.keysym.sym == SDLK_1) window.setMode(1);
     else if(event.key.keysym.sym == SDLK_2) window.setMode(2);
     else if(event.key.keysym.sym == SDLK_3) window.setMode(3);
