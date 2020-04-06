@@ -18,6 +18,11 @@ using namespace glm;
 #define WIDTH 480
 #define HEIGHT 395
 
+//Camera rotations
+#define PITCH glm::vec3(1,0,0)
+#define YAW   glm::vec3(0,1,0)
+#define ROLL   glm::vec3(0,0,1)
+
 void draw(std::vector<ModelTriangle> tris);
 void update();
 void handleEvent(SDL_Event event);
@@ -81,6 +86,12 @@ void handleEvent(SDL_Event event)
     else if(event.key.keysym.sym == SDLK_e) cam.position += cam.rotation[1];
     else if(event.key.keysym.sym == SDLK_q) cam.position -= cam.rotation[1];
     else if(event.key.keysym.sym == SDLK_l) cam.lookAt(model.position);
+    else if(event.key.keysym.sym == SDLK_UP) cam.rotate(0.1, PITCH);
+    else if(event.key.keysym.sym == SDLK_DOWN) cam.rotate(-0.1, PITCH);
+    else if(event.key.keysym.sym == SDLK_LEFT) cam.rotate(0.1, YAW);
+    else if(event.key.keysym.sym == SDLK_RIGHT) cam.rotate(-0.1, YAW);
+    else if(event.key.keysym.sym == SDLK_z) cam.rotate(0.1, ROLL);
+    else if(event.key.keysym.sym == SDLK_x) cam.rotate(-0.1, ROLL);
     else if(event.key.keysym.sym == SDLK_1) window.setMode(1);
     else if(event.key.keysym.sym == SDLK_2) window.setMode(2);
     else if(event.key.keysym.sym == SDLK_3) window.setMode(3);

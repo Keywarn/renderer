@@ -3,6 +3,7 @@
 #include "ModelTriangle.h"
 #include "Light.h"
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <string>
 #include <limits>
 
@@ -33,6 +34,54 @@ class Camera
       rotation[0] = right;
       rotation[1] = up;
       rotation[2] = forward;
+    }
+
+    void rotate(float angle, glm::vec3 axis) {
+      
+      glm::mat4 rot4 = convertRotation();
+      rot4 = glm::rotate(rot4, angle, axis);
+
+      rotation = convertBackRotation(rot4);
+
+    }
+
+    glm::mat4 convertRotation() {
+      glm::mat4 r = glm::mat4();
+
+      r[0][0] = rotation[0][0];
+      r[0][1] = rotation[0][1];
+      r[0][2] = rotation[0][2];
+      r[3][3] = position[0];
+
+      r[1][0] = rotation[1][0];
+      r[1][1] = rotation[1][1];
+      r[1][2] = rotation[1][2];
+      r[3][3] = position[1];
+
+      r[2][0] = rotation[2][0];
+      r[2][1] = rotation[2][1];
+      r[2][2] = rotation[2][2];
+      r[3][3] = position[2];
+
+      return(r);
+    }
+
+    glm::mat3 convertBackRotation(glm::mat4 rot4) {
+      glm::mat3 r = glm::mat3();
+
+      r[0][0] = rot4[0][0];
+      r[0][1] = rot4[0][1];
+      r[0][2] = rot4[0][2];
+
+      r[1][0] = rot4[1][0];
+      r[1][1] = rot4[1][1];
+      r[1][2] = rot4[1][2];
+
+      r[2][0] = rot4[2][0];
+      r[2][1] = rot4[2][1];
+      r[2][2] = rot4[2][2];
+
+      return(r);
     }
 
     void flat(const std::vector<ModelTriangle> tris, Light diffuseLight, Light ambientLight, DrawingWindow window) {
