@@ -40,7 +40,7 @@ The final grade awarded will depend upon the exact combination and features and 
 - [x] Saving of PPM files
 
 ### 50 - some of
-- [ ] Changing camera orientation (via orientation matrix)
+- [x] Changing camera orientation (via orientation matrix)
 - [x] LookAt
 - [x] Hard Shadow
 - [ ] Some form of generative geometry
