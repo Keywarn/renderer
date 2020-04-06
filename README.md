@@ -17,8 +17,8 @@ A rendering engine written in CPP.
 - D - Right
 - E - Up
 - Q - Down
-- L/R arrow - Pan
-- Up/Down arrow - Tilt
+- Left/Right - Pan
+- Up/Down - Tilt
 - Z/X - Roll
 
 - L - LookAt()
