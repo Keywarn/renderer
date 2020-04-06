@@ -88,6 +88,7 @@ class Camera
       float shadowBias = 0;
       bool shadows = true;
       
+      #pragma omp parallel for num_threads(2)
       //For each pixel in the image, create a ray
       for (int y = 0; y < window.height; y++) {
         for(int x = 0; x < window.width; x++){
@@ -129,7 +130,9 @@ class Camera
 
     void gouraud(const std::vector<ModelTriangle> tris, Light diffuseLight, Light ambientLight, DrawingWindow window) {  
       float shadowBias = 0;
-      bool shadows = true;    
+      bool shadows = true;  
+
+      #pragma omp parallel for num_threads(2)  
       //For each pixel in the image, create a ray
       for (int y = 0; y < window.height; y++) {
         for(int x = 0; x < window.width; x++){
