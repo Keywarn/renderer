@@ -29,8 +29,9 @@ void handleEvent(SDL_Event event);
 
 DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false, 1);
 Camera cam = Camera(glm::vec3(0,0,5), 200);
-Model model = Model("cornell-box",glm::vec3(0,0,0), 1);
-Model sphere = Model("sphere", glm::vec3(-1.8,0.9,-1.8), 1);
+Model model = Model("models/cornell-box",glm::vec3(0,0,0), 1);
+Model sphere = Model("models/sphere", glm::vec3(-1.8,0.9,-1.8), 1);
+Model logo = Model("models/logo",glm::vec3(0,2.9,-5.4), 1.5);
 Light diffuseLight = Light(glm::vec3(0, 3.8, -3), Colour(255,255,255), 50);
 Light ambientLight = Light(glm::vec3(0,0,0), Colour(255,255,255), 0.5f);
 
@@ -40,9 +41,10 @@ int main(int argc, char* argv[])
   cam.lookAt(model.position);
 
   std::vector<ModelTriangle> tris;
-  tris.reserve(sphere.tris.size() + model.tris.size());
+  tris.reserve(sphere.tris.size() + model.tris.size() + logo.tris.size());
   tris.insert(tris.end(), model.tris.begin(), model.tris.end());
   tris.insert(tris.end(), sphere.tris.begin(), sphere.tris.end());
+  tris.insert(tris.end(), logo.tris.begin(), logo.tris.end());
 
   tris = cam.preCompGouraud(tris, diffuseLight, ambientLight);
 
@@ -67,6 +69,7 @@ void draw(std::vector<ModelTriangle> tris)
   window.clearPixels();
   model.display(window, cam);
   sphere.display(window, cam);
+  logo.display(window, cam);
   if(window.getMode() == 3) cam.flat(tris, diffuseLight, ambientLight, window);
   else if(window.getMode() == 4) cam.gouraud(tris, diffuseLight, ambientLight, window);
 }
