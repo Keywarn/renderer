@@ -16,7 +16,7 @@ class ModelTriangle
     Colour vertColours[3];
 
     bool textured;
-    Image texture;
+    Image* texture;
     glm::vec2 texPoints[3];
 
     ModelTriangle() {
@@ -33,7 +33,7 @@ class ModelTriangle
       colour = triColour;
     }
 
-    ModelTriangle(ModelVertex* v0, ModelVertex* v1, ModelVertex* v2, Image tex, glm::vec2 tP0, glm::vec2 tP1, glm::vec2 tP2, Colour triColour){
+    ModelTriangle(ModelVertex* v0, ModelVertex* v1, ModelVertex* v2, Image* tex, glm::vec2 tP0, glm::vec2 tP1, glm::vec2 tP2, Colour triColour){
       vertices[0] = v0;
       vertices[1] = v1;
       vertices[2] = v2;
