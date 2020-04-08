@@ -108,10 +108,13 @@ class Camera
               glm::vec2 p1 = closest.intersectedTriangle.texPoints[1];
               glm::vec2 p2 = closest.intersectedTriangle.texPoints[2];
 
-              int x = p0.x + ((p1.x-p0.x) * closest.u) + ((p2.x-p0.x) * closest.v);
-              int y = p0.y + ((p1.y-p0.y) * closest.u) + ((p2.y-p0.y) * closest.v);
+              float u = p0.x + ((p1.x-p0.x) * closest.u) + ((p2.x-p0.x) * closest.v);
+              float v = p0.y + ((p1.y-p0.y) * closest.u) + ((p2.y-p0.y) * closest.v);
+              
+              int x = u * closest.intersectedTriangle.texture->width;
+              int y = v * closest.intersectedTriangle.texture->height;
 
-              base = closest.intersectedTriangle.texture->data[y][x];           
+              base = closest.intersectedTriangle.texture->data[y][x];        
             } 
 
             //Check for object blocking direct illumination
