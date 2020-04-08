@@ -14,6 +14,7 @@ class Model
 {
   public:
     std::vector<ModelVertex > vertices;
+    std::vector<glm::vec2 > texPoints;
     std::vector<ModelTriangle> tris;
     std::unordered_map<std::string, Colour> mats;
     float scale;
@@ -64,6 +65,9 @@ class Model
         std::string* toks = split(str, ' ');
         if (toks[0] == "v") {
           vertices.push_back(ModelVertex(glm::vec3(std::stof(toks[1]),std::stof(toks[2]),std::stof(toks[3])) + position));
+        }
+        if (toks[0] == "vt") {
+          texPoints.push_back(glm::vec2(std::stof(toks[1]),std::stof(toks[2])));
         }
       }
 
