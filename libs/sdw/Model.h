@@ -89,6 +89,7 @@ class Model
           for (int i = 0; i < 3; i++) {
             std::string* index = split(toks[i+1], '/');
             tri.vertices[i] = &vertices[std::stoi(index[0])-1];
+            if(textured) tri.texPoints[i] = texPoints[std::stoi(index[1])-1];
           }
           tri.colour = curColour;
           tri.setNormal();

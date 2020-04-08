@@ -14,6 +14,7 @@ class ModelTriangle
     glm::vec3 normal;
     Colour colour;
     Colour vertColours[3];
+    glm::vec2 texPoints[3];
 
     ModelTriangle() {
 
@@ -23,6 +24,18 @@ class ModelTriangle
       vertices[0] = v0;
       vertices[1] = v1;
       vertices[2] = v2;
+
+      colour = triColour;
+    }
+
+    ModelTriangle(ModelVertex* v0, ModelVertex* v1, ModelVertex* v2, glm::vec2 tP0, glm::vec2 tP1, glm::vec2 tP2, Colour triColour){
+      vertices[0] = v0;
+      vertices[1] = v1;
+      vertices[2] = v2;
+
+      texPoints[0] = tP0;
+      texPoints[1] = tP1;
+      texPoints[2] = tP2;
 
       colour = triColour;
     }
