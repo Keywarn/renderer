@@ -49,7 +49,7 @@ The final grade awarded will depend upon the exact combination and features and 
 
 ### 60 - some of
 - [x] Gouraud shading
-- [ ] Naive (non-perspective corrected) texture mapping
+- [x] Naive (non-perspective corrected) texture mapping
 - [ ] Simple animation (e.g. fly-through)
 - [ ] Some form of Physics (gravity, friction, bounce etc)
 - [ ] Basic culling (far-plane, near-plan, back-face)
