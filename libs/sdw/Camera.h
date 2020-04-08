@@ -103,8 +103,16 @@ class Camera
             //Get base colour of triangle
             Colour base = closest.intersectedTriangle.colour;
 
-            if(closest.intersectedTriangle.textured) base = closest.intersectedTriangle.texture->data[closest.intersectedTriangle.texPoints[0].y][closest.intersectedTriangle.texPoints[0].x];
-            
+            if(closest.intersectedTriangle.textured) {
+              glm::vec2 p0 = closest.intersectedTriangle.texPoints[0];
+              glm::vec2 p1 = closest.intersectedTriangle.texPoints[1];
+              glm::vec2 p2 = closest.intersectedTriangle.texPoints[2];
+
+              int x = p0.x + ((p1.x-p0.x) * closest.u) + ((p2.x-p0.x) * closest.v);
+              int y = p0.y + ((p1.y-p0.y) * closest.u) + ((p2.y-p0.y) * closest.v);
+
+              base = closest.intersectedTriangle.texture->data[y][x];           
+            } 
             //Check for object blocking direct illumination
             Colour diffuseCol = diffuseLight.calcDiffuse(closest);
             Colour ambientCol = ambientLight.calcAmbient();

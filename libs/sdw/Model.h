@@ -25,6 +25,7 @@ class Model
 
     Model(){
       scale = 1;
+      textured = false;
     }
 
     Model(std::string mName,glm::vec3 pos, float sf){
@@ -36,6 +37,8 @@ class Model
       matFile.open(mName + ".mtl", std::ios::binary);
 
       std::string str;
+
+      textured = false;
 
       //Read in the materials file
       while (getline(matFile, str)) {
