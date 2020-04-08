@@ -103,7 +103,7 @@ class Camera
             //Get base colour of triangle
             Colour base = closest.intersectedTriangle.colour;
 
-            if(closest.intersectedTriangle.textured) base = closest.intersectedTriangle.texture->data[0][1];
+            if(closest.intersectedTriangle.textured) base = closest.intersectedTriangle.texture->data[closest.intersectedTriangle.texPoints[0].y][closest.intersectedTriangle.texPoints[0].x];
             
             //Check for object blocking direct illumination
             Colour diffuseCol = diffuseLight.calcDiffuse(closest);

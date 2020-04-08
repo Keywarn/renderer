@@ -20,7 +20,7 @@ class ModelTriangle
     glm::vec2 texPoints[3];
 
     ModelTriangle() {
-
+      textured = false;
     }
 
     ModelTriangle(ModelVertex* v0, ModelVertex* v1, ModelVertex* v2, Colour triColour){
