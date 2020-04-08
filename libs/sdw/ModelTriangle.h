@@ -14,6 +14,8 @@ class ModelTriangle
     glm::vec3 normal;
     Colour colour;
     Colour vertColours[3];
+
+    bool textured;
     glm::vec2 texPoints[3];
 
     ModelTriangle() {
@@ -25,6 +27,8 @@ class ModelTriangle
       vertices[1] = v1;
       vertices[2] = v2;
 
+      textured = false;
+
       colour = triColour;
     }
 
@@ -32,6 +36,8 @@ class ModelTriangle
       vertices[0] = v0;
       vertices[1] = v1;
       vertices[2] = v2;
+
+      textured = true;
 
       texPoints[0] = tP0;
       texPoints[1] = tP1;

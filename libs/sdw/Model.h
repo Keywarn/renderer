@@ -85,6 +85,7 @@ class Model
 
         if (toks[0] == "f") {
           ModelTriangle tri;
+          if(textured) tri.textured = true;
 
           for (int i = 0; i < 3; i++) {
             std::string* index = split(toks[i+1], '/');
