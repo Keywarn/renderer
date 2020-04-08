@@ -113,6 +113,7 @@ class Camera
 
               base = closest.intersectedTriangle.texture->data[y][x];           
             } 
+
             //Check for object blocking direct illumination
             Colour diffuseCol = diffuseLight.calcDiffuse(closest);
             Colour ambientCol = ambientLight.calcAmbient();
