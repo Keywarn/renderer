@@ -40,7 +40,9 @@ class Model
           std::string matName = toks[1];
           getline(matFile, str);
           toks = split(str, ' ');
-          mats[matName] = Colour(std::stof(toks[1])*255, std::stof(toks[2])*255, std::stof(toks[3])*255);
+          if(toks[0] == "Kd") {
+            mats[matName] = Colour(std::stof(toks[1])*255, std::stof(toks[2])*255, std::stof(toks[3])*255);
+          }
         }
       }
       //Sweep for vertices
