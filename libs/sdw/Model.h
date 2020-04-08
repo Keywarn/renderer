@@ -50,7 +50,7 @@ class Model
           //If it has a texture
           else if(toks[0] == "map_Kd") {
             //Set default colour to grey for non-textured modes
-            mats[matName] = Colour(175,175,175);
+            mats[matName] = Colour(75,75,75);
             textured = true;
             texture = Image("models/" + toks[1]);
           }
