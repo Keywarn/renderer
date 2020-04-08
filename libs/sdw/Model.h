@@ -19,6 +19,9 @@ class Model
     float scale;
     glm::vec3 position;
 
+    bool textured;
+    Image texture;
+
     Model(){
       scale = 1;
     }
@@ -40,8 +43,16 @@ class Model
           std::string matName = toks[1];
           getline(matFile, str);
           toks = split(str, ' ');
+          //If it is a plain colour
           if(toks[0] == "Kd") {
             mats[matName] = Colour(std::stof(toks[1])*255, std::stof(toks[2])*255, std::stof(toks[3])*255);
+          }
+          //If it has a texture
+          else if(toks[0] == "map_Kd") {
+            //Set default colour to grey for non-textured modes
+            mats[matName] = Colour(175,175,175);
+            textured = true;
+            texture = Image("models/" + toks[1]);
           }
         }
       }
