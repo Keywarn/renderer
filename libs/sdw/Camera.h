@@ -147,7 +147,7 @@ class Camera
               }
             }
 
-            Colour lit = Colour(base, ambientCol, diffuseCol);
+            Colour lit = Colour(base, ambientCol, diffuseCol, closest.intersectedTriangle.material.albedo);
 
             window.setPixelColour(window.width - x,y,lit.packed, 1/closest.distanceFromCamera);
           }
@@ -191,7 +191,7 @@ class Camera
                   Colour diffuseCol = Colour(0,0,0);
                   Colour ambientCol = ambientLight.calcAmbient();
 
-                  lit = Colour(lit, diffuseCol, ambientCol);
+                  lit = Colour(lit, diffuseCol, ambientCol, 1);
                 }
               }
             }
@@ -209,7 +209,7 @@ class Camera
         Colour ambientCol = ambientLight.calcAmbient();
         for(int i = 0; i < 3; i++) {
           Colour diffuseCol = diffuseLight.calcDiffuseVertex(tri.vertices[i]);
-          tri.vertColours[i] = Colour(base,ambientCol, diffuseCol);
+          tri.vertColours[i] = Colour(base,ambientCol, diffuseCol, tri.material.albedo);
         }
       }
 

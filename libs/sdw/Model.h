@@ -47,7 +47,7 @@ class Model
         if (toks[0] == "newmtl") {
           std::string matName = toks[1];
 
-          mats[matName] = Material();
+          mats[matName] = Material(matName);
           getline(matFile, str);
           toks = split(str, ' ');
           //If it is a plain colour
