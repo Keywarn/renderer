@@ -96,16 +96,17 @@ class Camera
         for(int x = 0; x < window.width; x++){
 
           Colour base = Colour(0,0,0);
+          bool calc = false;
 
+          RayTriangleIntersection closest;
           for (int n = 0; n < samples; n++) {
             //Direction from the camera to the pixel in the image plane
             glm::vec3 dir = rotation * glm::normalize(position - glm::vec3(x-window.width/2, y-window.height/2, f));
             
             //Get the closest intersection of the ray
-            RayTriangleIntersection closest;
             if(closestIntersection(position, dir, tris, closest, 0, 100)) {
 
-
+              calc = true;
               //Get base colour of triangle
               if(!closest.intersectedTriangle.textured) base = base + closest.intersectedTriangle.colour;
               else {
@@ -121,8 +122,11 @@ class Camera
 
                 base = base + closest.intersectedTriangle.texture->data[y][x];        
               } 
-
             }
+          }
+          base = base / (float) samples;
+
+          if(calc) {
 
             //Check for object blocking direct illumination
             Colour diffuseCol = diffuseLight.calcDiffuse(closest);
