@@ -9,6 +9,7 @@
 #include "Colour.h"
 #include "Utils.h"
 #include "Camera.h"
+#include "Material.h"
 
 class Model
 {
@@ -16,7 +17,7 @@ class Model
     std::vector<ModelVertex > vertices;
     std::vector<glm::vec2 > texPoints;
     std::vector<ModelTriangle> tris;
-    std::unordered_map<std::string, Colour> mats;
+    std::unordered_map<std::string, Material> mats;
     float scale;
     glm::vec3 position;
 
@@ -45,16 +46,18 @@ class Model
         std::string* toks = split(str, ' ');
         if (toks[0] == "newmtl") {
           std::string matName = toks[1];
+
+          mats[matName] = Material();
           getline(matFile, str);
           toks = split(str, ' ');
           //If it is a plain colour
           if(toks[0] == "Kd") {
-            mats[matName] = Colour(std::stof(toks[1])*255, std::stof(toks[2])*255, std::stof(toks[3])*255);
+            mats[matName].diffuse = Colour(std::stof(toks[1])*255, std::stof(toks[2])*255, std::stof(toks[3])*255);
           }
           //If it has a texture
           else if(toks[0] == "map_Kd") {
             //Set default colour to grey for non-textured modes
-            mats[matName] = Colour(75,75,75);
+            mats[matName].diffuse = Colour(75,75,75);
             textured = true;
             texture = Image("models/" + toks[1]);
           }
@@ -78,12 +81,12 @@ class Model
       std::ifstream triFile;
       triFile.open(mName + ".obj", std::ios::binary);
       
-      Colour curColour;
+      Material curMaterial;
       while (getline(triFile, str)) {
         
         std::string* toks = split(str, ' ');
         if (toks[0] == "usemtl") {
-          curColour = mats[toks[1]];
+          curMaterial = mats[toks[1]];
         }
 
         if (toks[0] == "f") {
@@ -99,7 +102,7 @@ class Model
             if(textured) tri.texPoints[i] = texPoints[std::stoi(indices[1])-1];
           }
 
-          tri.colour = curColour;
+          tri.material = curMaterial;
           tri.setNormal();
 
           for (int i = 0; i < 3; i++) {
@@ -118,7 +121,7 @@ class Model
       for (auto &tri : tris) // access by reference to avoid copying
       {  
         CanvasTriangle canTri;
-        canTri.colour = tri.colour;
+        canTri.colour = tri.material.diffuse;
 
         for(int i = 0; i < 3; i++){
           glm::vec3 camToP = ((tri.vertices[i]->position) - cam.position) * cam.rotation;

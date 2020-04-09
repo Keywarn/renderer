@@ -5,6 +5,7 @@
 #include "Utils.h"
 #include "CanvasTriangle.h"
 #include "ModelVertex.h"
+#include "Material.h"
 #include <string>
 
 class ModelTriangle
@@ -12,7 +13,7 @@ class ModelTriangle
   public:
     ModelVertex* vertices[3];
     glm::vec3 normal;
-    Colour colour;
+    Material material;
     Colour vertColours[3];
 
     bool textured;
@@ -23,17 +24,17 @@ class ModelTriangle
       textured = false;
     }
 
-    ModelTriangle(ModelVertex* v0, ModelVertex* v1, ModelVertex* v2, Colour triColour){
+    ModelTriangle(ModelVertex* v0, ModelVertex* v1, ModelVertex* v2, Material mat){
       vertices[0] = v0;
       vertices[1] = v1;
       vertices[2] = v2;
 
       textured = false;
 
-      colour = triColour;
+      material = mat;
     }
 
-    ModelTriangle(ModelVertex* v0, ModelVertex* v1, ModelVertex* v2, Image* tex, glm::vec2 tP0, glm::vec2 tP1, glm::vec2 tP2, Colour triColour){
+    ModelTriangle(ModelVertex* v0, ModelVertex* v1, ModelVertex* v2, Image* tex, glm::vec2 tP0, glm::vec2 tP1, glm::vec2 tP2, Material mat){
       vertices[0] = v0;
       vertices[1] = v1;
       vertices[2] = v2;
@@ -45,7 +46,7 @@ class ModelTriangle
       texPoints[1] = tP1;
       texPoints[2] = tP2;
 
-      colour = triColour;
+      material = mat;
     }
 
     void setNormal() {

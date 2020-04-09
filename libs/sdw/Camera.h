@@ -110,7 +110,7 @@ class Camera
 
               calc = true;
               //Get base colour of triangle
-              if(!closest.intersectedTriangle.textured) base = base + closest.intersectedTriangle.colour;
+              if(!closest.intersectedTriangle.textured) base = base + closest.intersectedTriangle.material.diffuse;
               else {
                 glm::vec2 p0 = closest.intersectedTriangle.texPoints[0];
                 glm::vec2 p1 = closest.intersectedTriangle.texPoints[1];
@@ -205,7 +205,7 @@ class Camera
     std::vector<ModelTriangle> preCompGouraud(std::vector<ModelTriangle> tris, Light diffuseLight, Light ambientLight) {
       for (auto &tri : tris) {
 
-        Colour base = tri.colour;
+        Colour base = tri.material.diffuse;
         Colour ambientCol = ambientLight.calcAmbient();
         for(int i = 0; i < 3; i++) {
           Colour diffuseCol = diffuseLight.calcDiffuseVertex(tri.vertices[i]);
