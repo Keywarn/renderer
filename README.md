@@ -53,7 +53,7 @@ The final grade awarded will depend upon the exact combination and features and 
 - [x] Simple animation (e.g. fly-through)
 - [ ] Some form of Physics (gravity, friction, bounce etc)
 - [x] Basic culling (far-plane, near-plan, back-face)
-- [ ] Basic anti-aliasing
+- [x] Basic anti-aliasing
 
 ### 70 - some of
 - [ ] Phong Shading
