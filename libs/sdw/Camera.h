@@ -13,15 +13,17 @@ class Camera
     glm::vec3 position;
     glm::mat3 rotation;
     float f;
+    int samples;
 
     Camera()
     {
     }
 
-    Camera(glm::vec3 pos, float foc){
+    Camera(glm::vec3 pos, float foc, int ns){
       position = pos;
       rotation = glm::mat3();
       f = foc;
+      samples = ns;
 
       lookAt(glm::vec3(0,0,0));
     }
@@ -93,29 +95,34 @@ class Camera
       for (int y = 0; y < window.height; y++) {
         for(int x = 0; x < window.width; x++){
 
-          //Direction from the camera to the pixel in the image plane
-          glm::vec3 dir = rotation * glm::normalize(position - glm::vec3(x-window.width/2, y-window.height/2, f));
-          
-          //Get the closest intersection of the ray
-          RayTriangleIntersection closest;
-          if(closestIntersection(position, dir, tris, closest, 0, 100)) {
+          Colour base = Colour(0,0,0);
 
-            //Get base colour of triangle
-            Colour base = closest.intersectedTriangle.colour;
+          for (int n = 0; n < samples; n++) {
+            //Direction from the camera to the pixel in the image plane
+            glm::vec3 dir = rotation * glm::normalize(position - glm::vec3(x-window.width/2, y-window.height/2, f));
+            
+            //Get the closest intersection of the ray
+            RayTriangleIntersection closest;
+            if(closestIntersection(position, dir, tris, closest, 0, 100)) {
 
-            if(closest.intersectedTriangle.textured) {
-              glm::vec2 p0 = closest.intersectedTriangle.texPoints[0];
-              glm::vec2 p1 = closest.intersectedTriangle.texPoints[1];
-              glm::vec2 p2 = closest.intersectedTriangle.texPoints[2];
 
-              float u = p0.x + ((p1.x-p0.x) * closest.u) + ((p2.x-p0.x) * closest.v);
-              float v = p0.y + ((p1.y-p0.y) * closest.u) + ((p2.y-p0.y) * closest.v);
-              
-              int x = u * closest.intersectedTriangle.texture->width;
-              int y = v * closest.intersectedTriangle.texture->height;
+              //Get base colour of triangle
+              if(!closest.intersectedTriangle.textured) base += closest.intersectedTriangle.colour;
+              else {
+                glm::vec2 p0 = closest.intersectedTriangle.texPoints[0];
+                glm::vec2 p1 = closest.intersectedTriangle.texPoints[1];
+                glm::vec2 p2 = closest.intersectedTriangle.texPoints[2];
 
-              base = closest.intersectedTriangle.texture->data[y][x];        
-            } 
+                float u = p0.x + ((p1.x-p0.x) * closest.u) + ((p2.x-p0.x) * closest.v);
+                float v = p0.y + ((p1.y-p0.y) * closest.u) + ((p2.y-p0.y) * closest.v);
+                
+                int x = u * closest.intersectedTriangle.texture->width;
+                int y = v * closest.intersectedTriangle.texture->height;
+
+                base += closest.intersectedTriangle.texture->data[y][x];        
+              } 
+
+            }
 
             //Check for object blocking direct illumination
             Colour diffuseCol = diffuseLight.calcDiffuse(closest);
