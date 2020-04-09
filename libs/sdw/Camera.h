@@ -107,7 +107,7 @@ class Camera
 
 
               //Get base colour of triangle
-              if(!closest.intersectedTriangle.textured) base += closest.intersectedTriangle.colour;
+              if(!closest.intersectedTriangle.textured) base = base + closest.intersectedTriangle.colour;
               else {
                 glm::vec2 p0 = closest.intersectedTriangle.texPoints[0];
                 glm::vec2 p1 = closest.intersectedTriangle.texPoints[1];
@@ -119,7 +119,7 @@ class Camera
                 int x = u * closest.intersectedTriangle.texture->width;
                 int y = v * closest.intersectedTriangle.texture->height;
 
-                base += closest.intersectedTriangle.texture->data[y][x];        
+                base = base + closest.intersectedTriangle.texture->data[y][x];        
               } 
 
             }

@@ -52,6 +52,10 @@ class Colour
 
       packed = (255<<24) + (red<<16) + (green<<8) + blue;
     }
+
+    Colour operator+ (Colour param) {
+      return Colour(red + param.red, green + param.green, blue + param.blue);
+    }
 };
 
 std::ostream& operator<<(std::ostream& os, const Colour& colour)
