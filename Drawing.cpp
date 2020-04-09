@@ -39,6 +39,7 @@ int main(int argc, char* argv[])
 {
   SDL_Event event;
   cam.lookAt(model.position);
+  cam.position.y += 2.5;
 
   std::vector<ModelTriangle> tris;
   tris.reserve(sphere.tris.size() + model.tris.size() + logo.tris.size());

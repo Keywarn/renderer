@@ -98,7 +98,7 @@ class Camera
           
           //Get the closest intersection of the ray
           RayTriangleIntersection closest;
-          if(closestIntersection(position, dir, tris, closest, 0)) {
+          if(closestIntersection(position, dir, tris, closest, 0, 100)) {
 
             //Get base colour of triangle
             Colour base = closest.intersectedTriangle.colour;
@@ -126,7 +126,7 @@ class Camera
             if(shadows) {
               RayTriangleIntersection lightBlock;
               glm::vec3 shadowStart = closest.intersectionPoint + glm::normalize(closest.intersectedTriangle.normal) * shadowBias;
-              if(closestIntersection(shadowStart,glm::normalize(diffuseLight.position - closest.intersectionPoint), tris, lightBlock, 0.1f)){
+              if(closestIntersection(shadowStart,glm::normalize(diffuseLight.position - closest.intersectionPoint), tris, lightBlock, 0.1f, 100)){
                 //If distance to other object is less than distance to light, in shadow
                 if(glm::length(lightBlock.intersectionPoint - closest.intersectionPoint) < glm::length(diffuseLight.position - closest.intersectionPoint)){
                   diffuseCol = Colour(0,0,0);
@@ -156,7 +156,7 @@ class Camera
           
           //Get the closest intersection of the ray
           RayTriangleIntersection closest;
-          if(closestIntersection(position, dir, tris, closest, 0)) {
+          if(closestIntersection(position, dir, tris, closest, 0, 100)) {
 
             Colour c0 = closest.intersectedTriangle.vertColours[0];
             Colour c1 = closest.intersectedTriangle.vertColours[1];
@@ -172,7 +172,7 @@ class Camera
               RayTriangleIntersection lightBlock;
               glm::vec3 shadowStart = closest.intersectionPoint + glm::normalize(closest.intersectedTriangle.normal) * shadowBias;
 
-              if(closestIntersection(shadowStart,glm::normalize(diffuseLight.position - closest.intersectionPoint), tris, lightBlock, 0.1f)){
+              if(closestIntersection(shadowStart,glm::normalize(diffuseLight.position - closest.intersectionPoint), tris, lightBlock, 0.1f, 100)){
                 //If distance to other object is less than distance to light, in shadow
                 if(glm::length(lightBlock.intersectionPoint - closest.intersectionPoint) < glm::length(diffuseLight.position - closest.intersectionPoint)){
                   Colour diffuseCol = Colour(0,0,0);
@@ -204,7 +204,7 @@ class Camera
     }
 
 
-    bool closestIntersection(glm::vec3 start, glm::vec3 dir, const std::vector<ModelTriangle> tris, RayTriangleIntersection& closest, float near) {
+    bool closestIntersection(glm::vec3 start, glm::vec3 dir, const std::vector<ModelTriangle> tris, RayTriangleIntersection& closest, float near, float far) {
       bool result = false;
       closest.distanceFromCamera = std::numeric_limits<float>::max();
       RayTriangleIntersection currentInter;
@@ -214,7 +214,7 @@ class Camera
         if(intersectRay(tri, start, dir, currentInter)) {
           result = true;
 
-          if(currentInter.distanceFromCamera < closest.distanceFromCamera && currentInter.distanceFromCamera > near) {
+          if(currentInter.distanceFromCamera < closest.distanceFromCamera && currentInter.distanceFromCamera > near && currentInter.distanceFromCamera < far) {
             closest = currentInter;
           }
         }
