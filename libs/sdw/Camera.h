@@ -100,8 +100,10 @@ class Camera
 
           RayTriangleIntersection closest;
           for (int n = 0; n < samples; n++) {
+            float u = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+            float v = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
             //Direction from the camera to the pixel in the image plane
-            glm::vec3 dir = rotation * glm::normalize(position - glm::vec3(x-window.width/2, y-window.height/2, f));
+            glm::vec3 dir = rotation * glm::normalize(position - glm::vec3((x+u)-window.width/2, (y+v)-window.height/2, f));
             
             //Get the closest intersection of the ray
             if(closestIntersection(position, dir, tris, closest, 0, 100)) {
