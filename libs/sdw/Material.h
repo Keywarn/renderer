@@ -11,6 +11,7 @@ class Material
 
     Material()
     {
+      name = "";
       albedo = 1;
     }
 

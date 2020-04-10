@@ -41,26 +41,31 @@ class Model
 
       textured = false;
 
+      Material curMaterial = Material();
       //Read in the materials file
       while (getline(matFile, str)) {
         std::string* toks = split(str, ' ');
+        //If new material, add the old one and continue
         if (toks[0] == "newmtl") {
-          std::string matName = toks[1];
-
-          mats[matName] = Material(matName);
-          getline(matFile, str);
-          toks = split(str, ' ');
-          //If it is a plain colour
-          if(toks[0] == "Kd") {
-            mats[matName].diffuse = Colour(std::stof(toks[1])*255, std::stof(toks[2])*255, std::stof(toks[3])*255);
+          if(curMaterial.name != "") {
+            mats[curMaterial.name] = curMaterial;
           }
-          //If it has a texture
-          else if(toks[0] == "map_Kd") {
-            //Set default colour to grey for non-textured modes
-            mats[matName].diffuse = Colour(75,75,75);
-            textured = true;
-            texture = Image("models/" + toks[1]);
-          }
+          curMaterial = Material(toks[1]);
+        }
+        //If it is a plain colour
+        else if(toks[0] == "Kd") {
+          curMaterial.diffuse = Colour(std::stof(toks[1])*255, std::stof(toks[2])*255, std::stof(toks[3])*255);
+        }
+        //If it has a texture
+        else if(toks[0] == "map_Kd") {
+          //Set default colour to grey for non-textured modes
+          curMaterial.diffuse = Colour(75,75,75);
+          textured = true;
+          texture = Image("models/" + toks[1]);
+        }
+        //Specular copmonent
+        else if(toks[0] == "Ks") {
+          curMaterial.specular = Colour(std::stof(toks[1])*255, std::stof(toks[2])*255, std::stof(toks[3])*255);
         }
       }
       //Sweep for vertices
@@ -77,16 +82,18 @@ class Model
         }
       }
 
+      mats[curMaterial.name] = curMaterial;
+
       //Sweep for faces and material assignments
       std::ifstream triFile;
       triFile.open(mName + ".obj", std::ios::binary);
       
-      Material curMaterial;
+      Material workMaterial;
       while (getline(triFile, str)) {
         
         std::string* toks = split(str, ' ');
         if (toks[0] == "usemtl") {
-          curMaterial = mats[toks[1]];
+          workMaterial = mats[toks[1]];
         }
 
         if (toks[0] == "f") {
@@ -102,7 +109,7 @@ class Model
             if(textured) tri.texPoints[i] = texPoints[std::stoi(indices[1])-1];
           }
 
-          tri.material = curMaterial;
+          tri.material = workMaterial;
           tri.setNormal();
 
           for (int i = 0; i < 3; i++) {
