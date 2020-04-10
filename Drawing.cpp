@@ -35,7 +35,7 @@ void update();
 void handleEvent(SDL_Event event);
 
 DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false, 1);
-Camera cam = Camera(glm::vec3(0,0,5), 200, RGSS);
+Camera cam = Camera(glm::vec3(0,0,5), 200, NO_AA);
 Model model = Model("models/cornell-box",glm::vec3(0,0,0), 1);
 Model sphere = Model("models/sphere", glm::vec3(-1.8,0.9,-1.8), 1);
 Model logo = Model("models/logo",glm::vec3(0,2.9,-5.4), 1.5);
@@ -80,6 +80,7 @@ void draw(std::vector<ModelTriangle> tris)
   logo.display(window, cam);
   if(window.getMode() == 3) cam.flat(tris, diffuseLight, ambientLight, window);
   else if(window.getMode() == 4) cam.gouraud(tris, diffuseLight, ambientLight, window);
+  else if(window.getMode() == 5) cam.phong(tris, diffuseLight, ambientLight, window);
 }
 
 void update()
@@ -107,6 +108,7 @@ void handleEvent(SDL_Event event)
     else if(event.key.keysym.sym == SDLK_2) window.setMode(2);
     else if(event.key.keysym.sym == SDLK_3) window.setMode(3);
     else if(event.key.keysym.sym == SDLK_4) window.setMode(4);
+    else if(event.key.keysym.sym == SDLK_5) window.setMode(5);
     //else if(event.key.keysym.sym == SDLK_u) CanvasTriangle(CanvasPoint(rand()%WIDTH, rand()%HEIGHT), CanvasPoint(rand()%WIDTH,rand()%HEIGHT), CanvasPoint(rand()%WIDTH, rand()%HEIGHT), Colour(rand()%WIDTH, rand()%HEIGHT, rand()%255)).outline(window);
     //else if(event.key.keysym.sym == SDLK_f) CanvasTriangle(CanvasPoint(rand()%WIDTH, rand()%HEIGHT), CanvasPoint(rand()%WIDTH,rand()%HEIGHT), CanvasPoint(rand()%WIDTH, rand()%HEIGHT), Colour(rand()%WIDTH, rand()%HEIGHT, rand()%255)).fill(window);
     else if(event.key.keysym.sym == SDLK_p) window.writeImage("export");

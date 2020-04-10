@@ -217,6 +217,74 @@ class Camera
       return tris;
     }
 
+    void phong(const std::vector<ModelTriangle> tris, Light diffuseLight, Light ambientLight, DrawingWindow window) {
+      float shadowBias = 0;
+      bool shadows = true;
+      
+      #pragma omp parallel for num_threads(2)
+      //For each pixel in the image, create a ray
+      for (int y = 0; y < window.height; y++) {
+        for(int x = 0; x < window.width; x++){
+
+          Colour base = Colour(0,0,0);
+          bool calc = false;
+
+          RayTriangleIntersection closest;
+          for (int n = 0; n < samples.size(); n++) {
+            float u = samples[n].x;
+            float v = samples[n].y;
+            //Direction from the camera to the pixel in the image plane
+            glm::vec3 dir = rotation * glm::normalize(position - glm::vec3((x+u)-window.width/2, (y+v)-window.height/2, f));
+            
+            //Get the closest intersection of the ray
+            if(closestIntersection(position, dir, tris, closest, 0, 100)) {
+
+              calc = true;
+              //Get base colour of triangle
+              if(!closest.intersectedTriangle.textured) base = base + closest.intersectedTriangle.material.diffuse;
+              else {
+                glm::vec2 p0 = closest.intersectedTriangle.texPoints[0];
+                glm::vec2 p1 = closest.intersectedTriangle.texPoints[1];
+                glm::vec2 p2 = closest.intersectedTriangle.texPoints[2];
+
+                float u = p0.x + ((p1.x-p0.x) * closest.u) + ((p2.x-p0.x) * closest.v);
+                float v = p0.y + ((p1.y-p0.y) * closest.u) + ((p2.y-p0.y) * closest.v);
+                
+                int x = u * closest.intersectedTriangle.texture->width;
+                int y = v * closest.intersectedTriangle.texture->height;
+
+                base = base + closest.intersectedTriangle.texture->data[y][x];        
+              } 
+            }
+          }
+          base = base / (float) samples.size();
+
+          if(calc) {
+
+            //Check for object blocking direct illumination
+            Colour diffuseCol = diffuseLight.calcDiffusePhong(closest);
+            Colour ambientCol = ambientLight.calcAmbient();
+
+            
+
+            if(shadows) {
+              RayTriangleIntersection lightBlock;
+              glm::vec3 shadowStart = closest.intersectionPoint + glm::normalize(closest.intersectedTriangle.normal) * shadowBias;
+              if(closestIntersection(shadowStart,glm::normalize(diffuseLight.position - closest.intersectionPoint), tris, lightBlock, 0.1f, 100)){
+                //If distance to other object is less than distance to light, in shadow
+                if(glm::length(lightBlock.intersectionPoint - closest.intersectionPoint) < glm::length(diffuseLight.position - closest.intersectionPoint)){
+                  diffuseCol = Colour(0,0,0);
+                }
+              }
+            }
+
+            Colour lit = Colour(base, ambientCol, diffuseCol, closest.intersectedTriangle.material.albedo);
+
+            window.setPixelColour(window.width - x,y,lit.packed, 1/closest.distanceFromCamera);
+          }
+        }
+      }
+    }
 
     bool closestIntersection(glm::vec3 start, glm::vec3 dir, const std::vector<ModelTriangle> tris, RayTriangleIntersection& closest, float near, float far) {
       bool result = false;
