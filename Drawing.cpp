@@ -23,12 +23,19 @@ using namespace glm;
 #define YAW   glm::vec3(0,1,0)
 #define ROLL   glm::vec3(0,0,1)
 
+//Camera sampling patterns
+#define NO_AA       {glm::vec2(0.5,0.5)}
+#define TWOBYTWO    {glm::vec2(0.25,0.25),glm::vec2(0.75,0.25),glm::vec2(0.25,0.75),glm::vec2(0.755,0.75)}
+#define RGSS        {glm::vec2(0.625,0.125),glm::vec2(0.125,0.375),glm::vec2(0.875,0.625),glm::vec2(0.375,0.875)}
+#define FOURBYFOUR  {glm::vec2(0.125,0.125),glm::vec2(0.375,0.125),glm::vec2(0.625,0.125),glm::vec2(0.875,0.125),glm::vec2(0.125,0.375),glm::vec2(0.375,0.375),glm::vec2(0.625,0.375),glm::vec2(0.875,0.375),glm::vec2(0.125,0.625),glm::vec2(0.375,0.625),glm::vec2(0.625,0.625),glm::vec2(0.875,0.625),glm::vec2(0.125,0.875),glm::vec2(0.375,0.875),glm::vec2(0.625,0.875),glm::vec2(0.875,0.875)}
+
+
 void draw(std::vector<ModelTriangle> tris);
 void update();
 void handleEvent(SDL_Event event);
 
 DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false, 1);
-Camera cam = Camera(glm::vec3(0,0,5), 200, 1);
+Camera cam = Camera(glm::vec3(0,0,5), 200, RGSS);
 Model model = Model("models/cornell-box",glm::vec3(0,0,0), 1);
 Model sphere = Model("models/sphere", glm::vec3(-1.8,0.9,-1.8), 1);
 Model logo = Model("models/logo",glm::vec3(0,2.9,-5.4), 1.5);

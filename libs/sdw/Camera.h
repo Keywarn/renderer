@@ -13,13 +13,14 @@ class Camera
     glm::vec3 position;
     glm::mat3 rotation;
     float f;
-    int samples;
+    std::vector<glm::vec2> samples;
+
 
     Camera()
     {
     }
 
-    Camera(glm::vec3 pos, float foc, int ns){
+    Camera(glm::vec3 pos, float foc, std::vector<glm::vec2> ns){
       position = pos;
       rotation = glm::mat3();
       f = foc;
@@ -99,9 +100,9 @@ class Camera
           bool calc = false;
 
           RayTriangleIntersection closest;
-          for (int n = 0; n < samples; n++) {
-            float u = static_cast <float> (n) / static_cast <float> (samples);
-            float v = static_cast <float> (n) / static_cast <float> (samples);
+          for (int n = 0; n < samples.size(); n++) {
+            float u = samples[n].x;
+            float v = samples[n].y;
             //Direction from the camera to the pixel in the image plane
             glm::vec3 dir = rotation * glm::normalize(position - glm::vec3((x+u)-window.width/2, (y+v)-window.height/2, f));
             
@@ -126,7 +127,7 @@ class Camera
               } 
             }
           }
-          base = base / (float) samples;
+          base = base / (float) samples.size();
 
           if(calc) {
 
