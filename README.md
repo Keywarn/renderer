@@ -58,7 +58,7 @@ The final grade awarded will depend upon the exact combination and features and 
 ### 70 - some of
 - [ ] Phong Shading
 - [ ] Fairly “interesting” materials (e.g. mirrors)
-- [ ] Complex anti-aliasing
+- [x] Complex anti-aliasing
 - [ ] Perspective corrected texture mapping
 - [ ] “Fancy” animation
 - [ ] Soft shadow
