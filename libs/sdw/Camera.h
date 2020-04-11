@@ -238,38 +238,8 @@ class Camera
             
             //Get the closest intersection of the ray
             if(closestIntersection(position, dir, tris, closest, 0, 100)) {
-
+              base = base + shadeIntersection(closest, dir, tris);
               calc = true;
-
-              //Get base colour of triangle if it isn't textured
-              if(!closest.intersectedTriangle.textured){ 
-                //No reflection so its just the colour
-                if(closest.intersectedTriangle.material.reflect == 0) base = base + closest.intersectedTriangle.material.diffuse;
-                //Reflection required
-                else {
-                  glm::vec3 normal = interNormal(closest.intersectedTriangle.vertices[0]->normal, closest.intersectedTriangle.vertices[1]->normal, closest.intersectedTriangle.vertices[2]->normal, closest.u, closest.v);
-
-                  dir = glm::reflect(-dir, glm::normalize(normal));
-
-                  RayTriangleIntersection mirror;
-                  if(closestIntersection(closest.intersectionPoint, -dir, tris, mirror, 0.05f, 100)) {
-                    base = base + mirror.intersectedTriangle.material.diffuse;
-                  }
-                }
-              }
-              else {
-                glm::vec2 p0 = closest.intersectedTriangle.texPoints[0];
-                glm::vec2 p1 = closest.intersectedTriangle.texPoints[1];
-                glm::vec2 p2 = closest.intersectedTriangle.texPoints[2];
-
-                float u = p0.x + ((p1.x-p0.x) * closest.u) + ((p2.x-p0.x) * closest.v);
-                float v = p0.y + ((p1.y-p0.y) * closest.u) + ((p2.y-p0.y) * closest.v);
-                
-                int x = u * closest.intersectedTriangle.texture->width;
-                int y = v * closest.intersectedTriangle.texture->height;
-
-                base = base + closest.intersectedTriangle.texture->data[y][x];        
-              } 
             }
           }
           base = base / (float) samples.size();
@@ -300,6 +270,39 @@ class Camera
           }
         }
       }
+    }
+
+    Colour shadeIntersection(RayTriangleIntersection closest, glm::vec3 dir, std::vector<ModelTriangle> tris) {
+      
+      //Get base colour of triangle if it isn't textured
+      if(!closest.intersectedTriangle.textured){ 
+        //No reflection so its just the colour
+        if(closest.intersectedTriangle.material.reflect == 0) return(closest.intersectedTriangle.material.diffuse);
+        //Reflection required
+        else {
+          glm::vec3 normal = interNormal(closest.intersectedTriangle.vertices[0]->normal, closest.intersectedTriangle.vertices[1]->normal, closest.intersectedTriangle.vertices[2]->normal, closest.u, closest.v);
+
+          dir = glm::reflect(-dir, glm::normalize(normal));
+
+          RayTriangleIntersection mirror;
+          if(closestIntersection(closest.intersectionPoint, -dir, tris, mirror, 0.005f, 100)) {
+            return shadeIntersection(mirror, dir, tris);
+          }
+        }
+      }
+      else {
+        glm::vec2 p0 = closest.intersectedTriangle.texPoints[0];
+        glm::vec2 p1 = closest.intersectedTriangle.texPoints[1];
+        glm::vec2 p2 = closest.intersectedTriangle.texPoints[2];
+
+        float u = p0.x + ((p1.x-p0.x) * closest.u) + ((p2.x-p0.x) * closest.v);
+        float v = p0.y + ((p1.y-p0.y) * closest.u) + ((p2.y-p0.y) * closest.v);
+        
+        int x = u * closest.intersectedTriangle.texture->width;
+        int y = v * closest.intersectedTriangle.texture->height;
+
+        return(closest.intersectedTriangle.texture->data[y][x]);        
+      } 
     }
 
     bool closestIntersection(glm::vec3 start, glm::vec3 dir, const std::vector<ModelTriangle> tris, RayTriangleIntersection& closest, float near, float far) {
