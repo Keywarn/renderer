@@ -48,7 +48,13 @@ class Light
     }
 
     Colour calcSpecular(RayTriangleIntersection intersect, glm::vec3 camPos) {
-      return Colour(0,0,0);
+      glm::vec3 viewDir = glm::normalize(camPos - intersect.intersectionPoint);
+      glm::vec3 normal = interNormal(intersect);
+      glm::vec3 reflectDir = glm::reflect(glm::normalize(intersect.intersectionPoint - position), normal);
+
+      float vel = std::pow(std::max(glm::dot(viewDir, reflectDir), 0.0), 32);
+      
+      return (Colour(val * colour.red, val * colour.blue, val * colour.green));
     }
 
     glm::vec3 interNormal(RayTriangleIntersection intersect) {
