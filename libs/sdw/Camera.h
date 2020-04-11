@@ -258,7 +258,7 @@ class Camera
         dir = glm::reflect(-dir, glm::normalize(normal));
 
         RayTriangleIntersection mirror;
-        if(closestIntersection(closest.intersectionPoint, -dir, tris, mirror, 0.005f, 100)) {
+        if(closestIntersection(closest.intersectionPoint, -dir, tris, mirror, 0.00005, 100)) {
           return(shadeIntersection(mirror, dir, tris, diffuseLight, ambientLight, depth-1));
         }
       }
@@ -314,9 +314,9 @@ class Camera
       for (auto &tri : tris) // access by reference to avoid copying
       { 
         if(intersectRay(tri, start, dir, currentInter)) {
-          result = true;
 
           if(currentInter.distanceFromCamera < closest.distanceFromCamera && currentInter.distanceFromCamera > near && currentInter.distanceFromCamera < far) {
+            result = true;
             closest = currentInter;
           }
         }
