@@ -8,6 +8,7 @@ class Material
     Colour diffuse;
     Colour specular;
     float albedo;
+    float reflect;
 
     Material()
     {
@@ -15,6 +16,8 @@ class Material
       albedo = 1;
       specular = Colour(0,0,0);
       diffuse = Colour(0,0,0);
+      reflect = 0;
+
     }
 
     Material(std::string mName)
@@ -23,6 +26,7 @@ class Material
       albedo = 1;
       specular = Colour(0,0,0);
       diffuse = Colour(0,0,0);
+      reflect = 0;
     }
 
     //Simple RGB colour
@@ -32,6 +36,7 @@ class Material
       name = "";
       albedo = 1;
       specular = Colour(0,0,0);
+      reflect = 0;
     }
 
     

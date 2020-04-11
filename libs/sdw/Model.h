@@ -67,6 +67,10 @@ class Model
         else if(toks[0] == "Ks") {
           curMaterial.specular = Colour(std::stof(toks[1])*255, std::stof(toks[2])*255, std::stof(toks[3])*255);
         }
+        //Reflectivity copmonent
+        else if(toks[0] == "Ref") {
+          curMaterial.reflect = std::stof(toks[1]);
+        }
       }
       //Sweep for vertices
       std::ifstream vertFile;
