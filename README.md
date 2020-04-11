@@ -42,12 +42,12 @@ The final grade awarded will depend upon the exact combination and features and 
 ### 50 - some of
 - [x] Changing camera orientation (via orientation matrix)
 - [x] LookAt
-- [x] Hard Shadow
 - [ ] Some form of generative geometry
 - [x] Ambient lighting
 - [x] Diffuse lighting (proximity and angle-of-incidence)
 
 ### 60 - some of
+- [x] Hard Shadow
 - [x] Gouraud shading
 - [x] Naive (non-perspective corrected) texture mapping
 - [x] Simple animation (e.g. fly-through)
@@ -58,15 +58,15 @@ The final grade awarded will depend upon the exact combination and features and 
 ### 70 - some of
 - [x] Phong Shading
 - [ ] Fairly “interesting” materials (e.g. mirrors)
-- [x] Complex anti-aliasing
+- [x] Super Sampling anti-aliasing
 - [ ] Perspective corrected texture mapping
 - [ ] “Fancy” animation
 - [ ] Soft shadow
 - [ ] Bump maps
-- [ ] Environment maps
 - [ ] Basic clipping (bounding box)
 
 ### 80 - some of
+- [ ] Environment maps
 - [ ] Complex “interesting” materials (e.g. glass)
 - [ ] Line drawing optimisations (e.g. Bresenham)
 - [ ] Advance clipping (frustum)
