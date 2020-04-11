@@ -247,7 +247,14 @@ class Camera
                 if(closest.intersectedTriangle.material.reflect == 0) base = base + closest.intersectedTriangle.material.diffuse;
                 //Reflection required
                 else {
-                  base = base + Colour(255,255,255);
+                  glm::vec3 normal = interNormal(closest.intersectedTriangle.vertices[0]->normal, closest.intersectedTriangle.vertices[1]->normal, closest.intersectedTriangle.vertices[2]->normal, closest.u, closest.v);
+
+                  dir = glm::reflect(-dir, glm::normalize(normal));
+
+                  RayTriangleIntersection mirror;
+                  if(closestIntersection(closest.intersectionPoint, -dir, tris, mirror, 0.05f, 100)) {
+                    base = base + mirror.intersectedTriangle.material.diffuse;
+                  }
                 }
               }
               else {
