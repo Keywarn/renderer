@@ -218,8 +218,6 @@ class Camera
     }
 
     void phong(const std::vector<ModelTriangle> tris, Light diffuseLight, Light ambientLight, DrawingWindow window) {
-      float shadowBias = 0;
-      bool shadows = true;
       
       #pragma omp parallel for num_threads(2)
       //For each pixel in the image, create a ray
@@ -238,73 +236,74 @@ class Camera
             
             //Get the closest intersection of the ray and shade
             if(closestIntersection(position, dir, tris, closest, 0, 100)) {
-              shade = shade + shadeIntersection(closest, dir, tris, diffuseLight, ambientLight);
+              shade = shade + shadeIntersection(closest, dir, tris, diffuseLight, ambientLight, 0);
               calc = true;
             }
           }
           shade = shade / (float) samples.size();
 
-          if(calc) {
-
-            //Check for object blocking direct illumination
-            Colour diffuseCol = diffuseLight.calcDiffusePhong(closest);
-            Colour specularCol = diffuseLight.calcSpecular(closest, position);
-            Colour ambientCol = ambientLight.calcAmbient();
-
-            
-
-            if(shadows) {
-              RayTriangleIntersection lightBlock;
-              glm::vec3 shadowStart = closest.intersectionPoint + glm::normalize(closest.intersectedTriangle.normal) * shadowBias;
-              if(closestIntersection(shadowStart,glm::normalize(diffuseLight.position - closest.intersectionPoint), tris, lightBlock, 0.1f, 100)){
-                //If distance to other object is less than distance to light, in shadow
-                if(glm::length(lightBlock.intersectionPoint - closest.intersectionPoint) < glm::length(diffuseLight.position - closest.intersectionPoint)){
-                  diffuseCol = Colour(0,0,0);
-                }
-              }
-            }
-
-            Colour lit = Colour(shade, closest.intersectedTriangle.material.specular, ambientCol, diffuseCol, specularCol, closest.intersectedTriangle.material.albedo);
-
-            window.setPixelColour(window.width - x,y,lit.packed, 1/closest.distanceFromCamera);
-          }
+          window.setPixelColour(window.width - x,y,shade.packed, 1/closest.distanceFromCamera);
         }
       }
     }
 
-    Colour shadeIntersection(RayTriangleIntersection closest, glm::vec3 dir, std::vector<ModelTriangle> tris, Light diffuseLight, Light ambientLight) {
-      
+    Colour shadeIntersection(RayTriangleIntersection closest, glm::vec3 dir, std::vector<ModelTriangle> tris, Light diffuseLight, Light ambientLight, int depth) {
+      bool shadows = true;
+      float shadowBias = 0;
+
       //If it is reflective, get the reflected shade
-      if(closest.intersectedTriangle.material.reflect == 1) {
+      if(closest.intersectedTriangle.material.reflect == 1 && depth > 1) {
         glm::vec3 normal = interNormal(closest.intersectedTriangle.vertices[0]->normal, closest.intersectedTriangle.vertices[1]->normal, closest.intersectedTriangle.vertices[2]->normal, closest.u, closest.v);
 
         dir = glm::reflect(-dir, glm::normalize(normal));
 
         RayTriangleIntersection mirror;
         if(closestIntersection(closest.intersectionPoint, -dir, tris, mirror, 0.005f, 100)) {
-          return shadeIntersection(mirror, dir, tris, diffuseLight, ambientLight);
+          return(shadeIntersection(mirror, dir, tris, diffuseLight, ambientLight, depth-1));
         }
       }
-
-      //Get base colour of triangle if it isn't textured
-      if(!closest.intersectedTriangle.textured){ 
-        if(closest.intersectedTriangle.material.reflect == 0) return(closest.intersectedTriangle.material.diffuse);
-        //No reflection so its just the colour
-        //Reflection required
-      }
+      //Not reflected, work out 
       else {
-        glm::vec2 p0 = closest.intersectedTriangle.texPoints[0];
-        glm::vec2 p1 = closest.intersectedTriangle.texPoints[1];
-        glm::vec2 p2 = closest.intersectedTriangle.texPoints[2];
+        Colour base;
+        //Get base colour of triangle if it isn't textured
+        if(!closest.intersectedTriangle.textured) base = (closest.intersectedTriangle.material.diffuse);
+        //Textured get texture data
+        else {
+          glm::vec2 p0 = closest.intersectedTriangle.texPoints[0];
+          glm::vec2 p1 = closest.intersectedTriangle.texPoints[1];
+          glm::vec2 p2 = closest.intersectedTriangle.texPoints[2];
 
-        float u = p0.x + ((p1.x-p0.x) * closest.u) + ((p2.x-p0.x) * closest.v);
-        float v = p0.y + ((p1.y-p0.y) * closest.u) + ((p2.y-p0.y) * closest.v);
-        
-        int x = u * closest.intersectedTriangle.texture->width;
-        int y = v * closest.intersectedTriangle.texture->height;
+          float u = p0.x + ((p1.x-p0.x) * closest.u) + ((p2.x-p0.x) * closest.v);
+          float v = p0.y + ((p1.y-p0.y) * closest.u) + ((p2.y-p0.y) * closest.v);
+          
+          int x = u * closest.intersectedTriangle.texture->width;
+          int y = v * closest.intersectedTriangle.texture->height;
 
-        return(closest.intersectedTriangle.texture->data[y][x]);        
-      } 
+          base = closest.intersectedTriangle.texture->data[y][x];        
+        }
+
+        Colour diffuseCol = diffuseLight.calcDiffusePhong(closest);
+        Colour specularCol = diffuseLight.calcSpecular(closest, position);
+        Colour ambientCol = ambientLight.calcAmbient();
+
+        if(shadows) {
+          RayTriangleIntersection lightBlock;
+          glm::vec3 shadowStart = closest.intersectionPoint + glm::normalize(closest.intersectedTriangle.normal) * shadowBias;
+          if(closestIntersection(shadowStart,glm::normalize(diffuseLight.position - closest.intersectionPoint), tris, lightBlock, 0.1f, 100)){
+            //If distance to other object is less than distance to light, in shadow
+            if(glm::length(lightBlock.intersectionPoint - closest.intersectionPoint) < glm::length(diffuseLight.position - closest.intersectionPoint)){
+              diffuseCol = Colour(0,0,0);
+            }
+          }
+        }
+
+        Colour lit = Colour(base, closest.intersectedTriangle.material.specular, ambientCol, diffuseCol, specularCol, closest.intersectedTriangle.material.albedo);
+
+
+        return (lit);
+      }
+      std::cout<< "Shading error" << std::endl;
+      return Colour(0,0,0);
     }
 
     bool closestIntersection(glm::vec3 start, glm::vec3 dir, const std::vector<ModelTriangle> tris, RayTriangleIntersection& closest, float near, float far) {
