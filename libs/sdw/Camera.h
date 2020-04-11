@@ -236,7 +236,7 @@ class Camera
             
             //Get the closest intersection of the ray and shade
             if(closestIntersection(position, dir, tris, closest, 0, 100)) {
-              shade = shade + shadeIntersection(closest, dir, tris, diffuseLight, ambientLight, 0);
+              shade = shade + shadeIntersection(closest, dir, tris, diffuseLight, ambientLight, 1);
               calc = true;
             }
           }
@@ -252,7 +252,7 @@ class Camera
       float shadowBias = 0;
 
       //If it is reflective, get the reflected shade
-      if(closest.intersectedTriangle.material.reflect == 1 && depth > 1) {
+      if(closest.intersectedTriangle.material.reflect == 1 && depth >= 1) {
         glm::vec3 normal = interNormal(closest.intersectedTriangle.vertices[0]->normal, closest.intersectedTriangle.vertices[1]->normal, closest.intersectedTriangle.vertices[2]->normal, closest.u, closest.v);
 
         dir = glm::reflect(-dir, glm::normalize(normal));
