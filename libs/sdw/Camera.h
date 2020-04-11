@@ -274,21 +274,23 @@ class Camera
 
     Colour shadeIntersection(RayTriangleIntersection closest, glm::vec3 dir, std::vector<ModelTriangle> tris, Light diffuseLight, Light ambientLight) {
       
+      //If it is reflective, get the reflected shade
+      if(closest.intersectedTriangle.material.reflect == 1) {
+        glm::vec3 normal = interNormal(closest.intersectedTriangle.vertices[0]->normal, closest.intersectedTriangle.vertices[1]->normal, closest.intersectedTriangle.vertices[2]->normal, closest.u, closest.v);
+
+        dir = glm::reflect(-dir, glm::normalize(normal));
+
+        RayTriangleIntersection mirror;
+        if(closestIntersection(closest.intersectionPoint, -dir, tris, mirror, 0.005f, 100)) {
+          return shadeIntersection(mirror, dir, tris, diffuseLight, ambientLight);
+        }
+      }
+
       //Get base colour of triangle if it isn't textured
       if(!closest.intersectedTriangle.textured){ 
-        //No reflection so its just the colour
         if(closest.intersectedTriangle.material.reflect == 0) return(closest.intersectedTriangle.material.diffuse);
+        //No reflection so its just the colour
         //Reflection required
-        else {
-          glm::vec3 normal = interNormal(closest.intersectedTriangle.vertices[0]->normal, closest.intersectedTriangle.vertices[1]->normal, closest.intersectedTriangle.vertices[2]->normal, closest.u, closest.v);
-
-          dir = glm::reflect(-dir, glm::normalize(normal));
-
-          RayTriangleIntersection mirror;
-          if(closestIntersection(closest.intersectionPoint, -dir, tris, mirror, 0.005f, 100)) {
-            return shadeIntersection(mirror, dir, tris, diffuseLight, ambientLight);
-          }
-        }
       }
       else {
         glm::vec2 p0 = closest.intersectedTriangle.texPoints[0];
