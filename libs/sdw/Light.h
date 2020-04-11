@@ -52,7 +52,7 @@ class Light
       glm::vec3 normal = interNormal(intersect);
       glm::vec3 reflectDir = glm::reflect(glm::normalize(intersect.intersectionPoint - position), normal);
 
-      float vel = std::pow(std::max(glm::dot(viewDir, reflectDir), 0.0), 32);
+      float val = std::pow(std::max(glm::dot(viewDir, reflectDir), 0.0f), 32);
       
       return (Colour(val * colour.red, val * colour.blue, val * colour.green));
     }
