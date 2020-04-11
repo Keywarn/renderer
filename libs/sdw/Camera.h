@@ -263,6 +263,7 @@ class Camera
 
             //Check for object blocking direct illumination
             Colour diffuseCol = diffuseLight.calcDiffusePhong(closest);
+            Colour specularCol = diffuseLight.calcSpecular(closest, position);
             Colour ambientCol = ambientLight.calcAmbient();
 
             

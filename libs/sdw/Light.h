@@ -39,17 +39,24 @@ class Light
 
     Colour calcDiffusePhong(RayTriangleIntersection intersect) {
       glm::vec3 r = intersect.intersectionPoint - position;
-
-      glm::vec3 n0 = intersect.intersectedTriangle.vertices[0]->normal;
-      glm::vec3 n1 = intersect.intersectedTriangle.vertices[1]->normal;
-      glm::vec3 n2 = intersect.intersectedTriangle.vertices[2]->normal;
-
-      glm::vec3 normal = n0 + ((n1 - n0) * intersect.u) + ((n2 - n0) * intersect.v);
+      glm::vec3 normal = interNormal(intersect);
 
       float val = power * std::max(glm::dot(glm::normalize(r), glm::normalize(normal)), 0.0f) / (4 * M_PI * std::pow(glm::length(r),2));
 
       return (Colour(val * colour.red, val * colour.blue, val * colour.green));
 
+    }
+
+    Colour calcSpecular(RayTriangleIntersection intersect, glm::vec3 camPos) {
+      return Colour(0,0,0);
+    }
+
+    glm::vec3 interNormal(RayTriangleIntersection intersect) {
+      glm::vec3 n0 = intersect.intersectedTriangle.vertices[0]->normal;
+      glm::vec3 n1 = intersect.intersectedTriangle.vertices[1]->normal;
+      glm::vec3 n2 = intersect.intersectedTriangle.vertices[2]->normal;
+
+      return(n0 + ((n1 - n0) * intersect.u) + ((n2 - n0) * intersect.v));
     }
 
     Colour calcAmbient() {
