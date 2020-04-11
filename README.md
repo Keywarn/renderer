@@ -56,7 +56,7 @@ The final grade awarded will depend upon the exact combination and features and 
 - [x] Basic anti-aliasing
 
 ### 70 - some of
-- [ ] Phong Shading
+- [x] Phong Shading
 - [ ] Fairly “interesting” materials (e.g. mirrors)
 - [x] Complex anti-aliasing
 - [ ] Perspective corrected texture mapping
