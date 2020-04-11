@@ -279,7 +279,7 @@ class Camera
               }
             }
 
-            Colour lit = Colour(base, ambientCol, diffuseCol, closest.intersectedTriangle.material.albedo);
+            Colour lit = Colour(base, closest.intersectedTriangle.material.specular, ambientCol, diffuseCol, specularCol, closest.intersectedTriangle.material.albedo);
 
             window.setPixelColour(window.width - x,y,lit.packed, 1/closest.distanceFromCamera);
           }
