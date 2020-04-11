@@ -8,6 +8,10 @@
 
 std::string* split(std::string line, char delim);
 
+glm::vec3 interNormal(glm::vec3 n0, glm::vec3 n1, glm::vec3 n2, float u, float v) {
+  return(n0 + ((n1 - n0) * u) + ((n2 - n0) * v));
+}
+
 std::string* split(std::string line, char delim)
 {
     int numberOfTokens = count(line.begin(), line.end(), delim) + 1;

@@ -240,8 +240,16 @@ class Camera
             if(closestIntersection(position, dir, tris, closest, 0, 100)) {
 
               calc = true;
-              //Get base colour of triangle
-              if(!closest.intersectedTriangle.textured) base = base + closest.intersectedTriangle.material.diffuse;
+
+              //Get base colour of triangle if it isn't textured
+              if(!closest.intersectedTriangle.textured){ 
+                //No reflection so its just the colour
+                if(closest.intersectedTriangle.material.reflect == 0) base = base + closest.intersectedTriangle.material.diffuse;
+                //Reflection required
+                else {
+                  base = base + Colour(255,255,255);
+                }
+              }
               else {
                 glm::vec2 p0 = closest.intersectedTriangle.texPoints[0];
                 glm::vec2 p1 = closest.intersectedTriangle.texPoints[1];
