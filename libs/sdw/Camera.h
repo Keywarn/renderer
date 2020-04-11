@@ -226,7 +226,7 @@ class Camera
       for (int y = 0; y < window.height; y++) {
         for(int x = 0; x < window.width; x++){
 
-          Colour base = Colour(0,0,0);
+          Colour shade = Colour(0,0,0);
           bool calc = false;
 
           RayTriangleIntersection closest;
@@ -236,13 +236,13 @@ class Camera
             //Direction from the camera to the pixel in the image plane
             glm::vec3 dir = rotation * glm::normalize(position - glm::vec3((x+u)-window.width/2, (y+v)-window.height/2, f));
             
-            //Get the closest intersection of the ray
+            //Get the closest intersection of the ray and shade
             if(closestIntersection(position, dir, tris, closest, 0, 100)) {
-              base = base + shadeIntersection(closest, dir, tris);
+              shade = shade + shadeIntersection(closest, dir, tris, diffuseLight, ambientLight);
               calc = true;
             }
           }
-          base = base / (float) samples.size();
+          shade = shade / (float) samples.size();
 
           if(calc) {
 
@@ -264,7 +264,7 @@ class Camera
               }
             }
 
-            Colour lit = Colour(base, closest.intersectedTriangle.material.specular, ambientCol, diffuseCol, specularCol, closest.intersectedTriangle.material.albedo);
+            Colour lit = Colour(shade, closest.intersectedTriangle.material.specular, ambientCol, diffuseCol, specularCol, closest.intersectedTriangle.material.albedo);
 
             window.setPixelColour(window.width - x,y,lit.packed, 1/closest.distanceFromCamera);
           }
@@ -272,7 +272,7 @@ class Camera
       }
     }
 
-    Colour shadeIntersection(RayTriangleIntersection closest, glm::vec3 dir, std::vector<ModelTriangle> tris) {
+    Colour shadeIntersection(RayTriangleIntersection closest, glm::vec3 dir, std::vector<ModelTriangle> tris, Light diffuseLight, Light ambientLight) {
       
       //Get base colour of triangle if it isn't textured
       if(!closest.intersectedTriangle.textured){ 
@@ -286,7 +286,7 @@ class Camera
 
           RayTriangleIntersection mirror;
           if(closestIntersection(closest.intersectionPoint, -dir, tris, mirror, 0.005f, 100)) {
-            return shadeIntersection(mirror, dir, tris);
+            return shadeIntersection(mirror, dir, tris, diffuseLight, ambientLight);
           }
         }
       }
