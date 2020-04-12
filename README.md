@@ -59,7 +59,7 @@ The final grade awarded will depend upon the exact combination and features and 
 - [x] Phong Shading
 - [x] Fairly “interesting” materials (e.g. mirrors)
 - [x] Super Sampling anti-aliasing
-- [ ] Perspective corrected texture mapping
+- [x] Perspective corrected texture mapping
 - [ ] “Fancy” animation
 - [ ] Soft shadow
 - [ ] Bump maps
