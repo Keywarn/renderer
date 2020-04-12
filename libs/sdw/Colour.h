@@ -70,6 +70,10 @@ class Colour
     Colour operator/ (float param) {
       return Colour(red / param, green / param, blue / param);
     }
+
+    Colour operator* (float param) {
+      return Colour(red * param, green * param, blue * param);
+    }
 };
 
 std::ostream& operator<<(std::ostream& os, const Colour& colour)

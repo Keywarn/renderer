@@ -251,6 +251,8 @@ class Camera
       bool shadows = true;
       float shadowBias = 0;
       float reflect = closest.intersectedTriangle.material.reflect;
+      Colour reflectCol = Colour (0,0,0);
+      Colour shadedCol = Colour (0,0,0);
 
       //If it is reflective, get the reflected shade
       if(reflect > 0 && reflect <= 1 && depth >= 1) {
@@ -260,11 +262,11 @@ class Camera
 
         RayTriangleIntersection mirror;
         if(closestIntersection(closest.intersectionPoint, -dir, tris, mirror, 0.00005, 100)) {
-          return(shadeIntersection(mirror, dir, tris, diffuseLight, ambientLight, depth-1));
+          reflectCol = shadeIntersection(mirror, dir, tris, diffuseLight, ambientLight, depth-1);
         }
       }
       //Not reflected, work out 
-      else {
+      if ( reflect < 1) {
         Colour base;
         //Get base colour of triangle if it isn't textured
         if(!closest.intersectedTriangle.textured) base = (closest.intersectedTriangle.material.diffuse);
@@ -298,13 +300,10 @@ class Camera
           }
         }
 
-        Colour lit = Colour(base, closest.intersectedTriangle.material.specular, ambientCol, diffuseCol, specularCol, closest.intersectedTriangle.material.albedo);
-
-
-        return (lit);
+        shadedCol = Colour(base, closest.intersectedTriangle.material.specular, ambientCol, diffuseCol, specularCol, closest.intersectedTriangle.material.albedo);
       }
-      std::cout<< "Shading error" << std::endl;
-      return Colour(0,0,0);
+
+      return (reflectCol * reflect + shadedCol * (1-reflect));
     }
 
     bool closestIntersection(glm::vec3 start, glm::vec3 dir, const std::vector<ModelTriangle> tris, RayTriangleIntersection& closest, float near, float far) {
