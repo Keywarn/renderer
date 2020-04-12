@@ -250,9 +250,10 @@ class Camera
     Colour shadeIntersection(RayTriangleIntersection closest, glm::vec3 dir, std::vector<ModelTriangle> tris, Light diffuseLight, Light ambientLight, int depth) {
       bool shadows = true;
       float shadowBias = 0;
+      float reflect = closest.intersectedTriangle.material.reflect;
 
       //If it is reflective, get the reflected shade
-      if(closest.intersectedTriangle.material.reflect == 1 && depth >= 1) {
+      if(reflect > 0 && reflect <= 1 && depth >= 1) {
         glm::vec3 normal = interNormal(closest.intersectedTriangle.vertices[0]->normal, closest.intersectedTriangle.vertices[1]->normal, closest.intersectedTriangle.vertices[2]->normal, closest.u, closest.v);
 
         dir = glm::reflect(-dir, glm::normalize(normal));

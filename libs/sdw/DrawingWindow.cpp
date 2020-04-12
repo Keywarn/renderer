@@ -109,6 +109,11 @@ void DrawingWindow::clearPixels()
 }
 
 void DrawingWindow::setMode(int m) {
+    if(m == 1)      std::cout << "WIREFRAME MODE" << std::endl;
+    else if(m == 2) std::cout << "RASTERISE MODE" << std::endl;
+    else if(m == 3) std::cout << "RAYTRACE (FLAT) MODE" << std::endl;
+    else if(m == 4) std::cout << "RAYTRACE (GOURAUD) MODE" << std::endl;
+    else if(m == 5) std::cout << "RAYTRACE (PHONG) MODE" << std::endl;
     mode = m;
   }
 
