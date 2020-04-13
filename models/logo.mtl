@@ -1,3 +1,4 @@
 newmtl Logo
-map_Kd leopard.ppm
+map_Kd star.ppm
+bump star_bump.ppm -bm 0.2
 Ks 0.5 0.5 0.5
