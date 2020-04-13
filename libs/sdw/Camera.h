@@ -14,17 +14,19 @@ class Camera
     glm::mat3 rotation;
     float f;
     std::vector<glm::vec2> samples;
+    int depth;
 
 
     Camera()
     {
     }
 
-    Camera(glm::vec3 pos, float foc, std::vector<glm::vec2> ns){
+    Camera(glm::vec3 pos, float foc, std::vector<glm::vec2> ns, int d){
       position = pos;
       rotation = glm::mat3();
       f = foc;
       samples = ns;
+      depth = d;
 
       lookAt(glm::vec3(0,0,0));
     }
@@ -236,7 +238,7 @@ class Camera
             
             //Get the closest intersection of the ray and shade
             if(closestIntersection(position, dir, tris, closest, 0, 100)) {
-              shade = shade + shadeIntersection(closest, dir, tris, diffuseLight, ambientLight, 1);
+              shade = shade + shadeIntersection(closest, dir, tris, diffuseLight, ambientLight, depth);
               calc = true;
             }
           }
