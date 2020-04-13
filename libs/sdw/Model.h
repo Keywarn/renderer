@@ -67,8 +67,8 @@ class Model
           textured = true;
           texture = Image("models/" + toks[1]);
         }
-        //If it has a normal map
-        else if(toks[0] == "norm") {
+        //If it has a normal map (must come after a texture)
+        else if(toks[0] == "norm" && textured) {
           //Set default colour to grey for non-textured modes
           bumped = true;
           bump = Image("models/" + toks[1]);
@@ -117,6 +117,11 @@ class Model
           if(textured) {
             tri.textured = true;
             tri.texture = &texture;
+            if(bumped) {
+              tri.bumped = true;
+              tri.bump = &bump;
+              tri.nm = nm;
+            }
           }
 
           for (int i = 0; i < 3; i++) {

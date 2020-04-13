@@ -20,8 +20,13 @@ class ModelTriangle
     Image* texture;
     glm::vec2 texPoints[3];
 
+    bool bumped;
+    Image* bump;
+    float nm;
+
     ModelTriangle() {
       textured = false;
+      bumped = false;
     }
 
     ModelTriangle(ModelVertex* v0, ModelVertex* v1, ModelVertex* v2, Material mat){
@@ -30,6 +35,7 @@ class ModelTriangle
       vertices[2] = v2;
 
       textured = false;
+      bumped = false;
 
       material = mat;
     }
@@ -40,6 +46,7 @@ class ModelTriangle
       vertices[2] = v2;
 
       textured = true;
+      bumped = false;
       texture = tex;
 
       texPoints[0] = tP0;
