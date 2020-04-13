@@ -62,7 +62,7 @@ The final grade awarded will depend upon the exact combination and features and 
 - [x] Perspective corrected texture mapping
 - [ ] “Fancy” animation
 - [ ] Soft shadow
-- [ ] Bump maps
+- [x] Bump maps
 - [ ] Basic clipping (bounding box)
 
 ### 80 - some of
