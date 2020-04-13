@@ -254,9 +254,32 @@ class Camera
       Colour reflectCol = Colour (0,0,0);
       Colour shadedCol = Colour (0,0,0);
 
+      //Create normal vector
+      glm::vec3 normal;
+      glm::vec2 texP;
+
+      //Set texture co-ords
+      if(closest.intersectedTriangle.textured) {
+        glm::vec2 p0 = closest.intersectedTriangle.texPoints[0];
+        glm::vec2 p1 = closest.intersectedTriangle.texPoints[1];
+        glm::vec2 p2 = closest.intersectedTriangle.texPoints[2];
+
+        float u = p0.x + ((p1.x-p0.x) * closest.u) + ((p2.x-p0.x) * closest.v);
+        float v = p0.y + ((p1.y-p0.y) * closest.u) + ((p2.y-p0.y) * closest.v);
+        
+        texP.x = u * closest.intersectedTriangle.texture->width;
+        texP.y = v * closest.intersectedTriangle.texture->height;
+      }
+      //Get the normal from bump map
+      if(closest.intersectedTriangle.bumped) {
+        normal = interNormal(closest.intersectedTriangle.vertices[0]->normal, closest.intersectedTriangle.vertices[1]->normal, closest.intersectedTriangle.vertices[2]->normal, closest.u, closest.v);
+      }
+      else {
+        normal = interNormal(closest.intersectedTriangle.vertices[0]->normal, closest.intersectedTriangle.vertices[1]->normal, closest.intersectedTriangle.vertices[2]->normal, closest.u, closest.v);
+      }
+
       //If it is reflective, get the reflected shade
       if(reflect > 0 && reflect <= 1 && depth >= 1) {
-        glm::vec3 normal = interNormal(closest.intersectedTriangle.vertices[0]->normal, closest.intersectedTriangle.vertices[1]->normal, closest.intersectedTriangle.vertices[2]->normal, closest.u, closest.v);
 
         dir = glm::reflect(-dir, glm::normalize(normal));
 
@@ -272,26 +295,16 @@ class Camera
         if(!closest.intersectedTriangle.textured) base = (closest.intersectedTriangle.material.diffuse);
         //Textured get texture data
         else {
-          glm::vec2 p0 = closest.intersectedTriangle.texPoints[0];
-          glm::vec2 p1 = closest.intersectedTriangle.texPoints[1];
-          glm::vec2 p2 = closest.intersectedTriangle.texPoints[2];
-
-          float u = p0.x + ((p1.x-p0.x) * closest.u) + ((p2.x-p0.x) * closest.v);
-          float v = p0.y + ((p1.y-p0.y) * closest.u) + ((p2.y-p0.y) * closest.v);
-          
-          int x = u * closest.intersectedTriangle.texture->width;
-          int y = v * closest.intersectedTriangle.texture->height;
-
-          base = closest.intersectedTriangle.texture->data[y][x];        
+          base = closest.intersectedTriangle.texture->data[texP.y][texP.x];        
         }
 
-        Colour diffuseCol = diffuseLight.calcDiffusePhong(closest);
-        Colour specularCol = diffuseLight.calcSpecular(closest, position);
+        Colour diffuseCol = diffuseLight.calcDiffusePhong(closest, normal);
+        Colour specularCol = diffuseLight.calcSpecular(closest, normal, position);
         Colour ambientCol = ambientLight.calcAmbient();
 
         if(shadows) {
           RayTriangleIntersection lightBlock;
-          glm::vec3 shadowStart = closest.intersectionPoint + glm::normalize(closest.intersectedTriangle.normal) * shadowBias;
+          glm::vec3 shadowStart = closest.intersectionPoint + glm::normalize(normal) * shadowBias;
           if(closestIntersection(shadowStart,glm::normalize(diffuseLight.position - closest.intersectionPoint), tris, lightBlock, 0.1f, 100)){
             //If distance to other object is less than distance to light, in shadow
             if(glm::length(lightBlock.intersectionPoint - closest.intersectionPoint) < glm::length(diffuseLight.position - closest.intersectionPoint)){
