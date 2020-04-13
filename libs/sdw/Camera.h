@@ -257,7 +257,7 @@ class Camera
       Colour shadedCol = Colour (0,0,0);
 
       //Create normal vector
-      glm::vec3 normal;
+      glm::vec3 normal = interNormal(closest.intersectedTriangle.vertices[0]->normal, closest.intersectedTriangle.vertices[1]->normal, closest.intersectedTriangle.vertices[2]->normal, closest.u, closest.v);
       glm::vec2 texP;
 
       //Set texture co-ords
@@ -274,11 +274,26 @@ class Camera
       }
       //Get the normal from bump map
       if(closest.intersectedTriangle.bumped) {
+        ModelTriangle tri = closest.intersectedTriangle;
+
+        glm::vec3 dPos1 = tri.vertices[1]->position-tri.vertices[0]->position;
+        glm::vec3 dPos2 = tri.vertices[2]->position-tri.vertices[0]->position;
+
+        glm::vec2 dTex1 = tri.texPoints[1]-tri.texPoints[0];
+        glm::vec2 dTex2 = tri.texPoints[2]-tri.texPoints[0];
+
+        float r = 1.0f / (dTex1.x * dTex2.y - dTex1.y * dTex2.x);
+
+        glm::vec3 tangent = (dPos1 * dTex2.y   - dPos2 * dTex1.y)*r;
+        glm::vec3 bitangent = (dPos2 * dTex1.x   - dPos1 * dTex2.x)*r;
+
+        glm::mat3 TBN;
+        TBN[0] = glm::normalize(tangent);
+        TBN[1] = glm::normalize(bitangent);
+        TBN[2] = glm::normalize(normal);
+
         Colour nCol = closest.intersectedTriangle.bump->data[texP.y][texP.x];
-        normal = glm::vec3((nCol.red/ (float) 255) * 2 -1, (nCol.green/ (float) 255) * 2 -1, (nCol.red/ (float) 255) * 2 -1);
-      }
-      else {
-        normal = interNormal(closest.intersectedTriangle.vertices[0]->normal, closest.intersectedTriangle.vertices[1]->normal, closest.intersectedTriangle.vertices[2]->normal, closest.u, closest.v);
+        normal = TBN * glm::vec3((nCol.red/ (float) 255) * 2 -1, (nCol.green/ (float) 255) * 2 -1, (nCol.red/ (float) 255) * 2 -1);
       }
 
       //If it is reflective, get the reflected shade
