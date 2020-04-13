@@ -272,7 +272,8 @@ class Camera
       }
       //Get the normal from bump map
       if(closest.intersectedTriangle.bumped) {
-        normal = interNormal(closest.intersectedTriangle.vertices[0]->normal, closest.intersectedTriangle.vertices[1]->normal, closest.intersectedTriangle.vertices[2]->normal, closest.u, closest.v);
+        Colour nCol = closest.intersectedTriangle.bump->data[texP.y][texP.x];
+        normal = glm::vec3((nCol.red/ (float) 255) * 2 -1, (nCol.green/ (float) 255) * 2 -1, (nCol.red/ (float) 255) * 2 -1);
       }
       else {
         normal = interNormal(closest.intersectedTriangle.vertices[0]->normal, closest.intersectedTriangle.vertices[1]->normal, closest.intersectedTriangle.vertices[2]->normal, closest.u, closest.v);
