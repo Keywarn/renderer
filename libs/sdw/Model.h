@@ -24,6 +24,10 @@ class Model
     bool textured;
     Image texture;
 
+    bool bumped;
+    Image bump;
+    float nm;
+
     Model(){
       scale = 1;
       textured = false;
@@ -63,6 +67,14 @@ class Model
           textured = true;
           texture = Image("models/" + toks[1]);
         }
+        //If it has a normal map
+        else if(toks[0] == "norm") {
+          //Set default colour to grey for non-textured modes
+          bumped = true;
+          bump = Image("models/" + toks[1]);
+          nm = stof(toks[3]);
+        }
+
         //Specular copmonent
         else if(toks[0] == "Ks") {
           curMaterial.specular = Colour(std::stof(toks[1])*255, std::stof(toks[2])*255, std::stof(toks[3])*255);
