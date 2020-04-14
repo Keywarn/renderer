@@ -219,8 +219,10 @@ class Camera
       return tris;
     }
 
-    void phong(const std::vector<ModelTriangle> culled, const std::vector<ModelTriangle> tris, Light diffuseLight, Light ambientLight, DrawingWindow window) {
+    void phong(const std::vector<ModelTriangle> tris, Light diffuseLight, Light ambientLight, DrawingWindow window) {
       
+      std::vector<ModelTriangle> culled = backCull(tris);
+
       #pragma omp parallel for num_threads(2)
       //For each pixel in the image, create a ray
       for (int y = 0; y < window.height; y++) {
@@ -249,6 +251,19 @@ class Camera
       }
     }
 
+    std::vector<ModelTriangle> backCull (std::vector<ModelTriangle> tris) {
+      std::vector<ModelTriangle> culled;
+
+      for (auto &tri : tris) {
+        glm::vec3 toCam = glm::normalize(position - tri.vertices[0]-> position);
+        glm::vec3 normal = glm::normalize(tri.normal);
+
+        if(glm::dot(toCam, normal) <= 0) culled.push_back(tri);
+      }
+
+      return(culled);
+    }
+
     Colour shadeIntersection(RayTriangleIntersection closest, glm::vec3 dir, std::vector<ModelTriangle> tris, Light diffuseLight, Light ambientLight, int depth) {
       bool shadows = true;
       float shadowBias = 0;
@@ -269,8 +284,8 @@ class Camera
         float u = p0.x + ((p1.x-p0.x) * closest.u) + ((p2.x-p0.x) * closest.v);
         float v = p0.y + ((p1.y-p0.y) * closest.u) + ((p2.y-p0.y) * closest.v);
         
-        texP.x = u * closest.intersectedTriangle.texture->width;
-        texP.y = v * closest.intersectedTriangle.texture->height;
+        texP.x = std::max(0.0f, u * closest.intersectedTriangle.texture->width -1);
+        texP.y = std::max(0.0f, v * closest.intersectedTriangle.texture->height -1);
       }
       //Get the normal from bump map
       if(closest.intersectedTriangle.bumped) {
