@@ -63,7 +63,7 @@ The final grade awarded will depend upon the exact combination and features and 
 - [ ] “Fancy” animation
 - [ ] Soft shadow
 - [x] Bump maps
-- [ ] Basic clipping (bounding box)
+- [x] Basic clipping (bounding box)
 
 ### 80 - some of
 - [ ] Environment maps
