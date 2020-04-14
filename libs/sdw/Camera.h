@@ -15,6 +15,9 @@ class Camera
     float f;
     std::vector<glm::vec2> samples;
     int depth;
+    bool dirty;
+
+    std::vector<ModelTriangle> culled;
 
 
     Camera()
@@ -29,6 +32,7 @@ class Camera
       depth = d;
 
       lookAt(glm::vec3(0,0,0));
+      dirty = true;
     }
 
     void lookAt(glm::vec3 target) {
@@ -39,6 +43,15 @@ class Camera
       rotation[0] = right;
       rotation[1] = up;
       rotation[2] = forward;
+
+      dirty = true;
+    }
+
+    void move(glm::vec3 transform) {
+      
+      position += transform;
+
+      dirty = true;
     }
 
     void rotate(float angle, glm::vec3 axis) {
@@ -48,6 +61,7 @@ class Camera
 
       rotation = convertBackRotation(rot4);
 
+      dirty = true;
     }
 
     glm::mat4 convertRotation() {
@@ -221,7 +235,11 @@ class Camera
 
     void phong(const std::vector<ModelTriangle> tris, Light diffuseLight, Light ambientLight, DrawingWindow window) {
       
-      std::vector<ModelTriangle> culled = backCull(tris, window.width, window.height);
+      //Only need to change our culled tris if camera viewport has dirty flag set
+      if(dirty) {
+        culled = backCull(tris, window.width, window.height);
+        dirty = false;
+      }
 
       #pragma omp parallel for num_threads(2)
       //For each pixel in the image, create a ray

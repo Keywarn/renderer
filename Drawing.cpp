@@ -91,12 +91,12 @@ void update()
 void handleEvent(SDL_Event event)
 {
   if(event.type == SDL_KEYDOWN) {
-    if(event.key.keysym.sym == SDLK_a) cam.position -= cam.rotation[0]; 
-    else if(event.key.keysym.sym == SDLK_d) cam.position += cam.rotation[0];
-    else if(event.key.keysym.sym == SDLK_w) cam.position -= cam.rotation[2];
-    else if(event.key.keysym.sym == SDLK_s) cam.position += cam.rotation[2];
-    else if(event.key.keysym.sym == SDLK_e) cam.position += cam.rotation[1];
-    else if(event.key.keysym.sym == SDLK_q) cam.position -= cam.rotation[1];
+    if(event.key.keysym.sym == SDLK_a) cam.move(-cam.rotation[0]); 
+    else if(event.key.keysym.sym == SDLK_d) cam.move(cam.rotation[0]);
+    else if(event.key.keysym.sym == SDLK_w) cam.move(-cam.rotation[2]);
+    else if(event.key.keysym.sym == SDLK_s) cam.move(cam.rotation[2]);
+    else if(event.key.keysym.sym == SDLK_e) cam.move(cam.rotation[1]);
+    else if(event.key.keysym.sym == SDLK_q) cam.move(-cam.rotation[1]);
     else if(event.key.keysym.sym == SDLK_l) cam.lookAt(model.position);
     else if(event.key.keysym.sym == SDLK_UP) cam.rotate(0.1, PITCH);
     else if(event.key.keysym.sym == SDLK_DOWN) cam.rotate(-0.1, PITCH);
