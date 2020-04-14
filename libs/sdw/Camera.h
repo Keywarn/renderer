@@ -277,18 +277,22 @@ class Camera
         glm::vec3 normal = glm::normalize(tri.normal);
 
         //Checking if vertex is in visible image area
-        bool visible = false;
+        glm::vec2 max = glm::vec2(std::numeric_limits<float>::min(),std::numeric_limits<float>::min());
+        glm::vec2 min = glm::vec2(std::numeric_limits<float>::max(),std::numeric_limits<float>::max());
 
         for(int i = 0; i < 3; i++) {
           glm::vec3 camToP = ((tri.vertices[i]->position) - position) * rotation;
           camToP.x = f * camToP.x / camToP.z;
           camToP.y = f * camToP.y / camToP.z;
 
-          int x = - camToP.x + width/2;
-          int y = camToP.y + height/2;
+          if(camToP.x < min.x) min.x = camToP.x;
+          else if(camToP.x > max.x) max.x = camToP.x;
 
-          if(x >= 0 && x < width && y < height && y >= 0) visible = true;
+          if(camToP.y < min.y) min.y = camToP.y;
+          else if(camToP.y > max.y) max.y = camToP.y;
         }
+
+        bool visible = min.x < width && 0 < max.x && min.y < height && 0 < max.y;
 
         //Only add to drawable faces if all vertices are visible and it isn't a backface
         if(glm::dot(toCam, normal) <= 0 && visible) culled.push_back(tri);
