@@ -219,7 +219,7 @@ class Camera
       return tris;
     }
 
-    void phong(const std::vector<ModelTriangle> tris, Light diffuseLight, Light ambientLight, DrawingWindow window) {
+    void phong(const std::vector<ModelTriangle> culled, const std::vector<ModelTriangle> tris, Light diffuseLight, Light ambientLight, DrawingWindow window) {
       
       #pragma omp parallel for num_threads(2)
       //For each pixel in the image, create a ray
@@ -237,7 +237,7 @@ class Camera
             glm::vec3 dir = rotation * glm::normalize(position - glm::vec3((x+u)-window.width/2, (y+v)-window.height/2, f));
             
             //Get the closest intersection of the ray and shade
-            if(closestIntersection(position, dir, tris, closest, 0, 100)) {
+            if(closestIntersection(position, dir, culled, closest, 0, 100)) {
               shade = shade + shadeIntersection(closest, dir, tris, diffuseLight, ambientLight, depth);
               calc = true;
             }

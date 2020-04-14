@@ -30,7 +30,7 @@ using namespace glm;
 #define FOURBYFOUR  {glm::vec2(0.125,0.125),glm::vec2(0.375,0.125),glm::vec2(0.625,0.125),glm::vec2(0.875,0.125),glm::vec2(0.125,0.375),glm::vec2(0.375,0.375),glm::vec2(0.625,0.375),glm::vec2(0.875,0.375),glm::vec2(0.125,0.625),glm::vec2(0.375,0.625),glm::vec2(0.625,0.625),glm::vec2(0.875,0.625),glm::vec2(0.125,0.875),glm::vec2(0.375,0.875),glm::vec2(0.625,0.875),glm::vec2(0.875,0.875)}
 
 
-void draw(std::vector<ModelTriangle> tris);
+void draw(std::vector<ModelTriangle> culled, std::vector<ModelTriangle> tris);
 void update();
 void handleEvent(SDL_Event event);
 
@@ -56,6 +56,16 @@ int main(int argc, char* argv[])
 
   tris = cam.preCompGouraud(tris, diffuseLight, ambientLight);
 
+  std::vector<ModelTriangle> culled;
+
+  for (auto &tri : tris) {
+    glm::vec3 toCam = glm::normalize(cam.position - tri.vertices[0]-> position);
+    glm::vec3 normal = glm::normalize(tri.normal);
+
+    if(glm::dot(toCam, normal) > 0) culled.push_back(tri);
+  }
+  std::cout << "SIZE: " << culled.size() << std::endl;
+
   std::cout.precision(5);
   while(true)
   {
@@ -63,7 +73,7 @@ int main(int argc, char* argv[])
     // We MUST poll for events - otherwise the window will freeze !
     if(window.pollForInputEvents(&event)) handleEvent(event);
     update();
-    draw(tris);
+    draw(culled, tris);
     // Need to render the frame at the end, or nothing actually gets shown on the screen !
     window.renderFrame();
     auto end = std::chrono::system_clock::now();
@@ -72,7 +82,7 @@ int main(int argc, char* argv[])
   }
 }
 
-void draw(std::vector<ModelTriangle> tris)
+void draw(std::vector<ModelTriangle> culled, std::vector<ModelTriangle> tris)
 {
   window.clearPixels();
   model.display(window, cam);
@@ -80,7 +90,7 @@ void draw(std::vector<ModelTriangle> tris)
   logo.display(window, cam);
   if(window.getMode() == 3) cam.flat(tris, diffuseLight, ambientLight, window);
   else if(window.getMode() == 4) cam.gouraud(tris, diffuseLight, ambientLight, window);
-  else if(window.getMode() == 5) cam.phong(tris, diffuseLight, ambientLight, window);
+  else if(window.getMode() == 5) cam.phong(culled, tris, diffuseLight, ambientLight, window);
 }
 
 void update()
