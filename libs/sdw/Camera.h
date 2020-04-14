@@ -221,7 +221,7 @@ class Camera
 
     void phong(const std::vector<ModelTriangle> tris, Light diffuseLight, Light ambientLight, DrawingWindow window) {
       
-      std::vector<ModelTriangle> culled = backCull(tris);
+      std::vector<ModelTriangle> culled = backCull(tris, window.width, window.height);
 
       #pragma omp parallel for num_threads(2)
       //For each pixel in the image, create a ray
@@ -251,14 +251,29 @@ class Camera
       }
     }
 
-    std::vector<ModelTriangle> backCull (std::vector<ModelTriangle> tris) {
+    std::vector<ModelTriangle> backCull (std::vector<ModelTriangle> tris, int width, int height) {
       std::vector<ModelTriangle> culled;
 
       for (auto &tri : tris) {
         glm::vec3 toCam = glm::normalize(position - tri.vertices[0]-> position);
         glm::vec3 normal = glm::normalize(tri.normal);
 
-        if(glm::dot(toCam, normal) <= 0) culled.push_back(tri);
+        //Checking if vertex is in visible image area
+        bool visible = false;
+
+        for(int i = 0; i < 3; i++) {
+          glm::vec3 camToP = ((tri.vertices[i]->position) - position) * rotation;
+          camToP.x = f * camToP.x / camToP.z;
+          camToP.y = f * camToP.y / camToP.z;
+
+          int x = - camToP.x + width/2;
+          int y = camToP.y + height/2;
+
+          if(x >= 0 && x < width && y < height && y >= 0) visible = true;
+        }
+
+        //Only add to drawable faces if all vertices are visible and it isn't a backface
+        if(glm::dot(toCam, normal) <= 0 && visible) culled.push_back(tri);
       }
 
       return(culled);
