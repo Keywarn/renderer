@@ -371,22 +371,28 @@ class Camera
         Colour diffuseCol = Colour(0,0,0);
         Colour specularCol = Colour(0,0,0);
         for (auto &light : diffuseLights) {
-          diffuseCol = diffuseCol + light.calcDiffusePhong(closest, normal);
-          specularCol = specularCol + light.calcSpecular(closest, normal, position);
 
+          Colour diffuseContrib = light.calcDiffusePhong(closest, normal);
+          Colour specularContrib = light.calcSpecular(closest, normal, position);
+
+          if(shadows) {
+            RayTriangleIntersection lightBlock;
+            glm::vec3 shadowStart = closest.intersectionPoint + glm::normalize(normal) * shadowBias;
+            if(closestIntersection(shadowStart,glm::normalize(light.position - closest.intersectionPoint), tris, lightBlock, 0.05f, 100)){
+              //If distance to other object is less than distance to light, in shadow
+              if(glm::length(lightBlock.intersectionPoint - closest.intersectionPoint) < glm::length(light.position - closest.intersectionPoint)){
+                diffuseContrib = Colour(0,0,0);
+                specularContrib = Colour(0,0,0);
+              }
+            }
+          }
+
+          diffuseCol = diffuseCol + diffuseContrib;
+          specularCol = specularCol + specularContrib;
         }
         Colour ambientCol = ambientLight.calcAmbient();
 
-        if(shadows) {
-          RayTriangleIntersection lightBlock;
-          glm::vec3 shadowStart = closest.intersectionPoint + glm::normalize(normal) * shadowBias;
-          if(closestIntersection(shadowStart,glm::normalize(diffuseLights[0].position - closest.intersectionPoint), tris, lightBlock, 0.1f, 100)){
-            //If distance to other object is less than distance to light, in shadow
-            if(glm::length(lightBlock.intersectionPoint - closest.intersectionPoint) < glm::length(diffuseLights[0].position - closest.intersectionPoint)){
-              diffuseCol = Colour(0,0,0);
-            }
-          }
-        }
+
 
         shadedCol = Colour(base, closest.intersectedTriangle.material.specular, ambientCol, diffuseCol, specularCol, closest.intersectedTriangle.material.albedo);
       }
