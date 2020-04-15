@@ -39,7 +39,7 @@ Camera cam = Camera(glm::vec3(0,0,5), 200, NO_AA, 5);
 Model model = Model("models/cornell-box",glm::vec3(0,0,0), 1);
 Model sphere = Model("models/sphere", glm::vec3(-1.8,0.9,-1.8), 1);
 Model logo = Model("models/logo",glm::vec3(0,2.9,-5.4), 1);
-Light diffuseLight = Light(glm::vec3(-0.884011, 5.118497, -3.567968), Colour(255,255,255), 40, glm::vec3(1.3, 0,0), glm::vec3(0,0,1.05),1,1);
+Light diffuseLight = Light(glm::vec3(-0.884011, 5.118497, -3.567968), Colour(255,255,255), 60, glm::vec3(1.3, 0,0), glm::vec3(0,0,1.05),1,1);
 Light ambientLight = Light(glm::vec3(0,0,0), Colour(255,255,255), 0.15f);
 
 std::vector<Light> dLights = {diffuseLight};

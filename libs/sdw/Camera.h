@@ -392,7 +392,7 @@ class Camera
 
                 //Calculate Specular intensity
                 glm::vec3 viewDir = glm::normalize(position - closest.intersectionPoint);
-                glm::vec3 reflectDir = glm::reflect(glm::normalize(closest.intersectionPoint - position), glm::normalize(normal));
+                glm::vec3 reflectDir = glm::reflect(glm::normalize(closest.intersectionPoint - cellPos), glm::normalize(normal));
 
                 specularVal += std::pow(std::max(glm::dot(viewDir, reflectDir), 0.0f), 10) / (light.uSteps*light.vSteps);
               }
