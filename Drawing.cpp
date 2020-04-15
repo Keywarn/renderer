@@ -40,8 +40,8 @@ Model model = Model("models/cornell-box",glm::vec3(0,0,0), 1);
 Model sphere = Model("models/sphere", glm::vec3(-1.8,0.9,-1.8), 1);
 Model logo = Model("models/logo",glm::vec3(0,2.9,-5.4), 1.5);
 Light diffuseLight = Light(glm::vec3(1, 3.8, -3), Colour(255,255,255), 40);
-Light diffuseLight2 = Light(glm::vec3(-1, 3.8, -3), Colour(255,255,255), 40);
-Light ambientLight = Light(glm::vec3(0,0,0), Colour(255,255,255), 0.2f);
+Light diffuseLight2 = Light(glm::vec3(-2, 3.8, -3), Colour(255,255,255), 40);
+Light ambientLight = Light(glm::vec3(0,0,0), Colour(255,255,255), 0.15f);
 
 std::vector<Light> dLights = {diffuseLight, diffuseLight2};
 

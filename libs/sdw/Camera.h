@@ -368,8 +368,13 @@ class Camera
           base = closest.intersectedTriangle.texture->data[texP.y][texP.x];        
         }
 
-        Colour diffuseCol = diffuseLights[0].calcDiffusePhong(closest, normal);
-        Colour specularCol = diffuseLights[0].calcSpecular(closest, normal, position);
+        Colour diffuseCol = Colour(0,0,0);
+        Colour specularCol = Colour(0,0,0);
+        for (auto &light : diffuseLights) {
+          diffuseCol = diffuseCol + light.calcDiffusePhong(closest, normal);
+          specularCol = specularCol + light.calcSpecular(closest, normal, position);
+
+        }
         Colour ambientCol = ambientLight.calcAmbient();
 
         if(shadows) {
@@ -386,7 +391,10 @@ class Camera
         shadedCol = Colour(base, closest.intersectedTriangle.material.specular, ambientCol, diffuseCol, specularCol, closest.intersectedTriangle.material.albedo);
       }
 
-      return (reflectCol * reflect + shadedCol * (1-reflect));
+      Colour final = reflectCol * reflect + shadedCol * (1-reflect);
+      final.fix();
+
+      return (final);
     }
 
     bool closestIntersection(glm::vec3 start, glm::vec3 dir, const std::vector<ModelTriangle> tris, RayTriangleIntersection& closest, float near, float far) {
