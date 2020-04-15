@@ -39,17 +39,17 @@ Camera cam = Camera(glm::vec3(0,0,5), 200, NO_AA, 5);
 Model model = Model("models/cornell-box",glm::vec3(0,0,0), 1);
 Model sphere = Model("models/sphere", glm::vec3(-1.8,0.9,-1.8), 1);
 Model logo = Model("models/logo",glm::vec3(0,2.9,-5.4), 1.5);
-Light diffuseLight = Light(glm::vec3(1, 3.8, -3), Colour(255,255,255), 30);
-Light diffuseLight2 = Light(glm::vec3(-1, 3.8, -3), Colour(255,255,255), 30);
-Light ambientLight = Light(glm::vec3(0,0,0), Colour(255,255,255), 0.5f);
+Light diffuseLight = Light(glm::vec3(1, 3.8, -3), Colour(255,255,255), 40);
+Light diffuseLight2 = Light(glm::vec3(-1, 3.8, -3), Colour(255,255,255), 40);
+Light ambientLight = Light(glm::vec3(0,0,0), Colour(255,255,255), 0.2f);
+
+std::vector<Light> dLights = {diffuseLight, diffuseLight2};
 
 int main(int argc, char* argv[])
 {
   SDL_Event event;
   cam.lookAt(model.position);
   cam.position.y += 2.5;
-
-  std::vector<Light> lights = {diffuseLight, diffuseLight2};
   std::vector<ModelTriangle> tris;
   tris.reserve(sphere.tris.size() + model.tris.size() + logo.tris.size());
   tris.insert(tris.end(), model.tris.begin(), model.tris.end());
@@ -82,7 +82,7 @@ void draw(std::vector<ModelTriangle> tris)
   logo.display(window, cam);
   if(window.getMode() == 3) cam.flat(tris, diffuseLight, ambientLight, window);
   else if(window.getMode() == 4) cam.gouraud(tris, diffuseLight, ambientLight, window);
-  else if(window.getMode() == 5) cam.phong(tris, diffuseLight, ambientLight, window);
+  else if(window.getMode() == 5) cam.phong(tris, dLights, ambientLight, window);
 }
 
 void update()
