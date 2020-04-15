@@ -302,7 +302,6 @@ class Camera
     }
 
     Colour shadeIntersection(RayTriangleIntersection closest, glm::vec3 dir, std::vector<ModelTriangle> tris, std::vector<Light> diffuseLights, Light ambientLight, int depth) {
-      bool shadows = true;
       float shadowBias = 0;
       float reflect = closest.intersectedTriangle.material.reflect;
       Colour reflectCol = Colour (0,0,0);
@@ -370,25 +369,38 @@ class Camera
 
         Colour diffuseCol = Colour(0,0,0);
         Colour specularCol = Colour(0,0,0);
+
+        //For each light work out contributions
         for (auto &light : diffuseLights) {
+          //Intesities for light
+          float diffuseVal = 0;
+          float specularVal = 0;
 
-          Colour diffuseContrib = light.calcDiffusePhong(closest, normal);
-          Colour specularContrib = light.calcSpecular(closest, normal, position);
+          //Add intesnity per cell
+          for (int u = 0; u < light.uSteps; u++) {
+            for (int v = 0; v < light.vSteps; v++) {
+              //Get the centre of each cell
+              glm::vec3 cellPos = light.position + (u+0.5f) * (light.uVec/(float)light.uSteps) + (v+0.5f) *(light.vVec/(float)light.vSteps);
+              glm::vec3 r = closest.intersectionPoint - cellPos;
 
-          if(shadows) {
-            RayTriangleIntersection lightBlock;
-            glm::vec3 shadowStart = closest.intersectionPoint + glm::normalize(normal) * shadowBias;
-            if(closestIntersection(shadowStart,glm::normalize(light.position - closest.intersectionPoint), tris, lightBlock, 0.05f, 100)){
-              //If distance to other object is less than distance to light, in shadow
-              if(glm::length(lightBlock.intersectionPoint - closest.intersectionPoint) < glm::length(light.position - closest.intersectionPoint)){
-                diffuseContrib = Colour(0,0,0);
-                specularContrib = Colour(0,0,0);
+              RayTriangleIntersection lightBlock;
+              glm::vec3 shadowStart = closest.intersectionPoint + glm::normalize(normal) * shadowBias;
+              //If there is no object in the way
+              if(!closestIntersection(shadowStart,glm::normalize(cellPos - closest.intersectionPoint), tris, lightBlock, 0.05f, glm::length(cellPos - closest.intersectionPoint))){
+                //Get the diffuse intensity
+                diffuseVal += light.power/(light.uSteps*light.vSteps) * std::max(glm::dot(glm::normalize(r), glm::normalize(normal)), 0.0f) / (4 * M_PI * std::pow(glm::length(r),2));
+
+                //Calculate Specular intensity
+                glm::vec3 viewDir = glm::normalize(position - closest.intersectionPoint);
+                glm::vec3 reflectDir = glm::reflect(glm::normalize(closest.intersectionPoint - position), glm::normalize(normal));
+
+                specularVal += std::pow(std::max(glm::dot(viewDir, reflectDir), 0.0f), 10) / (light.uSteps*light.vSteps);
               }
             }
           }
 
-          diffuseCol = diffuseCol + diffuseContrib;
-          specularCol = specularCol + specularContrib;
+          diffuseCol = diffuseCol + (light.colour * diffuseVal);
+          specularCol = specularCol + (light.colour * specularVal);
         }
         Colour ambientCol = ambientLight.calcAmbient();
 

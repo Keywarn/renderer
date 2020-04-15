@@ -59,33 +59,6 @@ class Light
       return (Colour(val * colour.red, val * colour.blue, val * colour.green));
     }
 
-    //Phong Diffuse Calcuations using area lights
-    Colour calcDiffusePhong(RayTriangleIntersection intersect, glm::vec3 normal) {
-
-      float val = 0;
-      for (int u = 0; u < uSteps; u++) {
-        for (int v = 0; v < vSteps; v++) {
-          //Get the centre of each cell
-          glm::vec3 cellPos = position + (u+0.5f) * (uVec/(float)uSteps) + (v+0.5f) *(vVec/(float)vSteps);
-          glm::vec3 r = intersect.intersectionPoint - cellPos;
-
-          val += power/(uSteps*vSteps) * std::max(glm::dot(glm::normalize(r), glm::normalize(normal)), 0.0f) / (4 * M_PI * std::pow(glm::length(r),2));
-        }
-      }
-
-      return (Colour(val * colour.red, val * colour.blue, val * colour.green));
-
-    }
-
-    Colour calcSpecular(RayTriangleIntersection intersect, glm::vec3 normal, glm::vec3 camPos) {
-      glm::vec3 viewDir = glm::normalize(camPos - intersect.intersectionPoint);
-      glm::vec3 reflectDir = glm::reflect(glm::normalize(intersect.intersectionPoint - position), glm::normalize(normal));
-
-      float val = std::pow(std::max(glm::dot(viewDir, reflectDir), 0.0f), 10);
-      
-      return (Colour(val * colour.red, val * colour.blue, val * colour.green));
-    }
-
     Colour calcAmbient() {
       return (Colour(power * colour.red, power * colour.blue, power * colour.green));
     }
