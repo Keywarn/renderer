@@ -39,7 +39,8 @@ Camera cam = Camera(glm::vec3(0,0,5), 200, NO_AA, 5);
 Model model = Model("models/cornell-box",glm::vec3(0,0,0), 1);
 Model sphere = Model("models/sphere", glm::vec3(-1.8,0.9,-1.8), 1);
 Model logo = Model("models/logo",glm::vec3(0,2.9,-5.4), 1.5);
-Light diffuseLight = Light(glm::vec3(0, 3.8, -3), Colour(255,255,255), 50);
+Light diffuseLight = Light(glm::vec3(1, 3.8, -3), Colour(255,255,255), 30);
+Light diffuseLight2 = Light(glm::vec3(-1, 3.8, -3), Colour(255,255,255), 30);
 Light ambientLight = Light(glm::vec3(0,0,0), Colour(255,255,255), 0.5f);
 
 int main(int argc, char* argv[])
@@ -48,6 +49,7 @@ int main(int argc, char* argv[])
   cam.lookAt(model.position);
   cam.position.y += 2.5;
 
+  std::vector<Light> lights = {diffuseLight, diffuseLight2};
   std::vector<ModelTriangle> tris;
   tris.reserve(sphere.tris.size() + model.tris.size() + logo.tris.size());
   tris.insert(tris.end(), model.tris.begin(), model.tris.end());
