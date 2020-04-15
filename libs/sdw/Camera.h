@@ -258,7 +258,7 @@ class Camera
             
             //Get the closest intersection of the ray and shade
             if(closestIntersection(position, dir, culled, closest, 0, 100)) {
-              shade = shade + shadeIntersection(closest, dir, tris, diffuseLights, ambientLight, depth);
+              shade = shade + shadeIntersection(closest, position, dir, tris, diffuseLights, ambientLight, depth);
               calc = true;
             }
           }
@@ -301,7 +301,7 @@ class Camera
       return(culled);
     }
 
-    Colour shadeIntersection(RayTriangleIntersection closest, glm::vec3 dir, std::vector<ModelTriangle> tris, std::vector<Light> diffuseLights, Light ambientLight, int depth) {
+    Colour shadeIntersection(RayTriangleIntersection closest, glm::vec3 origin, glm::vec3 dir, std::vector<ModelTriangle> tris, std::vector<Light> diffuseLights, Light ambientLight, int depth) {
       float shadowBias = 0;
       float reflect = closest.intersectedTriangle.material.reflect;
       Colour reflectCol = Colour (0,0,0);
@@ -354,7 +354,7 @@ class Camera
 
         RayTriangleIntersection mirror;
         if(closestIntersection(closest.intersectionPoint, -dir, tris, mirror, 0.00005, 100)) {
-          reflectCol = shadeIntersection(mirror, dir, tris, diffuseLights, ambientLight, depth-1);
+          reflectCol = shadeIntersection(mirror, closest.intersectionPoint, dir, tris, diffuseLights, ambientLight, depth-1);
         }
       }
       //Not reflected, work out 
@@ -391,7 +391,7 @@ class Camera
                 diffuseVal += light.power/(light.uSteps*light.vSteps) * std::max(glm::dot(glm::normalize(r), glm::normalize(normal)), 0.0f) / (4 * M_PI * std::pow(glm::length(r),2));
 
                 //Calculate Specular intensity
-                glm::vec3 viewDir = glm::normalize(position - closest.intersectionPoint);
+                glm::vec3 viewDir = glm::normalize(origin - closest.intersectionPoint);
                 glm::vec3 reflectDir = glm::reflect(glm::normalize(closest.intersectionPoint - cellPos), glm::normalize(normal));
 
                 specularVal += std::pow(std::max(glm::dot(viewDir, reflectDir), 0.0f), 10) / (light.uSteps*light.vSteps);
