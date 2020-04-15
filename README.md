@@ -61,7 +61,7 @@ The final grade awarded will depend upon the exact combination and features and 
 - [x] Super Sampling anti-aliasing
 - [x] Perspective corrected texture mapping
 - [ ] “Fancy” animation
-- [ ] Soft shadow
+- [x] Soft shadow
 - [x] Bump maps
 - [x] Basic clipping (bounding box)
 
