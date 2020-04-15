@@ -11,6 +11,12 @@ class Light
     Colour colour;
     float power;
 
+    //Area light properties
+    glm::vec3 uVec;
+    glm::vec3 vVec;
+    int uSteps;
+    int vSteps;
+
     Light()
     {
     }
@@ -19,6 +25,17 @@ class Light
       position = pos;
       colour = lightCol;
       power = pow;
+    }
+
+    Light(glm::vec3 pos, Colour lightCol, float pow, glm::vec3 uV, glm::vec3 vV, int uS, int vS) {
+      position = pos;
+      colour = lightCol;
+      power = pow;
+
+      uVec = uV;
+      vVec = vV;
+      uSteps = uS;
+      vSteps = vS;
     }
 
     Colour calcDiffuse(RayTriangleIntersection intersect)  {
