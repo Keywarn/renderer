@@ -352,18 +352,35 @@ class Camera
       //If it is reflective, get the reflected shade
       if(reflect > 0 && reflect <= 1 && depth >= 1) {
 
-        dir = glm::reflect(dir, glm::normalize(normal));
+        glm::vec3 newDir = glm::reflect(dir, glm::normalize(normal));
 
         RayTriangleIntersection mirror;
-        if(closestIntersection(closest.intersectionPoint, dir, tris, mirror, 0.00005, 100)) {
-          reflectCol = shadeIntersection(mirror, closest.intersectionPoint, dir, tris, diffuseLights, ambientLight, depth-1);
+        if(closestIntersection(closest.intersectionPoint, newDir, tris, mirror, 0.00005, 100)) {
+          reflectCol = shadeIntersection(mirror, closest.intersectionPoint, newDir, tris, diffuseLights, ambientLight, depth-1);
         }
       }
       //transparent, get the material on the other side
       if(transparent > 0 && transparent <= 1 && depth >= 1) {
+
+        float cosi = glm::dot(glm::normalize(dir), glm::normalize(normal));
+        float curIOR = 1;
+        float newIOR = closest.intersectedTriangle.material.ior;
+        glm::vec3 newNormal = normal;
+
+        if (cosi < 0) cosi = -cosi;
+        else {
+          std::swap(curIOR, newIOR);
+          newNormal = -normal;
+        }
+
+        float ratio = curIOR / newIOR;
+        float k = 1 - ratio * ratio * (1 - cosi * cosi);
+
+        glm::vec3 newDir = ratio * dir + (ratio * cosi - sqrtf(k)) * glm::normalize(newNormal);
+
         RayTriangleIntersection glass;
-        if(closestIntersection(closest.intersectionPoint, dir, tris, glass, 0.00005, 100)) {
-          transparentCol = shadeIntersection(glass, closest.intersectionPoint, dir, tris, diffuseLights, ambientLight, depth-1);
+        if(closestIntersection(closest.intersectionPoint, newDir, tris, glass, 0.00005, 100)) {
+          transparentCol = shadeIntersection(glass, closest.intersectionPoint, newDir, tris, diffuseLights, ambientLight, depth-1);
         }
       }
 
