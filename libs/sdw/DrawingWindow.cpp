@@ -140,6 +140,4 @@ void DrawingWindow::writeImage(std::string fname) {
       }
 
   img.close();
-
-  std::cout << "Wrote image: " + fname + ".ppm" << std::endl;
 }
