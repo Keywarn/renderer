@@ -304,7 +304,9 @@ class Camera
     Colour shadeIntersection(RayTriangleIntersection closest, glm::vec3 origin, glm::vec3 dir, std::vector<ModelTriangle> tris, std::vector<Light> diffuseLights, Light ambientLight, int depth) {
       float shadowBias = 0;
       float reflect = closest.intersectedTriangle.material.reflect;
+      float transparent = closest.intersectedTriangle.material.transparent;
       Colour reflectCol = Colour (0,0,0);
+      Colour transparentCol = Colour(0,0,0);
       Colour shadedCol = Colour (0,0,0);
 
       //Create normal vector
@@ -357,8 +359,17 @@ class Camera
           reflectCol = shadeIntersection(mirror, closest.intersectionPoint, dir, tris, diffuseLights, ambientLight, depth-1);
         }
       }
-      //Not reflected, work out 
-      if ( reflect < 1) {
+      //transparent, get the material on the other side
+      if(transparent > 0 && transparent <= 1 && depth >= 1) {
+        std::cout << "TRANS" << std::endl;
+        RayTriangleIntersection glass;
+        if(closestIntersection(closest.intersectionPoint, dir, tris, glass, 0.00005, 100)) {
+          transparentCol = shadeIntersection(glass, closest.intersectionPoint, dir, tris, diffuseLights, ambientLight, depth-1);
+        }
+      }
+
+      //Not reflected or transparent, work out 
+      if ( reflect < 1 || transparent < 1) {
         Colour base;
         //Get base colour of triangle if it isn't textured
         if(!closest.intersectedTriangle.textured) base = (closest.intersectedTriangle.material.diffuse);
@@ -409,7 +420,7 @@ class Camera
         shadedCol = Colour(base, closest.intersectedTriangle.material.specular, ambientCol, diffuseCol, specularCol, closest.intersectedTriangle.material.albedo);
       }
 
-      Colour final = reflectCol * reflect + shadedCol * (1-reflect);
+      Colour final = reflectCol * reflect + transparentCol * transparent + shadedCol * (1-(reflect+transparent));
       final.fix();
 
       return (final);
