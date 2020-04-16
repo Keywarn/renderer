@@ -306,7 +306,7 @@ class Camera
       float reflect = closest.intersectedTriangle.material.reflect;
       float transparent = closest.intersectedTriangle.material.transparent;
       Colour reflectCol = Colour (0,0,0);
-      Colour transparentCol = Colour(0,0,0);
+      Colour transparentCol = Colour(255,255,255);
       Colour shadedCol = Colour (0,0,0);
 
       //Create normal vector
@@ -376,11 +376,13 @@ class Camera
         float ratio = curIOR / newIOR;
         float k = 1 - ratio * ratio * (1 - cosi * cosi);
 
-        glm::vec3 newDir = ratio * dir + (ratio * cosi - sqrtf(k)) * glm::normalize(newNormal);
-
-        RayTriangleIntersection glass;
-        if(closestIntersection(closest.intersectionPoint, newDir, tris, glass, 0.00005, 100)) {
-          transparentCol = shadeIntersection(glass, closest.intersectionPoint, newDir, tris, diffuseLights, ambientLight, depth-1);
+        //Not total internal refraction
+        if(k > 0) {
+          glm::vec3 newDir = ratio * glm::normalize(dir) + (ratio * cosi - sqrtf(k)) * glm::normalize(newNormal);
+          RayTriangleIntersection glass;
+          if(closestIntersection(closest.intersectionPoint, newDir, tris, glass, 0.00005, 100)) {
+            transparentCol = shadeIntersection(glass, closest.intersectionPoint, newDir, tris, diffuseLights, ambientLight, depth-1);
+          }
         }
       }
 
