@@ -83,6 +83,13 @@ class Model
         else if(toks[0] == "Ref") {
           curMaterial.reflect = std::stof(toks[1]);
         }
+        //Transparency component
+        else if(toks[0] == "d") {
+          curMaterial.transparent = std::stof(toks[1]);
+        }
+        else if(toks[0] == "ior") {
+          curMaterial.ior = std::stof(toks[1]);
+        }
       }
       //Sweep for vertices
       std::ifstream vertFile;

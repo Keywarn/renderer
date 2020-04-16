@@ -10,6 +10,9 @@ class Material
     float albedo;
     float reflect;
 
+    float transparent;
+    float ior;
+
     Material()
     {
       name = "";
@@ -17,6 +20,9 @@ class Material
       specular = Colour(0,0,0);
       diffuse = Colour(0,0,0);
       reflect = 0;
+
+      transparent = 0;
+      float ior = 1;
 
     }
 
@@ -27,6 +33,9 @@ class Material
       specular = Colour(0,0,0);
       diffuse = Colour(0,0,0);
       reflect = 0;
+
+      transparent = 0;
+      float ior = 1;
     }
 
     //Simple RGB colour
@@ -37,6 +46,9 @@ class Material
       albedo = 1;
       specular = Colour(0,0,0);
       reflect = 0;
+
+      transparent = 0;
+      float ior = 1;
     }
 
     
