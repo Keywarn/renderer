@@ -352,16 +352,15 @@ class Camera
       //If it is reflective, get the reflected shade
       if(reflect > 0 && reflect <= 1 && depth >= 1) {
 
-        dir = glm::reflect(-dir, glm::normalize(normal));
+        dir = glm::reflect(dir, glm::normalize(normal));
 
         RayTriangleIntersection mirror;
-        if(closestIntersection(closest.intersectionPoint, -dir, tris, mirror, 0.00005, 100)) {
+        if(closestIntersection(closest.intersectionPoint, dir, tris, mirror, 0.00005, 100)) {
           reflectCol = shadeIntersection(mirror, closest.intersectionPoint, dir, tris, diffuseLights, ambientLight, depth-1);
         }
       }
       //transparent, get the material on the other side
       if(transparent > 0 && transparent <= 1 && depth >= 1) {
-        std::cout << "TRANS" << std::endl;
         RayTriangleIntersection glass;
         if(closestIntersection(closest.intersectionPoint, dir, tris, glass, 0.00005, 100)) {
           transparentCol = shadeIntersection(glass, closest.intersectionPoint, dir, tris, diffuseLights, ambientLight, depth-1);

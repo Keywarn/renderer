@@ -15,8 +15,8 @@
 using namespace std;
 using namespace glm;
 
-#define WIDTH 480
-#define HEIGHT 395
+#define WIDTH 640
+#define HEIGHT 480
 
 //Camera rotations
 #define PITCH glm::vec3(1,0,0)
@@ -40,7 +40,7 @@ Model model = Model("models/cornell-box",glm::vec3(0,0,0), 1);
 Model sphere = Model("models/sphere", glm::vec3(-1.8,0.9,-1.8), 1);
 Model logo = Model("models/logo",glm::vec3(0,2.9,-5.4), 1);
 Light diffuseLight = Light(glm::vec3(-0.884011, 5.118497, -3.567968), Colour(255,255,255), 60, glm::vec3(1.3, 0,0), glm::vec3(0,0,1.05),1,1);
-Light ambientLight = Light(glm::vec3(0,0,0), Colour(255,255,255), 0.15f);
+Light ambientLight = Light(glm::vec3(0,0,0), Colour(255,255,255), 0.25f);
 
 std::vector<Light> dLights = {diffuseLight};
 

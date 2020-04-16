@@ -22,7 +22,7 @@ class Material
       reflect = 0;
 
       transparent = 0;
-      float ior = 1;
+      ior = 1;
 
     }
 
@@ -35,7 +35,7 @@ class Material
       reflect = 0;
 
       transparent = 0;
-      float ior = 1;
+      ior = 1;
     }
 
     //Simple RGB colour
@@ -48,7 +48,7 @@ class Material
       reflect = 0;
 
       transparent = 0;
-      float ior = 1;
+      ior = 1;
     }
 
     
