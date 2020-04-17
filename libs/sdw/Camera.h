@@ -458,10 +458,23 @@ class Camera
 
           //Not total internal refraction
           glm::vec3 newDir = ratio * glm::normalize(dir) + (ratio * cosi - sqrtf(k)) * glm::normalize(newNormal);
-          RayTriangleIntersection glass;
-          if(closestIntersection(closest.intersectionPoint, newDir, tris, glass, 0.00005, 100)) {
-            return(shadeIntersection(glass, closest.intersectionPoint, newDir, tris, diffuseLights, ambientLight, depth-1));
+
+          Colour refractedCol = Colour(0,0,0);
+          Colour reflectedCol = Colour(0,0,0);
+
+          RayTriangleIntersection refracted;
+          if(closestIntersection(closest.intersectionPoint, newDir, tris, refracted, 0.00005, 100)) {
+            refractedCol = shadeIntersection(refracted, closest.intersectionPoint, newDir, tris, diffuseLights, ambientLight, depth-1);
           }
+
+          glm::vec3 refDir = glm::reflect(dir, glm::normalize(normal));
+
+          RayTriangleIntersection reflect;
+          if(closestIntersection(closest.intersectionPoint, refDir, tris, reflect, 0.00005, 100)) {
+            reflectedCol = shadeIntersection(reflect, closest.intersectionPoint, refDir, tris, diffuseLights, ambientLight, depth-1);
+          }
+
+          return (reflectedCol * kr + refractedCol * (1-kr));
         }
 
         std::cout << "Refraction shader issue" << std::endl;
