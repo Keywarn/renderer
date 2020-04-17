@@ -72,3 +72,7 @@ The final grade awarded will depend upon the exact combination and features and 
 - [ ] Advance clipping (frustum)
 - [ ] Photon maps and caustics
 - [ ] “Intelligent” model simplification
+
+### Extras
+- [ ] Thin film simulation (bubbles)
+- [ ] Volumetric Lightin
