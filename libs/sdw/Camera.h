@@ -361,29 +361,7 @@ class Camera
       }
       //transparent, get the material on the other side
       if(transparent > 0 && transparent <= 1 && depth >= 1) {
-
-        float cosi = glm::dot(glm::normalize(dir), glm::normalize(normal));
-        float curIOR = 1;
-        float newIOR = closest.intersectedTriangle.material.ior;
-        glm::vec3 newNormal = normal;
-
-        if (cosi < 0) cosi = -cosi;
-        else {
-          std::swap(curIOR, newIOR);
-          newNormal = -normal;
-        }
-
-        float ratio = curIOR / newIOR;
-        float k = 1 - ratio * ratio * (1 - cosi * cosi);
-
-        //Not total internal refraction
-        if(k > 0) {
-          glm::vec3 newDir = ratio * glm::normalize(dir) + (ratio * cosi - sqrtf(k)) * glm::normalize(newNormal);
-          RayTriangleIntersection glass;
-          if(closestIntersection(closest.intersectionPoint, newDir, tris, glass, 0.00005, 100)) {
-            transparentCol = shadeIntersection(glass, closest.intersectionPoint, newDir, tris, diffuseLights, ambientLight, depth-1);
-          }
-        }
+        transparentCol = shadeRefract(dir, normal, closest, tris, diffuseLights, ambientLight, depth);
       }
 
       //Not reflected or transparent, work out 
@@ -442,6 +420,52 @@ class Camera
       final.fix();
 
       return (final);
+    }
+
+    Colour shadeRefract(glm::vec3 dir, glm::vec3 normal, RayTriangleIntersection closest, std::vector<ModelTriangle> tris, std::vector<Light> diffuseLights, Light ambientLight, int depth) {
+        float cosi = glm::dot(glm::normalize(dir), glm::normalize(normal));
+        float curIOR = 1;
+        float newIOR = closest.intersectedTriangle.material.ior;
+        glm::vec3 newNormal = normal;
+
+        if (cosi < 0) cosi = -cosi;
+        else {
+          std::swap(curIOR, newIOR);
+          newNormal = -normal;
+        }
+
+        float sint = curIOR / newIOR * sqrtf(std::max(0.f, 1 - cosi * cosi)); 
+        float kr = 0;
+        //Total Internal refraction
+        if (sint >= 1) {
+          glm::vec3 newDir = glm::reflect(dir, glm::normalize(normal));
+
+          RayTriangleIntersection fresnel;
+          if(closestIntersection(closest.intersectionPoint, newDir, tris, fresnel, 0.00005, 100)) {
+            return(shadeIntersection(fresnel, closest.intersectionPoint, newDir, tris, diffuseLights, ambientLight, depth-1));
+          }
+        }
+        //Some reflection/refraction
+        else { 
+          float cost = sqrtf(std::max(0.f, 1 - sint * sint)); 
+          cosi = std::fabsf(cosi); 
+          float Rs = ((newIOR * cosi) - (curIOR * cost)) / ((newIOR * cosi) + (curIOR * cost)); 
+          float Rp = ((curIOR * cosi) - (newIOR * cost)) / ((curIOR * cosi) + (newIOR * cost)); 
+          kr = (Rs * Rs + Rp * Rp) / 2; 
+        
+          float ratio = curIOR / newIOR;
+          float k = 1 - ratio * ratio * (1 - cosi * cosi);
+
+          //Not total internal refraction
+          glm::vec3 newDir = ratio * glm::normalize(dir) + (ratio * cosi - sqrtf(k)) * glm::normalize(newNormal);
+          RayTriangleIntersection glass;
+          if(closestIntersection(closest.intersectionPoint, newDir, tris, glass, 0.00005, 100)) {
+            return(shadeIntersection(glass, closest.intersectionPoint, newDir, tris, diffuseLights, ambientLight, depth-1));
+          }
+        }
+
+        std::cout << "Refraction shader issue" << std::endl;
+        return (Colour(0,0,0));
     }
 
     bool closestIntersection(glm::vec3 start, glm::vec3 dir, const std::vector<ModelTriangle> tris, RayTriangleIntersection& closest, float near, float far) {
