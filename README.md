@@ -67,7 +67,7 @@ The final grade awarded will depend upon the exact combination and features and 
 
 ### 80 - some of
 - [ ] Environment maps
-- [ ] Complex “interesting” materials (e.g. glass)
+- [x] Complex “interesting” materials (e.g. glass)
 - [ ] Line drawing optimisations (e.g. Bresenham)
 - [ ] Advance clipping (frustum)
 - [ ] Photon maps and caustics
