@@ -12,8 +12,12 @@ class RayTriangleIntersection
     float u;
     float v;
 
+    Colour shadowColour;
+    bool shadowRay;
+
     RayTriangleIntersection() {
-        
+        shadowColour = Colour(0,0,0);
+        shadowRay = false;
     }
 
     RayTriangleIntersection(glm::vec3 point, float distance, ModelTriangle tri, float uu, float vv)
