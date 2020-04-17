@@ -1,3 +1,4 @@
 *.o
 Drawing
 test.ppm
+export.ppm
