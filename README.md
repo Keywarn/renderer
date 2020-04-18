@@ -25,6 +25,8 @@ A rendering engine written in CPP.
 
 ### Other
 - P - export
+- J - Line Anti-Aliasing
+- K - Super Sampling
 
 ## Indicative marking features
 

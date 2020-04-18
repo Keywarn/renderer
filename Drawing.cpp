@@ -34,7 +34,7 @@ void draw(std::vector<ModelTriangle> tris);
 void update();
 void handleEvent(SDL_Event event);
 
-DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false, 1);
+DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false, 1, false, false);
 Camera cam = Camera(glm::vec3(0,0,5), 200, NO_AA, 5);
 Model model = Model("models/cornell-box",glm::vec3(0,0,0), 1);
 Model sphere = Model("models/sphere", glm::vec3(-1.8,0.9,-1.8), 1);
@@ -116,6 +116,8 @@ void handleEvent(SDL_Event event)
     //else if(event.key.keysym.sym == SDLK_u) CanvasTriangle(CanvasPoint(rand()%WIDTH, rand()%HEIGHT), CanvasPoint(rand()%WIDTH,rand()%HEIGHT), CanvasPoint(rand()%WIDTH, rand()%HEIGHT), Colour(rand()%WIDTH, rand()%HEIGHT, rand()%255)).outline(window);
     //else if(event.key.keysym.sym == SDLK_f) CanvasTriangle(CanvasPoint(rand()%WIDTH, rand()%HEIGHT), CanvasPoint(rand()%WIDTH,rand()%HEIGHT), CanvasPoint(rand()%WIDTH, rand()%HEIGHT), Colour(rand()%WIDTH, rand()%HEIGHT, rand()%255)).fill(window);
     else if(event.key.keysym.sym == SDLK_p) window.writeImage("export");
+    else if(event.key.keysym.sym == SDLK_j) window.antiAliasing(window.getAA());
+    else if(event.key.keysym.sym == SDLK_k) window.superSampling(window.getSS());
 
   }
   else if(event.type == SDL_MOUSEBUTTONDOWN) cout << "MOUSE CLICKED" << endl;

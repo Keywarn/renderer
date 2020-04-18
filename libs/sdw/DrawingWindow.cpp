@@ -7,7 +7,7 @@ DrawingWindow::DrawingWindow()
 }
 
 // Complex constructor method
-DrawingWindow::DrawingWindow(int w, int h, bool fullscreen, int m)
+DrawingWindow::DrawingWindow(int w, int h, bool fullscreen, int m, bool a, bool s)
 {
   if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) !=0) {
     printMessageAndQuit("Could not initialise SDL: ", SDL_GetError());
@@ -17,6 +17,8 @@ DrawingWindow::DrawingWindow(int w, int h, bool fullscreen, int m)
   height = h;
   //MODE: 1 wireframe, 2 rasterise, 3 raytrace
   mode = m;
+  AA = a;
+  SS = s;
   pixelBuffer = new uint32_t[width*height];
   depthBuffer = new float[width*height];
   std::fill_n(depthBuffer, width*height, 0);
@@ -120,6 +122,36 @@ void DrawingWindow::setMode(int m) {
 
 int DrawingWindow::getMode() {
   return(mode);
+}
+
+void DrawingWindow::antiAliasing(bool a){
+  if(a == true){
+    AA = false;
+    std::cout << "Anti-Aliasing Off" << std::endl;
+  }
+  if(a == false){
+    AA = true;
+    std::cout << "Anti-Aliasing On" << std::endl;
+  }
+}
+
+bool DrawingWindow::getAA(){
+  return AA;
+}
+
+void DrawingWindow::superSampling(bool s){
+  if(s == true){
+    SS = false;
+    std::cout << "Super Samping Off" << std::endl;
+  }
+  if(s == false){
+    SS = true;
+    std::cout << "Super Samping On" << std::endl;
+  }
+}
+
+bool DrawingWindow::getSS(){
+  return SS;
 }
 
 void DrawingWindow::writeImage(std::string fname) {

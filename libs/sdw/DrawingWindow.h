@@ -13,6 +13,8 @@ private:
   uint32_t *pixelBuffer;
   float *depthBuffer;
   int mode;
+  int AA;
+  int SS;
 
 public:
   int height;
@@ -20,7 +22,7 @@ public:
 
   // Constructor method
   DrawingWindow();
-  DrawingWindow(int w, int h, bool fullscreen, int m);
+  DrawingWindow(int w, int h, bool fullscreen, int m, bool a, bool s);
   void destroy();
   void renderFrame();
   bool pollForInputEvents(SDL_Event *event);
@@ -45,5 +47,11 @@ public:
   void setMode(int m);
 
   int getMode();
+
+  void antiAliasing(bool a);
+  bool getAA();
+
+  void superSampling(bool s);
+  bool getSS();
 
 };
