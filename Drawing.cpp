@@ -38,7 +38,7 @@ DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false, 1);
 Camera cam = Camera(glm::vec3(0,0,5), 200, NO_AA, 5);
 Model model = Model("models/cornell-box",glm::vec3(0,0,0), 1);
 Model sphere = Model("models/sphere", glm::vec3(-1.8,0.9,-1.8), 1);
-Model logo = Model("models/logo",glm::vec3(0,2.9,-5.4), 1);
+Model logo = Model("models/logo",glm::vec3(0,2.9,-5.4), 2);
 Light diffuseLight = Light(glm::vec3(-0.884011, 5.118497, -3.567968), Colour(255,255,255), 60, glm::vec3(1.3, 0,0), glm::vec3(0,0,1.05),1,1);
 Light ambientLight = Light(glm::vec3(0,0,0), Colour(255,255,255), 0.25f);
 
@@ -77,10 +77,12 @@ int main(int argc, char* argv[])
 void draw(std::vector<ModelTriangle> tris)
 {
   window.clearPixels();
-  model.display(window, cam);
-  sphere.display(window, cam);
-  logo.display(window, cam);
-  if(window.getMode() == 3) cam.flat(tris, diffuseLight, ambientLight, window);
+  if (window.getMode() == 1 || window.getMode() == 2){
+    model.display(window, cam);
+    sphere.display(window, cam);
+    logo.display(window, cam);
+  }
+  else if(window.getMode() == 3) cam.flat(tris, diffuseLight, ambientLight, window);
   else if(window.getMode() == 4) cam.gouraud(tris, diffuseLight, ambientLight, window);
   else if(window.getMode() == 5) cam.phong(tris, dLights, ambientLight, window);
 }
