@@ -247,7 +247,6 @@ class Camera
         for(int x = 0; x < window.width; x++){
 
           Colour shade = Colour(0,0,0);
-          bool calc = false;
 
           RayTriangleIntersection closest;
           for (int n = 0; n < samples.size(); n++) {
@@ -259,7 +258,6 @@ class Camera
             //Get the closest intersection of the ray and shade
             if(closestIntersection(position, dir, culled, closest, 0, 100)) {
               shade = shade + shadeIntersection(closest, position, dir, tris, diffuseLights, ambientLight, depth);
-              calc = true;
             }
           }
           shade = shade / (float) samples.size();
