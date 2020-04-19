@@ -411,6 +411,17 @@ class Camera
           //Do the monte carlo stuff
           if(difSamples > 1) {
             ambientCol = Colour(0,0,0);
+
+            for (int i = 0; i < difSamples; i++) { 
+              //Get samples in hemisphere
+              RayTriangleIntersection global;
+              glm::vec3 sampleDir = glm::vec3(0,1,0);
+              //If there is no object in the way
+              if(!closestIntersection(closest.intersectionPoint,glm::normalize(sampleDir), tris, global, 0.05f, 100)){
+              ambientCol = ambientCol + shadeIntersection(global, closest.intersectionPoint, sampleDir, tris, diffuseLights, difSamples, depth-1);
+              } 
+            }
+            ambientCol = ambientCol / difSamples; 
           }
         }
 
