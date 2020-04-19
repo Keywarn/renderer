@@ -84,7 +84,7 @@ void draw(std::vector<ModelTriangle> tris)
   }
   else if(window.getMode() == 3) cam.flat(tris, diffuseLight, ambientLight, window);
   else if(window.getMode() == 4) cam.gouraud(tris, diffuseLight, ambientLight, window);
-  else if(window.getMode() == 5) cam.phong(tris, dLights, ambientLight, window);
+  else if(window.getMode() == 5) cam.phong(tris, dLights, 1, window);
 }
 
 void update()

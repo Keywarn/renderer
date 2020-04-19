@@ -36,10 +36,17 @@ class Colour
     }
 
     //Colour from base, specular(material), diffuse, specular(light) and amibent pass
-    Colour(Colour base, Colour specMat, Colour ambient, Colour diffuse, Colour specular, float albedo) {
-      red = base.red * (ambient.red + (albedo *diffuse.red))/255 + (specMat.red * specular.red/255);
-      green = base.green * (ambient.green + (albedo * diffuse.green))/255 + (specMat.green * specular.green/255);
-      blue = base.blue * (ambient.blue + (albedo * diffuse.blue))/255 + (specMat.blue * specular.blue/255);
+    Colour(Colour base, Colour specMat, Colour ambient, Colour diffuse, Colour specular, float albedo, bool global) {
+      if(!global) {
+        red = base.red * (ambient.red + (albedo *diffuse.red))/255 + (specMat.red * specular.red/255);
+        green = base.green * (ambient.green + (albedo * diffuse.green))/255 + (specMat.green * specular.green/255);
+        blue = base.blue * (ambient.blue + (albedo * diffuse.blue))/255 + (specMat.blue * specular.blue/255);
+      }
+      else {
+        red = base.red * ((albedo *diffuse.red))/255 + (specMat.red * specular.red/255) + ambient.red;
+        green = base.green * ((albedo * diffuse.green))/255 + (specMat.green * specular.green/255) + ambient.green;
+        blue = base.blue * ((albedo * diffuse.blue))/255 + (specMat.blue * specular.blue/255) + ambient.blue;
+      }
 
       fix();
       packed = packed = (255<<24) + (red<<16) + (green<<8) + blue;

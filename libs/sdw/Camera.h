@@ -233,7 +233,7 @@ class Camera
       return tris;
     }
 
-    void phong(const std::vector<ModelTriangle> tris, std::vector<Light> diffuseLights, Light ambientLight, DrawingWindow window) {
+    void phong(const std::vector<ModelTriangle> tris, std::vector<Light> diffuseLights, int difSamples, DrawingWindow window) {
       
       //Only need to change our culled tris if camera viewport has dirty flag set
       if(dirty) {
@@ -257,7 +257,7 @@ class Camera
             
             //Get the closest intersection of the ray and shade
             if(closestIntersection(position, dir, culled, closest, 0, 100)) {
-              shade = shade + shadeIntersection(closest, position, dir, tris, diffuseLights, ambientLight, depth);
+              shade = shade + shadeIntersection(closest, position, dir, tris, diffuseLights, difSamples, depth);
             }
           }
           shade = shade / (float) samples.size();
@@ -299,13 +299,14 @@ class Camera
       return(culled);
     }
 
-    Colour shadeIntersection(RayTriangleIntersection closest, glm::vec3 origin, glm::vec3 dir, std::vector<ModelTriangle> tris, std::vector<Light> diffuseLights, Light ambientLight, int depth) {
+    Colour shadeIntersection(RayTriangleIntersection closest, glm::vec3 origin, glm::vec3 dir, std::vector<ModelTriangle> tris, std::vector<Light> diffuseLights, int difSamples, int depth) {
       float shadowBias = 0;
       float reflect = closest.intersectedTriangle.material.reflect;
       float transparent = closest.intersectedTriangle.material.transparent;
       Colour reflectCol = Colour (0,0,0);
       Colour transparentCol = Colour(255,255,255);
       Colour shadedCol = Colour (0,0,0);
+      Colour ambientCol = Colour (0,0,0);
 
       //Create normal vector
       glm::vec3 normal = interNormal(closest.intersectedTriangle.vertices[0]->normal, closest.intersectedTriangle.vertices[1]->normal, closest.intersectedTriangle.vertices[2]->normal, closest.u, closest.v);
@@ -354,12 +355,12 @@ class Camera
 
         RayTriangleIntersection mirror;
         if(closestIntersection(closest.intersectionPoint, newDir, tris, mirror, 0.00005, 100)) {
-          reflectCol = shadeIntersection(mirror, closest.intersectionPoint, newDir, tris, diffuseLights, ambientLight, depth-1);
+          reflectCol = shadeIntersection(mirror, closest.intersectionPoint, newDir, tris, diffuseLights, difSamples, depth-1);
         }
       }
       //transparent, get the material on the other side
       if(transparent > 0 && transparent <= 1 && depth >= 1) {
-        transparentCol = shadeRefract(dir, normal, closest, tris, diffuseLights, ambientLight, depth);
+        transparentCol = shadeRefract(dir, normal, closest, tris, diffuseLights, difSamples, depth);
       }
 
       //Not reflected or transparent, work out 
@@ -406,12 +407,19 @@ class Camera
 
           diffuseCol = diffuseCol + (light.colour * diffuseVal);
           specularCol = specularCol + (light.colour * specularVal);
+          
+          //Do the monte carlo stuff
+          if(difSamples > 1) {
+            ambientCol = Colour(0,0,0);
+          }
         }
-        Colour ambientCol = ambientLight.calcAmbient();
 
+        if(difSamples == 1) {
+          ambientCol = Colour(55,55,55);
+          shadedCol = Colour(base, closest.intersectedTriangle.material.specular, ambientCol, diffuseCol, specularCol, closest.intersectedTriangle.material.albedo, false);
+        }
+        else shadedCol = Colour(base, closest.intersectedTriangle.material.specular, ambientCol, diffuseCol, specularCol, closest.intersectedTriangle.material.albedo, true);
 
-
-        shadedCol = Colour(base, closest.intersectedTriangle.material.specular, ambientCol, diffuseCol, specularCol, closest.intersectedTriangle.material.albedo);
       }
 
       Colour final = reflectCol * reflect + transparentCol * transparent + shadedCol * (1-(reflect+transparent));
@@ -420,7 +428,7 @@ class Camera
       return (final);
     }
 
-    Colour shadeRefract(glm::vec3 dir, glm::vec3 normal, RayTriangleIntersection closest, std::vector<ModelTriangle> tris, std::vector<Light> diffuseLights, Light ambientLight, int depth) {
+    Colour shadeRefract(glm::vec3 dir, glm::vec3 normal, RayTriangleIntersection closest, std::vector<ModelTriangle> tris, std::vector<Light> diffuseLights, int difSamples, int depth) {
         float cosi = glm::dot(glm::normalize(dir), glm::normalize(normal));
         float curIOR = 1;
         float newIOR = closest.intersectedTriangle.material.ior;
@@ -440,7 +448,7 @@ class Camera
 
           RayTriangleIntersection fresnel;
           if(closestIntersection(closest.intersectionPoint, newDir, tris, fresnel, 0.00005, 100)) {
-            return(shadeIntersection(fresnel, closest.intersectionPoint, newDir, tris, diffuseLights, ambientLight, depth-1));
+            return(shadeIntersection(fresnel, closest.intersectionPoint, newDir, tris, diffuseLights, difSamples, depth-1));
           }
         }
         //Some reflection/refraction
@@ -462,14 +470,14 @@ class Camera
 
           RayTriangleIntersection refracted;
           if(closestIntersection(closest.intersectionPoint, newDir, tris, refracted, 0.00005, 100)) {
-            refractedCol = shadeIntersection(refracted, closest.intersectionPoint, newDir, tris, diffuseLights, ambientLight, depth-1);
+            refractedCol = shadeIntersection(refracted, closest.intersectionPoint, newDir, tris, diffuseLights, difSamples, depth-1);
           }
 
           glm::vec3 refDir = glm::reflect(dir, glm::normalize(normal));
 
           RayTriangleIntersection reflect;
           if(closestIntersection(closest.intersectionPoint, refDir, tris, reflect, 0.00005, 100)) {
-            reflectedCol = shadeIntersection(reflect, closest.intersectionPoint, refDir, tris, diffuseLights, ambientLight, depth-1);
+            reflectedCol = shadeIntersection(reflect, closest.intersectionPoint, refDir, tris, diffuseLights, difSamples, depth-1);
           }
 
           return (reflectedCol * kr + refractedCol * (1-kr));
