@@ -428,9 +428,12 @@ class Camera
 
         if(difSamples == 1) {
           ambientCol = Colour(55,55,55);
-          shadedCol = Colour(base, closest.intersectedTriangle.material.specular, ambientCol, diffuseCol, specularCol, closest.intersectedTriangle.material.albedo, false);
+          shadedCol = Colour(base, closest.intersectedTriangle.material.specular, ambientCol, diffuseCol, specularCol, closest.intersectedTriangle.material.albedo);
         }
-        else shadedCol = Colour(base, closest.intersectedTriangle.material.specular, ambientCol, diffuseCol, specularCol, closest.intersectedTriangle.material.albedo, true);
+        else  {
+          Colour specMat = closest.intersectedTriangle.material.specular;
+          shadedCol = (((base * diffuseCol/255) + ambientCol) * closest.intersectedTriangle.material.albedo) + (specMat * specularCol/255);
+        }
 
       }
 
