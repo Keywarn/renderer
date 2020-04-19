@@ -245,7 +245,7 @@ class Camera
       //For each pixel in the image, create a ray
       for (int y = 0; y < window.height; y++) {
         for(int x = 0; x < window.width; x++){
-
+          std::cout << "X: " << x << '/' << window.width << " Y: " << y << '/' << window.height << "  \r";
           Colour shade = Colour(0,0,0);
 
           RayTriangleIntersection closest;
@@ -265,6 +265,7 @@ class Camera
           window.setPixelColour(window.width - x,y,shade.packed, 1/closest.distanceFromCamera);
         }
       }
+      std::cout << std::endl;
     }
 
     std::vector<ModelTriangle> backCull (std::vector<ModelTriangle> tris, int width, int height) {
@@ -348,7 +349,7 @@ class Camera
         normal = TBN * glm::vec3((nCol.red/ (float) 255) * 2 -1, (nCol.green/ (float) 255) * 2 -1, (nCol.red/ (float) 255) * 2 -1);
       }
 
-      //If it is reflective, get the reflected shade
+      //REFLECTIVE
       if(reflect > 0 && reflect <= 1 && depth >= 1) {
 
         glm::vec3 newDir = glm::reflect(dir, glm::normalize(normal));
@@ -358,12 +359,12 @@ class Camera
           reflectCol = shadeIntersection(mirror, closest.intersectionPoint, newDir, tris, diffuseLights, difSamples, depth-1);
         }
       }
-      //transparent, get the material on the other side
+      //TRANSPARENT
       if(transparent > 0 && transparent <= 1 && depth >= 1) {
         transparentCol = shadeRefract(dir, normal, closest, tris, diffuseLights, difSamples, depth);
       }
 
-      //Not reflected or transparent, work out 
+      //DIFFUSE
       if ( reflect < 1 || transparent < 1) {
         Colour base;
         //Get base colour of triangle if it isn't textured
@@ -416,8 +417,8 @@ class Camera
               //Get samples in hemisphere
               RayTriangleIntersection bounce;
               glm::vec3 sampleDir = dir;
-              //If there is no object in the way
-              if(!closestIntersection(closest.intersectionPoint,glm::normalize(sampleDir), tris, bounce, 0.05f, 100)){
+
+              if(closestIntersection(closest.intersectionPoint,glm::normalize(sampleDir), tris, bounce, 0.05f, 100)){
                 ambientCol = ambientCol + shadeIntersection(bounce, closest.intersectionPoint, sampleDir, tris, diffuseLights, difSamples, depth-1);
               }
             }
