@@ -6,6 +6,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <string>
 #include <limits>
+#include <math.h>
+#include <random>
 
 class Camera
 {
@@ -421,11 +423,18 @@ class Camera
             else tangent = glm::vec3(0, -normal.z, normal.y) / sqrtf(normal.y * normal.y + normal.z * normal.z); 
             bitangent = glm::cross(normal, tangent); 
 
-            for (int i = 0; i < difSamples; i++) { 
+            //Create a point distribution generator
+            std::default_random_engine generator; 
+            std::uniform_real_distribution<float> distribution(0, 1); 
+
+            for (int i = 0; i < difSamples; i++) {
+              float r1 = distribution(generator); 
+              float r2 = distribution(generator); 
+              glm::vec3 point = hemiSample(r1, r2); 
               //Get samples in hemisphere
-              RayTriangleIntersection bounce;
               glm::vec3 sampleDir = dir;
 
+              RayTriangleIntersection bounce;
               if(closestIntersection(closest.intersectionPoint,glm::normalize(sampleDir), tris, bounce, 0.05f, 100)){
                 ambientCol = ambientCol + shadeIntersection(bounce, closest.intersectionPoint, sampleDir, tris, diffuseLights, difSamples, depth-1);
               }
@@ -449,6 +458,14 @@ class Camera
       final.fix();
 
       return (final);
+    }
+
+    glm::vec3 hemiSample(float r1, float r2) {
+      float sinTheta = sqrtf(1 - r1 * r1); 
+      float phi = 2 * M_PI * r2; 
+      float x = sinTheta * cosf(phi); 
+      float z = sinTheta * sinf(phi); 
+      return glm::vec3(x, r1, z); 
     }
 
     Colour shadeRefract(glm::vec3 dir, glm::vec3 normal, RayTriangleIntersection closest, std::vector<ModelTriangle> tris, std::vector<Light> diffuseLights, int difSamples, int depth) {
