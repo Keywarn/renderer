@@ -310,7 +310,7 @@ class Camera
       Colour ambientCol = Colour (0,0,0);
 
       //Create normal vector
-      glm::vec3 normal = interNormal(closest.intersectedTriangle.vertices[0]->normal, closest.intersectedTriangle.vertices[1]->normal, closest.intersectedTriangle.vertices[2]->normal, closest.u, closest.v);
+      glm::vec3 normal = glm::normalize(interNormal(closest.intersectedTriangle.vertices[0]->normal, closest.intersectedTriangle.vertices[1]->normal, closest.intersectedTriangle.vertices[2]->normal, closest.u, closest.v));
       glm::vec2 texP;
 
       //Set texture co-ords
@@ -412,6 +412,14 @@ class Camera
           //Do the monte carlo stuff
           if(difSamples > 1 && depth >= 1) {
             ambientCol = Colour(0,0,0);
+
+            //Create co-ord system for sphere
+            glm::vec3 tangent = glm::vec3(0,0,0);
+            glm::vec3 bitangent = glm::vec3(0,0,0);
+
+            if (std::fabs(normal.x) > std::fabs(normal.y)) tangent = glm::vec3(normal.z, 0, -normal.x) / sqrtf(normal.x * normal.x + normal.z * normal.z); 
+            else tangent = glm::vec3(0, -normal.z, normal.y) / sqrtf(normal.y * normal.y + normal.z * normal.z); 
+            bitangent = glm::cross(normal, tangent); 
 
             for (int i = 0; i < difSamples; i++) { 
               //Get samples in hemisphere
