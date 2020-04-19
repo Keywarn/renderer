@@ -33,7 +33,7 @@ using namespace glm;
 //Samples for global illumination of diffuse surfaces
 //Anti-aliasing samples
 //Cells in light (per dimension)
-#define DIF_SAMPLES 1
+#define DIF_SAMPLES 5
 #define AA_MODE     NO_AA
 #define CELLS       1
 

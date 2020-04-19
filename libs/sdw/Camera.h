@@ -409,17 +409,17 @@ class Camera
           specularCol = specularCol + (light.colour * specularVal);
           
           //Do the monte carlo stuff
-          if(difSamples > 1) {
+          if(difSamples > 1 && depth >= 1) {
             ambientCol = Colour(0,0,0);
 
             for (int i = 0; i < difSamples; i++) { 
               //Get samples in hemisphere
-              RayTriangleIntersection global;
-              glm::vec3 sampleDir = glm::vec3(0,1,0);
+              RayTriangleIntersection bounce;
+              glm::vec3 sampleDir = dir;
               //If there is no object in the way
-              if(!closestIntersection(closest.intersectionPoint,glm::normalize(sampleDir), tris, global, 0.05f, 100)){
-              ambientCol = ambientCol + shadeIntersection(global, closest.intersectionPoint, sampleDir, tris, diffuseLights, difSamples, depth-1);
-              } 
+              if(!closestIntersection(closest.intersectionPoint,glm::normalize(sampleDir), tris, bounce, 0.05f, 100)){
+                ambientCol = ambientCol + shadeIntersection(bounce, closest.intersectionPoint, sampleDir, tris, diffuseLights, difSamples, depth-1);
+              }
             }
             ambientCol = ambientCol / difSamples; 
           }
