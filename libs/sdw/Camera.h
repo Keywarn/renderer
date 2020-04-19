@@ -428,18 +428,23 @@ class Camera
             std::uniform_real_distribution<float> distribution(0, 1); 
 
             for (int i = 0; i < difSamples; i++) {
+              //Get two random variables
               float r1 = distribution(generator); 
               float r2 = distribution(generator); 
-              glm::vec3 point = hemiSample(r1, r2); 
-              //Get samples in hemisphere
-              glm::vec3 sampleDir = dir;
+              //Get a point on hemisphere in the space normal space
+              glm::vec3 point = hemiSample(r1, r2);
+              //Convert to world co-ords
+              glm::vec3 sampleDir(
+                point.x * bitangent.x + point.y * normal.x + point.z * tangent.x, 
+                point.x * bitangent.y + point.y * normal.y + point.z * tangent.y, 
+                point.x * bitangent.z + point.y * normal.z + point.z * tangent.z); 
 
               RayTriangleIntersection bounce;
               if(closestIntersection(closest.intersectionPoint,glm::normalize(sampleDir), tris, bounce, 0.05f, 100)){
-                ambientCol = ambientCol + shadeIntersection(bounce, closest.intersectionPoint, sampleDir, tris, diffuseLights, difSamples, depth-1);
+                ambientCol = ambientCol + shadeIntersection(bounce, closest.intersectionPoint, sampleDir, tris, diffuseLights, difSamples, depth-1) * r1;
               }
             }
-            ambientCol = ambientCol / difSamples; 
+            ambientCol = ambientCol / difSamples * (1 / (2 * M_PI));
           }
         }
 
