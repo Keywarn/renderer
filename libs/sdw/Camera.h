@@ -440,7 +440,7 @@ class Camera
                 point.x * bitangent.z + point.y * normal.z + point.z * tangent.z); 
 
               RayTriangleIntersection bounce;
-              if(closestIntersection(closest.intersectionPoint,glm::normalize(sampleDir), tris, bounce, 0.5f, 100)){
+              if(closestIntersection(closest.intersectionPoint,glm::normalize(sampleDir), tris, bounce, 0.1f, 100)){
                 ambientCol = ambientCol + shadeIntersection(bounce, closest.intersectionPoint, sampleDir, tris, diffuseLights, difSamples, depth-1) * (r1/(float)(1 / (2 * M_PI)));
               }
             }
@@ -458,9 +458,9 @@ class Camera
           Colour specMat = closest.intersectedTriangle.material.specular;
           //shadedCol = (((base * diffuseCol/255) + ambientCol) * closest.intersectedTriangle.material.albedo) + (specMat * specularCol/255);
 
-          shadedCol.red   = ((diffuseCol.red  ) / (float) 255) * base.red   + (ambientCol.red / 5.0f); 
-          shadedCol.green = ((diffuseCol.green) / (float) 255) * base.green + (ambientCol.green / 5.0f);
-          shadedCol.blue  = ((diffuseCol.blue ) / (float) 255) * base.blue  + (ambientCol.blue / 5.0f);
+          shadedCol.red   = ((diffuseCol.red  ) / (float) 255) * base.red   + (ambientCol.red / 5.0f)   + (specMat.red * specularCol.red/255); 
+          shadedCol.green = ((diffuseCol.green) / (float) 255) * base.green + (ambientCol.green / 5.0f) + (specMat.green * specularCol.blue/255);
+          shadedCol.blue  = ((diffuseCol.blue ) / (float) 255) * base.blue  + (ambientCol.blue / 5.0f)  + (specMat.green * specularCol.blue/255);
 
           shadedCol.fix();
 
