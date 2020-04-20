@@ -454,7 +454,9 @@ class Camera
         }
         else  {
           Colour specMat = closest.intersectedTriangle.material.specular;
-          shadedCol = (((base * diffuseCol/255) + ambientCol) * closest.intersectedTriangle.material.albedo) + (specMat * specularCol/255);
+          //shadedCol = (((base * diffuseCol/255) + ambientCol) * closest.intersectedTriangle.material.albedo) + (specMat * specularCol/255);
+          shadedCol = ((diffuseCol/255) / M_PI + (ambientCol/255) * 2) * base; 
+          shadedCol.fix();
         }
 
       }

@@ -33,16 +33,17 @@ using namespace glm;
 //Samples for global illumination of diffuse surfaces
 //Anti-aliasing samples
 //Cells in light (per dimension)
-#define DIF_SAMPLES 1
+#define DIF_SAMPLES 10
 #define AA_MODE     NO_AA
 #define CELLS       1
+#define DEPTH       1
 
 void draw(std::vector<ModelTriangle> tris);
 void update();
 void handleEvent(SDL_Event event);
 
 DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false, 1, false, false);
-Camera cam = Camera(glm::vec3(0,0,5), 200, AA_MODE, 5);
+Camera cam = Camera(glm::vec3(0,0,5), 200, AA_MODE, DEPTH);
 Model model = Model("models/cornell-box",glm::vec3(0,0,0), 1);
 Model sphere = Model("models/sphere", glm::vec3(-1.8,0.9,-1.8), 1);
 Model logo = Model("models/logo",glm::vec3(0,2.9,-5.4), 1.5);
