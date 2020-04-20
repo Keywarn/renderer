@@ -245,6 +245,7 @@ class Camera
       //For each pixel in the image, create a ray
       for (int y = 0; y < window.height; y++) {
         for(int x = 0; x < window.width; x++){
+          std::cout << "X: " << x << '/' << window.width << " Y: " << y << '/' << window.height << "  \r";
 
           Colour shade = Colour(0,0,0);
 
