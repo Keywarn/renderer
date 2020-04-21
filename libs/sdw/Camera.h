@@ -317,6 +317,7 @@ class Camera
       Colour transparentCol = Colour(255,255,255);
       Colour shadedCol = Colour (0,0,0);
       Colour ambientCol = Colour (0,0,0);
+      glm::vec3 ambientVec = glm::vec3(0,0,0);
 
       //Create normal vector
       glm::vec3 normal = glm::normalize(interNormal(closest.intersectedTriangle.vertices[0]->normal, closest.intersectedTriangle.vertices[1]->normal, closest.intersectedTriangle.vertices[2]->normal, closest.u, closest.v));
@@ -428,7 +429,7 @@ class Camera
         else  {
           //Do the monte carlo stuff on primary rays (or perfectly reflected) only
           if(primary) {
-            ambientCol = Colour(0,0,0);
+            ambientVec = glm::vec3(0,0,0);
             float pdf = 1 / (2 * M_PI);
             //Create co-ord system for sphere
             glm::vec3 tangent = glm::vec3(0,0,0);
@@ -452,20 +453,23 @@ class Camera
 
               RayTriangleIntersection bounce;
               if(closestIntersection(closest.intersectionPoint,glm::normalize(sampleDir), tris, bounce, 0.005f, 100)){
-                ambientCol = ambientCol + shadeIntersection(bounce, closest.intersectionPoint, sampleDir, tris, diffuseLights, difSamples, depth-1) * (r1/pdf);
+                Colour gatherCol =  shadeIntersection(bounce, closest.intersectionPoint, sampleDir, tris, diffuseLights, difSamples, depth-1);
+                ambientVec.x += ((float) gatherCol.red / 255.0f) * r1 / pdf;
+                ambientVec.y += ((float) gatherCol.green / 255.0f) * r1 / pdf;
+                ambientVec.z += ((float) gatherCol.blue / 255.0f) * r1 / pdf;
               }
             }
             // std::cout << "Before Divide: " << ambientCol << std::endl;
-            ambientCol = ambientCol / (float) difSamples;
+            ambientVec = ambientVec / (float) difSamples;
             // std::cout << "After: " << ambientCol << std::endl;
           }
 
           Colour specMat = closest.intersectedTriangle.material.specular;
           //shadedCol = (((base * diffuseCol/255) + ambientCol) * closest.intersectedTriangle.material.albedo) + (specMat * specularCol/255);
 
-          shadedCol.red   = ((diffuseCol.red / 255.0f) / M_PI + (ambientCol.red / 255.0f) * 2.0f) * base.red;
-          shadedCol.green = ((diffuseCol.green / 255.0f) / M_PI + (ambientCol.green / 255.0f) * 2.0f) * base.green;
-          shadedCol.blue  = ((diffuseCol.blue / 255.0f) / M_PI + (ambientCol.blue / 255.0f) * 2.0f) * base.blue;
+          shadedCol.red   = ((diffuseCol.red / 255.0f) / M_PI + (ambientVec.x) * 2.0f) * base.red;
+          shadedCol.green = ((diffuseCol.green / 255.0f) / M_PI + (ambientVec.y) * 2.0f) * base.green;
+          shadedCol.blue  = ((diffuseCol.blue / 255.0f) / M_PI + (ambientVec.z) * 2.0f) * base.blue;
           shadedCol.fix();
 
         }
