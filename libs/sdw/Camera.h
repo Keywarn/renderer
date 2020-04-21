@@ -532,14 +532,14 @@ class Camera
 
           RayTriangleIntersection refracted;
           if(closestIntersection(closest.intersectionPoint, newDir, tris, refracted, 0.00005, 100)) {
-            refractedCol = shadeIntersection(refracted, closest.intersectionPoint, newDir, tris, diffuseLights, difSamples, depth-1);
+            refractedCol = shadeIntersection(refracted, closest.intersectionPoint, newDir, tris, diffuseLights, difSamples, depth-1, primary);
           }
 
           glm::vec3 refDir = glm::reflect(dir, glm::normalize(normal));
 
           RayTriangleIntersection reflect;
           if(closestIntersection(closest.intersectionPoint, refDir, tris, reflect, 0.00005, 100)) {
-            reflectedCol = shadeIntersection(reflect, closest.intersectionPoint, refDir, tris, diffuseLights, difSamples, depth-1);
+            reflectedCol = shadeIntersection(reflect, closest.intersectionPoint, refDir, tris, diffuseLights, difSamples, depth-1, primary);
           }
 
           return (reflectedCol * kr + refractedCol * (1-kr));
