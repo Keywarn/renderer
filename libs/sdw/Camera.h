@@ -435,9 +435,9 @@ class Camera
             glm::vec3 tangent = glm::vec3(0,0,0);
             glm::vec3 bitangent = glm::vec3(0,0,0);
 
-            if (std::fabs(normal.x) > std::fabs(normal.y)) tangent = glm::vec3(normal.z, 0, -normal.x) / sqrtf(normal.x * normal.x + normal.z * normal.z); 
-            else tangent = glm::vec3(0, -normal.z, normal.y) / sqrtf(normal.y * normal.y + normal.z * normal.z); 
-            bitangent = glm::cross(normal, tangent); 
+            if (std::fabs(-normal.x) > std::fabs(-normal.y)) tangent = glm::vec3(-normal.z, 0, normal.x) / sqrtf(-normal.x * -normal.x + -normal.z * -normal.z); 
+            else tangent = glm::vec3(0, normal.z, -normal.y) / sqrtf(-normal.y * -normal.y + -normal.z * -normal.z); 
+            bitangent = glm::cross(-normal, tangent); 
 
             for (int i = 0; i < difSamples; i++) {
               //Get two random variables
@@ -447,9 +447,9 @@ class Camera
               glm::vec3 point = hemiSample(r1, r2);
               //Convert to world co-ords
               glm::vec3 sampleDir(
-                point.x * bitangent.x + point.y * normal.x + point.z * tangent.x, 
-                point.x * bitangent.y + point.y * normal.y + point.z * tangent.y, 
-                point.x * bitangent.z + point.y * normal.z + point.z * tangent.z); 
+                point.x * bitangent.x + point.y * -normal.x + point.z * tangent.x, 
+                point.x * bitangent.y + point.y * -normal.y + point.z * tangent.y, 
+                point.x * bitangent.z + point.y * -normal.z + point.z * tangent.z); 
 
               RayTriangleIntersection bounce;
               if(closestIntersection(closest.intersectionPoint,glm::normalize(sampleDir), tris, bounce, 0.005f, 100)){
