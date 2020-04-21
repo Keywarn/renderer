@@ -58,11 +58,12 @@ int main(int argc, char* argv[])
   cam.lookAt(model.position);
   cam.position.y += 2.5;
   std::vector<ModelTriangle> tris;
-  tris.reserve(sphere.tris.size() + model.tris.size() + logo.tris.size() + dragon.tris.size());
+  tris.reserve(sphere.tris.size() + model.tris.size() + logo.tris.size());
+  //tris.reserve(sphere.tris.size() + model.tris.size() + logo.tris.size() + dragon.tris.size());
   tris.insert(tris.end(), model.tris.begin(), model.tris.end());
   tris.insert(tris.end(), sphere.tris.begin(), sphere.tris.end());
   tris.insert(tris.end(), logo.tris.begin(), logo.tris.end());
-  tris.insert(tris.end(), dragon.tris.begin(), dragon.tris.end());
+  ///tris.insert(tris.end(), dragon.tris.begin(), dragon.tris.end());
 
   tris = cam.preCompGouraud(tris, diffuseLight, ambientLight);
 
