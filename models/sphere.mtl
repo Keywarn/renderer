@@ -1,3 +1,4 @@
 newmtl None
-Kd 1 0 1
-Ks 0.8 0.8 0.8
+Kd 1 0.766 0.366
+Ks 1 1 1
+Ref 0.2

@@ -410,7 +410,13 @@ class Camera
 
           diffuseCol = diffuseCol + (light.colour * diffuseVal);
           specularCol = specularCol + (light.colour * specularVal);
-          
+        }
+
+        if(difSamples == 1) {
+          ambientCol = Colour(55,55,55);
+          shadedCol = Colour(base, closest.intersectedTriangle.material.specular, ambientCol, diffuseCol, specularCol, closest.intersectedTriangle.material.albedo);
+        }
+        else  {
           //Do the monte carlo stuff
           if(difSamples > 1 && depth >= 1) {
             ambientCol = Colour(0,0,0);
@@ -448,19 +454,13 @@ class Camera
             ambientCol = ambientCol / (float) difSamples;
             // std::cout << "After: " << ambientCol << std::endl;
           }
-        }
 
-        if(difSamples == 1) {
-          ambientCol = Colour(55,55,55);
-          shadedCol = Colour(base, closest.intersectedTriangle.material.specular, ambientCol, diffuseCol, specularCol, closest.intersectedTriangle.material.albedo);
-        }
-        else  {
           Colour specMat = closest.intersectedTriangle.material.specular;
           //shadedCol = (((base * diffuseCol/255) + ambientCol) * closest.intersectedTriangle.material.albedo) + (specMat * specularCol/255);
 
           shadedCol.red   = ((diffuseCol.red  ) / (float) 255) * base.red   + (ambientCol.red / 5.0f)   + (specMat.red * specularCol.red/255); 
           shadedCol.green = ((diffuseCol.green) / (float) 255) * base.green + (ambientCol.green / 5.0f) + (specMat.green * specularCol.blue/255);
-          shadedCol.blue  = ((diffuseCol.blue ) / (float) 255) * base.blue  + (ambientCol.blue / 5.0f)  + (specMat.green * specularCol.blue/255);
+          shadedCol.blue  = ((diffuseCol.blue ) / (float) 255) * base.blue  + (ambientCol.blue)/  5.0f  + (specMat.green * specularCol.blue/255);
 
           shadedCol.fix();
 
