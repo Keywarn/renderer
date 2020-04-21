@@ -371,7 +371,7 @@ class Camera
       }
       //TRANSPARENT
       if(transparent > 0 && transparent <= 1 && depth >= 1) {
-        transparentCol = shadeRefract(dir, normal, closest, tris, diffuseLights, difSamples, depth);
+        transparentCol = shadeRefract(dir, normal, closest, tris, diffuseLights, difSamples, depth, primary);
       }
 
       //DIFFUSE
@@ -490,7 +490,7 @@ class Camera
       return glm::vec3(x, r1, z); 
     }
 
-    Colour shadeRefract(glm::vec3 dir, glm::vec3 normal, RayTriangleIntersection closest, std::vector<ModelTriangle> tris, std::vector<Light> diffuseLights, int difSamples, int depth) {
+    Colour shadeRefract(glm::vec3 dir, glm::vec3 normal, RayTriangleIntersection closest, std::vector<ModelTriangle> tris, std::vector<Light> diffuseLights, int difSamples, int depth, bool primary) {
         float cosi = glm::dot(glm::normalize(dir), glm::normalize(normal));
         float curIOR = 1;
         float newIOR = closest.intersectedTriangle.material.ior;
@@ -510,7 +510,7 @@ class Camera
 
           RayTriangleIntersection fresnel;
           if(closestIntersection(closest.intersectionPoint, newDir, tris, fresnel, 0.00005, 100)) {
-            return(shadeIntersection(fresnel, closest.intersectionPoint, newDir, tris, diffuseLights, difSamples, depth-1));
+            return(shadeIntersection(fresnel, closest.intersectionPoint, newDir, tris, diffuseLights, difSamples, depth-1, primary));
           }
         }
         //Some reflection/refraction
@@ -544,8 +544,6 @@ class Camera
 
           return (reflectedCol * kr + refractedCol * (1-kr));
         }
-
-        std::cout << "Refraction shader issue" << std::endl;
         return (Colour(0,0,0));
     }
 
