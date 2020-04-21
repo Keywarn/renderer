@@ -458,9 +458,9 @@ class Camera
           Colour specMat = closest.intersectedTriangle.material.specular;
           //shadedCol = (((base * diffuseCol/255) + ambientCol) * closest.intersectedTriangle.material.albedo) + (specMat * specularCol/255);
 
-          shadedCol.red   = ((diffuseCol.red  ) / (float) 255) * base.red   + (ambientCol.red / 5.0f)   + (specMat.red * specularCol.red/255); 
-          shadedCol.green = ((diffuseCol.green) / (float) 255) * base.green + (ambientCol.green / 5.0f) + (specMat.green * specularCol.blue/255);
-          shadedCol.blue  = ((diffuseCol.blue ) / (float) 255) * base.blue  + (ambientCol.blue)/  5.0f  + (specMat.green * specularCol.blue/255);
+          shadedCol.red   = ((diffuseCol.red  ) / (float) 255) * base.red   + (ambientCol.red / 4.0f)   + (specMat.red * specularCol.red/255); 
+          shadedCol.green = ((diffuseCol.green) / (float) 255) * base.green + (ambientCol.green / 4.0f) + (specMat.green * specularCol.blue/255);
+          shadedCol.blue  = ((diffuseCol.blue ) / (float) 255) * base.blue  + (ambientCol.blue)/  4.0f  + (specMat.green * specularCol.blue/255);
 
           shadedCol.fix();
 
