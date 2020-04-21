@@ -55,7 +55,7 @@ f 22/ 24/ 21/
 f 22/ 23/ 24/
 
 o front_wall
-usemtl Mirror
+usemtl White
 f 22/ 17/ 20/
 f 22/ 20/ 23/
 

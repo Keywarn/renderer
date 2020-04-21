@@ -21,12 +21,19 @@ class Camera
 
     std::vector<ModelTriangle> culled;
 
+    std::default_random_engine generator; 
+    std::uniform_real_distribution<float> distribution;
+    
+
 
     Camera()
     {
+      distribution = std::uniform_real_distribution<float>(0, 1);
     }
 
     Camera(glm::vec3 pos, float foc, std::vector<glm::vec2> ns, int d){
+      distribution = std::uniform_real_distribution<float>(0, 1); 
+
       position = pos;
       rotation = glm::mat3();
       f = foc;
@@ -259,7 +266,7 @@ class Camera
             
             //Get the closest intersection of the ray and shade
             if(closestIntersection(position, dir, culled, closest, 0, 100)) {
-              shade = shade + shadeIntersection(closest, position, dir, tris, diffuseLights, difSamples, depth);
+              shade = shade + shadeIntersection(closest, position, dir, tris, diffuseLights, difSamples, depth, true);
             }
           }
           shade = shade / (float) samples.size();
@@ -302,7 +309,7 @@ class Camera
       return(culled);
     }
 
-    Colour shadeIntersection(RayTriangleIntersection closest, glm::vec3 origin, glm::vec3 dir, std::vector<ModelTriangle> tris, std::vector<Light> diffuseLights, int difSamples, int depth) {
+    Colour shadeIntersection(RayTriangleIntersection closest, glm::vec3 origin, glm::vec3 dir, std::vector<ModelTriangle> tris, std::vector<Light> diffuseLights, int difSamples, int depth, bool primary = false) {
       float shadowBias = 0;
       float reflect = closest.intersectedTriangle.material.reflect;
       float transparent = closest.intersectedTriangle.material.transparent;
@@ -358,7 +365,7 @@ class Camera
 
         RayTriangleIntersection mirror;
         if(closestIntersection(closest.intersectionPoint, newDir, tris, mirror, 0.00005, 100)) {
-          reflectCol = shadeIntersection(mirror, closest.intersectionPoint, newDir, tris, diffuseLights, difSamples, depth-1);
+          reflectCol = shadeIntersection(mirror, closest.intersectionPoint, newDir, tris, diffuseLights, difSamples, depth-1, primary);
         }
       }
       //TRANSPARENT
@@ -412,13 +419,15 @@ class Camera
           specularCol = specularCol + (light.colour * specularVal);
         }
 
+        //Not momte carlo, sue previous shading rules
         if(difSamples == 1) {
           ambientCol = Colour(55,55,55);
           shadedCol = Colour(base, closest.intersectedTriangle.material.specular, ambientCol, diffuseCol, specularCol, closest.intersectedTriangle.material.albedo);
         }
+        //Monte carlo, use new shading rules
         else  {
-          //Do the monte carlo stuff
-          if(difSamples > 1 && depth >= 1) {
+          //Do the monte carlo stuff on primary rays (or perfectly reflected) only
+          if(primary) {
             ambientCol = Colour(0,0,0);
 
             //Create co-ord system for sphere
@@ -428,10 +437,6 @@ class Camera
             if (std::fabs(normal.x) > std::fabs(normal.y)) tangent = glm::vec3(normal.z, 0, -normal.x) / sqrtf(normal.x * normal.x + normal.z * normal.z); 
             else tangent = glm::vec3(0, -normal.z, normal.y) / sqrtf(normal.y * normal.y + normal.z * normal.z); 
             bitangent = glm::cross(normal, tangent); 
-
-            //Create a point distribution generator
-            std::default_random_engine generator; 
-            std::uniform_real_distribution<float> distribution(0, 1); 
 
             for (int i = 0; i < difSamples; i++) {
               //Get two random variables

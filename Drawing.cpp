@@ -36,7 +36,7 @@ using namespace glm;
 #define DIF_SAMPLES 64
 #define AA_MODE     NO_AA
 #define CELLS       1
-#define DEPTH       1
+#define DEPTH       5
 
 void draw(std::vector<ModelTriangle> tris);
 void update();
