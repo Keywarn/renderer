@@ -429,7 +429,7 @@ class Camera
           //Do the monte carlo stuff on primary rays (or perfectly reflected) only
           if(primary) {
             ambientCol = Colour(0,0,0);
-
+            float pdf = 1 / (2 * M_PI);
             //Create co-ord system for sphere
             glm::vec3 tangent = glm::vec3(0,0,0);
             glm::vec3 bitangent = glm::vec3(0,0,0);
@@ -451,8 +451,8 @@ class Camera
                 point.x * bitangent.z + point.y * normal.z + point.z * tangent.z); 
 
               RayTriangleIntersection bounce;
-              if(closestIntersection(closest.intersectionPoint,glm::normalize(sampleDir), tris, bounce, 0.1f, 100)){
-                ambientCol = ambientCol + shadeIntersection(bounce, closest.intersectionPoint, sampleDir, tris, diffuseLights, difSamples, depth-1) * (r1/(float)(1 / (2 * M_PI)));
+              if(closestIntersection(closest.intersectionPoint,glm::normalize(sampleDir), tris, bounce, 0.005f, 100)){
+                ambientCol = ambientCol + shadeIntersection(bounce, closest.intersectionPoint, sampleDir, tris, diffuseLights, difSamples, depth-1) * (r1/pdf);
               }
             }
             // std::cout << "Before Divide: " << ambientCol << std::endl;
@@ -463,10 +463,9 @@ class Camera
           Colour specMat = closest.intersectedTriangle.material.specular;
           //shadedCol = (((base * diffuseCol/255) + ambientCol) * closest.intersectedTriangle.material.albedo) + (specMat * specularCol/255);
 
-          shadedCol.red   = ((diffuseCol.red  ) / (float) 255) * base.red   + (ambientCol.red / 4.0f)   + (specMat.red * specularCol.red/255); 
-          shadedCol.green = ((diffuseCol.green) / (float) 255) * base.green + (ambientCol.green / 4.0f) + (specMat.green * specularCol.blue/255);
-          shadedCol.blue  = ((diffuseCol.blue ) / (float) 255) * base.blue  + (ambientCol.blue)/  4.0f  + (specMat.green * specularCol.blue/255);
-
+          shadedCol.red   = ((diffuseCol.red / 255.0f) / M_PI + (ambientCol.red / 255.0f) * 2.0f) * base.red;
+          shadedCol.green = ((diffuseCol.green / 255.0f) / M_PI + (ambientCol.green / 255.0f) * 2.0f) * base.green;
+          shadedCol.blue  = ((diffuseCol.blue / 255.0f) / M_PI + (ambientCol.blue / 255.0f) * 2.0f) * base.blue;
           shadedCol.fix();
 
         }
