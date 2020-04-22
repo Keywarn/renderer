@@ -44,7 +44,7 @@ void update();
 void handleEvent(SDL_Event event);
 
 DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false, 1, false, false);
-Camera cam = Camera(glm::vec3(0,0,3), 400, AA_MODE, DEPTH);
+Camera cam = Camera(glm::vec3(0,4,6), 400, AA_MODE, DEPTH);
 Model model = Model("models/cornell-box",glm::vec3(0,0,0), 1);
 Model sphere = Model("models/sphere", glm::vec3(-1.8,0.9,-1.8), 1);
 Model logo = Model("models/logo",glm::vec3(0,2.9,-5.4), 1.5);
