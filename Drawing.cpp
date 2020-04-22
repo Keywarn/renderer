@@ -34,7 +34,7 @@ using namespace glm;
 //Anti-aliasing samples
 //Cells in light (per dimension)
 //Max depth of rays
-#define DIF_SAMPLES 4
+#define DIF_SAMPLES 256
 #define AA_MODE     NO_AA
 #define CELLS       1
 #define DEPTH       5
