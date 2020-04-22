@@ -33,6 +33,7 @@ using namespace glm;
 //Samples for global illumination of diffuse surfaces
 //Anti-aliasing samples
 //Cells in light (per dimension)
+//Max depth of rays
 #define DIF_SAMPLES 4
 #define AA_MODE     NO_AA
 #define CELLS       1
@@ -48,6 +49,7 @@ Model model = Model("models/cornell-box",glm::vec3(0,0,0), 1);
 Model sphere = Model("models/sphere", glm::vec3(-1.8,0.9,-1.8), 1);
 Model logo = Model("models/logo",glm::vec3(0,2.9,-5.4), 1.5);
 Light diffuseLight = Light(glm::vec3(-0.884011, 5.118497, -3.567968), Colour(255,255,255), 225, glm::vec3(1.3, 0,0), glm::vec3(0,0,1.05),CELLS,CELLS);
+Model dragon = Model("models/dragon",glm::vec3(0.686,1.6,-1.4), 0.75);
 Light ambientLight = Light(glm::vec3(0,0,0), Colour(255,255,255), 0.25f);
 
 std::vector<Light> dLights = {diffuseLight};
@@ -59,9 +61,11 @@ int main(int argc, char* argv[])
   cam.position.y += 2.5;
   std::vector<ModelTriangle> tris;
   tris.reserve(sphere.tris.size() + model.tris.size() + logo.tris.size());
+  //tris.reserve(sphere.tris.size() + model.tris.size() + logo.tris.size() + dragon.tris.size());
   tris.insert(tris.end(), model.tris.begin(), model.tris.end());
   tris.insert(tris.end(), sphere.tris.begin(), sphere.tris.end());
   tris.insert(tris.end(), logo.tris.begin(), logo.tris.end());
+  ///tris.insert(tris.end(), dragon.tris.begin(), dragon.tris.end());
 
   tris = cam.preCompGouraud(tris, diffuseLight, ambientLight);
 
@@ -89,6 +93,7 @@ void draw(std::vector<ModelTriangle> tris)
     model.display(window, cam);
     sphere.display(window, cam);
     logo.display(window, cam);
+    dragon.display(window, cam);
   }
   else if(window.getMode() == 3) cam.flat(tris, diffuseLight, ambientLight, window);
   else if(window.getMode() == 4) cam.gouraud(tris, diffuseLight, ambientLight, window);

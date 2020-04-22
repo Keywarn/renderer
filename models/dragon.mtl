@@ -1,0 +1,5 @@
+newmtl Dragon
+Kd 0 0.8 0.5
+Ks 0.2 0.2 0.2
+d 0.95
+ior 1.5
