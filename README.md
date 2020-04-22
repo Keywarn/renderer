@@ -72,7 +72,7 @@ The final grade awarded will depend upon the exact combination and features and 
 - [x] Complex “interesting” materials (e.g. glass)
 - [ ] Line drawing optimisations (e.g. Bresenham)
 - [ ] Advance clipping (frustum)
-- [ ] Photon maps and caustics
+- [x] Photon maps and caustics
 - [ ] “Intelligent” model simplification
 
 ### Extras
