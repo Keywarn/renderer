@@ -39,9 +39,15 @@ using namespace glm;
 #define CELLS       1
 #define DEPTH       5
 
+//ANIMATION SETTINGS
+#define FRAMES 30
+#define ANIM_NAME "wf"
+#define PAD 3
+
 void draw(std::vector<ModelTriangle> tris);
 void update();
 void handleEvent(SDL_Event event);
+int numDigits(int number);
 
 DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false, 1, false, false);
 Camera cam = Camera(glm::vec3(0,4,6), 400, AA_MODE, DEPTH);
@@ -69,7 +75,31 @@ int main(int argc, char* argv[])
 
   tris = cam.preCompGouraud(tris, diffuseLight, ambientLight);
 
+  glm::vec3 finalCam = glm::vec3(0,2.5,3);
+  glm::vec3 movePerF = (finalCam-cam.position) / (float) FRAMES;
+  glm::vec3 camTarget = glm::vec3(0,2.5,0);
+
   std::cout.precision(5);
+  cam.lookAt(glm::vec3(0,0,0));
+
+  for(int i = 0; i < FRAMES; i++) {
+    auto start = std::chrono::system_clock::now();
+    //calc new position
+    cam.rotate(0.8f/FRAMES, PITCH);
+    cam.move(movePerF);
+    draw(tris);
+    window.renderFrame();
+    std::string outName = ANIM_NAME + std::string( PAD-numDigits(i), '0').append( std::to_string(i));
+    window.writeImage("out/" + outName);
+
+    auto end = std::chrono::system_clock::now();
+    std::chrono::duration<double> fTime = end-start;
+    if(window.getMode() > 2) std::cout << "Frame Time: " << std::fixed <<fTime.count() << "s   FPS: " << std::fixed << 1/fTime.count()<< std::endl;
+  }
+
+  std::cout << "ANIMATION DONE" << std::endl;
+  
+  /* old code
   while(true)
   {
     auto start = std::chrono::system_clock::now();
@@ -84,6 +114,7 @@ int main(int argc, char* argv[])
     std::chrono::duration<double> fTime = end-start;
     if(window.getMode() > 2) std::cout << "Frame Time: " << std::fixed <<fTime.count() << "s   FPS: " << std::fixed << 1/fTime.count()<< std::endl;
   }
+  */
 }
 
 void draw(std::vector<ModelTriangle> tris)
@@ -134,4 +165,15 @@ void handleEvent(SDL_Event event)
 
   }
   else if(event.type == SDL_MOUSEBUTTONDOWN) cout << "MOUSE CLICKED" << endl;
+}
+
+int numDigits(int number)
+{
+    int digits = 0;
+    if (number < 0) digits = 1; // remove this line if '-' counts as a digit
+    while (number) {
+        number /= 10;
+        digits++;
+    }
+    return digits;
 }
