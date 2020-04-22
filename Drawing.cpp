@@ -34,10 +34,10 @@ using namespace glm;
 //Anti-aliasing samples
 //Cells in light (per dimension)
 //Max depth of rays
-#define DIF_SAMPLES 256
+#define DIF_SAMPLES 32
 #define AA_MODE     NO_AA
 #define CELLS       1
-#define DEPTH       2
+#define DEPTH       5
 
 void draw(std::vector<ModelTriangle> tris);
 void update();
@@ -49,7 +49,7 @@ Model model = Model("models/cornell-box",glm::vec3(0,0,0), 1);
 Model sphere = Model("models/sphere", glm::vec3(-1.8,0.9,-1.8), 1);
 Model logo = Model("models/logo",glm::vec3(0,2.9,-5.4), 1.5);
 Light diffuseLight = Light(glm::vec3(-0.884011, 5.118497, -3.567968), Colour(255,255,255), 225, glm::vec3(1.3, 0,0), glm::vec3(0,0,1.05),CELLS,CELLS);
-Model dragon = Model("models/cube",glm::vec3(0.686,1.6,-1.4), 0.75);
+Model dragon = Model("models/monkey",glm::vec3(0.686,1.6,-1.4), 0.75);
 Light ambientLight = Light(glm::vec3(0,0,0), Colour(255,255,255), 0.25f);
 
 std::vector<Light> dLights = {diffuseLight};

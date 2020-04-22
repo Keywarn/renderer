@@ -255,7 +255,7 @@ class Camera
       //For each pixel in the image, create a ray
       for (int y = 0; y < window.height; y++) {
         for(int x = 0; x < window.width; x++){
-          if(omp_get_thread_num() == 1) std::cout << "X: " << x-120 << '/' << window.width << " Y: " << y << '/' << "119" << "  \r";
+          if(omp_get_thread_num() == 1) std::cout << "X: " << x << '/' << window.width << " Y: " << y << '/' << window.height << "  \r";
           Colour shade = Colour(0,0,0);
 
           RayTriangleIntersection closest;
