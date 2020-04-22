@@ -30,9 +30,11 @@ using namespace glm;
 #define FOURBYFOUR  {glm::vec2(0.125,0.125),glm::vec2(0.375,0.125),glm::vec2(0.625,0.125),glm::vec2(0.875,0.125),glm::vec2(0.125,0.375),glm::vec2(0.375,0.375),glm::vec2(0.625,0.375),glm::vec2(0.875,0.375),glm::vec2(0.125,0.625),glm::vec2(0.375,0.625),glm::vec2(0.625,0.625),glm::vec2(0.875,0.625),glm::vec2(0.125,0.875),glm::vec2(0.375,0.875),glm::vec2(0.625,0.875),glm::vec2(0.875,0.875)}
 
 //Parameters to change sampling in scene
+//Samples for global illumination of diffuse surfaces
 //Anti-aliasing samples
 //Cells in light (per dimension)
-//Depth of shader
+//Max depth of rays
+#define DIF_SAMPLES 4
 #define AA_MODE     NO_AA
 #define CELLS       1
 #define DEPTH       5
@@ -46,8 +48,8 @@ Camera cam = Camera(glm::vec3(0,0,5), 200, AA_MODE, DEPTH);
 Model model = Model("models/cornell-box",glm::vec3(0,0,0), 1);
 Model sphere = Model("models/sphere", glm::vec3(-1.8,0.9,-1.8), 1);
 Model logo = Model("models/logo",glm::vec3(0,2.9,-5.4), 1.5);
+Light diffuseLight = Light(glm::vec3(-0.884011, 5.118497, -3.567968), Colour(255,255,255), 225, glm::vec3(1.3, 0,0), glm::vec3(0,0,1.05),CELLS,CELLS);
 Model dragon = Model("models/dragon",glm::vec3(0.686,1.6,-1.4), 0.75);
-Light diffuseLight = Light(glm::vec3(-0.884011, 5.118497, -3.567968), Colour(255,255,255), 60, glm::vec3(1.3, 0,0), glm::vec3(0,0,1.05),CELLS,CELLS);
 Light ambientLight = Light(glm::vec3(0,0,0), Colour(255,255,255), 0.25f);
 
 std::vector<Light> dLights = {diffuseLight};
@@ -77,7 +79,7 @@ int main(int argc, char* argv[])
     draw(tris);
     // Need to render the frame at the end, or nothing actually gets shown on the screen !
     window.renderFrame();
-    if(window.getMode() > 2) window.writeImage("export");
+    if(window.getMode() > 2) window.writeImage("out/export");
     auto end = std::chrono::system_clock::now();
     std::chrono::duration<double> fTime = end-start;
     if(window.getMode() > 2) std::cout << "Frame Time: " << std::fixed <<fTime.count() << "s   FPS: " << std::fixed << 1/fTime.count()<< std::endl;
@@ -95,7 +97,7 @@ void draw(std::vector<ModelTriangle> tris)
   }
   else if(window.getMode() == 3) cam.flat(tris, diffuseLight, ambientLight, window);
   else if(window.getMode() == 4) cam.gouraud(tris, diffuseLight, ambientLight, window);
-  else if(window.getMode() == 5) cam.phong(tris, dLights, ambientLight, window);
+  else if(window.getMode() == 5) cam.phong(tris, dLights, DIF_SAMPLES, window);
 }
 
 void update()

@@ -13,8 +13,8 @@ COMPILER_OPTIONS = -c -pipe -Wall -std=c++11
 DEBUG_OPTIONS = -ggdb -g3
 FUSSY_OPTIONS = -Werror -pedantic
 SANITIZER_OPTIONS = -O1 -fsanitize=undefined -fsanitize=address -fno-omit-frame-pointer
-SPEEDY_OPTIONS = -Ofast -funsafe-math-optimizations -march=native -openmp
-LINKER_OPTIONS =
+SPEEDY_OPTIONS = -Ofast -funsafe-math-optimizations -march=native -Xpreprocessor -fopenmp
+LINKER_OPTIONS = -lomp
 
 # Set up flags
 SDW_COMPILER_FLAGS := -I./libs/sdw
