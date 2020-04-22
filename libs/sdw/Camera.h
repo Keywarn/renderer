@@ -8,6 +8,7 @@
 #include <limits>
 #include <math.h>
 #include <random>
+#include <omp.h>
 
 class Camera
 {
@@ -250,11 +251,11 @@ class Camera
         dirty = false;
       }
 
-      #pragma omp parallel for num_threads(2)
+      #pragma omp parallel for
       //For each pixel in the image, create a ray
       for (int y = 0; y < window.height; y++) {
         for(int x = 0; x < window.width; x++){
-          std::cout << "X: " << x << '/' << window.width << " Y: " << y << '/' << window.height << "  \r";
+          if(omp_get_thread_num() == 1) std::cout << "X: " << x << '/' << window.width << " Y: " << y << '/' << window.height << "  \r";
           Colour shade = Colour(0,0,0);
 
           RayTriangleIntersection closest;
@@ -434,6 +435,7 @@ class Camera
             //Create co-ord system for sphere
             glm::vec3 tangent = glm::vec3(0,0,0);
             glm::vec3 bitangent = glm::vec3(0,0,0);
+            if(closest.intersectedTriangle.bumped) normal = -normal;
 
             if (std::fabs(-normal.x) > std::fabs(-normal.y)) tangent = glm::vec3(-normal.z, 0, normal.x) / sqrtf(-normal.x * -normal.x + -normal.z * -normal.z); 
             else tangent = glm::vec3(0, normal.z, -normal.y) / sqrtf(-normal.y * -normal.y + -normal.z * -normal.z); 

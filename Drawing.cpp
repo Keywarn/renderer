@@ -75,7 +75,7 @@ int main(int argc, char* argv[])
     draw(tris);
     // Need to render the frame at the end, or nothing actually gets shown on the screen !
     window.renderFrame();
-    if(window.getMode() > 2) window.writeImage("export");
+    if(window.getMode() > 2) window.writeImage("out/export");
     auto end = std::chrono::system_clock::now();
     std::chrono::duration<double> fTime = end-start;
     if(window.getMode() > 2) std::cout << "Frame Time: " << std::fixed <<fTime.count() << "s   FPS: " << std::fixed << 1/fTime.count()<< std::endl;
