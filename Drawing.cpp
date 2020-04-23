@@ -95,7 +95,7 @@ int main(int argc, char* argv[])
 
     auto end = std::chrono::system_clock::now();
     std::chrono::duration<double> fTime = end-start;
-    if(window.getMode() > 2) std::cout << "Frame Time: " << std::fixed <<fTime.count() << "s   FPS: " << std::fixed << 1/fTime.count()<< std::endl;
+    std::cout << "Frame " << i << '/' << FRAMES << " Time: " << std::fixed <<fTime.count() << "s   FPS: " << std::fixed << 1/fTime.count()<< std::endl;
   }
 
   for(int i = FRAMES; i < FRAMES +15; i++) {
