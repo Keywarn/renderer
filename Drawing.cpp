@@ -34,14 +34,14 @@ using namespace glm;
 //Anti-aliasing samples
 //Cells in light (per dimension)
 //Max depth of rays
-#define DIF_SAMPLES 1
+#define DIF_SAMPLES 256
 #define AA_MODE     RGSS
-#define CELLS       4
+#define CELLS       2
 #define DEPTH       5
 
 //ANIMATION SETTINGS
 #define FRAMES 30
-#define ANIM_NAME "phong"
+#define ANIM_NAME "global"
 #define PAD 3
 
 void draw(std::vector<ModelTriangle> tris);
