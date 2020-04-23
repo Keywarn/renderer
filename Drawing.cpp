@@ -34,14 +34,14 @@ using namespace glm;
 //Anti-aliasing samples
 //Cells in light (per dimension)
 //Max depth of rays
-#define DIF_SAMPLES 256
-#define AA_MODE     NO_AA
+#define DIF_SAMPLES 1
+#define AA_MODE     RGSS
 #define CELLS       1
 #define DEPTH       5
 
 //ANIMATION SETTINGS
 #define FRAMES 30
-#define ANIM_NAME "wf"
+#define ANIM_NAME "phong"
 #define PAD 3
 
 void draw(std::vector<ModelTriangle> tris);
@@ -81,6 +81,7 @@ int main(int argc, char* argv[])
 
   std::cout.precision(5);
   cam.lookAt(glm::vec3(0,0,0));
+  window.setMode(5);
 
   for(int i = 0; i < FRAMES; i++) {
     auto start = std::chrono::system_clock::now();
@@ -95,6 +96,11 @@ int main(int argc, char* argv[])
     auto end = std::chrono::system_clock::now();
     std::chrono::duration<double> fTime = end-start;
     if(window.getMode() > 2) std::cout << "Frame Time: " << std::fixed <<fTime.count() << "s   FPS: " << std::fixed << 1/fTime.count()<< std::endl;
+  }
+
+  for(int i = FRAMES; i < FRAMES +15; i++) {
+    std::string outName = ANIM_NAME + std::string( PAD-numDigits(i), '0').append( std::to_string(i));
+    window.writeImage("out/" + outName);
   }
 
   std::cout << "ANIMATION DONE" << std::endl;
