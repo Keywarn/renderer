@@ -36,7 +36,7 @@ using namespace glm;
 //Max depth of rays
 #define DIF_SAMPLES 1
 #define AA_MODE     RGSS
-#define CELLS       1
+#define CELLS       4
 #define DEPTH       5
 
 //ANIMATION SETTINGS
