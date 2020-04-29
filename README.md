@@ -1,6 +1,19 @@
 # renderer
 A rendering engine written in CPP.
 
+## Code
+
+There are two main `.cpp` files included. `Drawing.cpp`runs an interactive window which makes use of the controls as listed below. `Animation.cpp` is the file used to render out an animation with a certain number of frames. The `make`commands use the interactive version by default.
+
+###Parameters
+
+There are several paramters which can be changed in the `Drawing.cpp` file (towards the top). These affect the quality of the render and the time taken to render.
+
+- `DIF_SAMPLES`- `int`value which determines the number of monte carlo samples to use for global illumination (only available on the phong mode). A value of `1`uses standard ambient lighting instead of global illumination.
+- `AA_MODE` - The sampling mode to be used for anti-aliasing. Can be: `NO_AA`,`TWOBYTWO`,`RGSS`or `FOURBYFOUR`
+- `CELLS` - The number of cells for each direct light (along each side), value of `1` results in hard shadows.
+- `DEPTH`- Maximum number of bounces for a given ray (when handling mirrors, glass etc.)
+
 ## Controls
 
 ### Rendering Mode
