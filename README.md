@@ -5,7 +5,7 @@ A rendering engine written in CPP.
 
 There are two main `.cpp` files included. `Drawing.cpp`runs an interactive window which makes use of the controls as listed below. `Animation.cpp` is the file used to render out an animation with a certain number of frames. The `make`commands use the interactive version by default.
 
-###Parameters
+### Parameters
 
 There are several paramters which can be changed in the `Drawing.cpp` file (towards the top). These affect the quality of the render and the time taken to render.
 
@@ -90,4 +90,4 @@ The final grade awarded will depend upon the exact combination and features and 
 
 ### Extras
 - [ ] Thin film simulation (bubbles)
-- [ ] Volumetric Lightin
+- [ ] Volumetric Lighting
