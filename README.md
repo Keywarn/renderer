@@ -1,5 +1,10 @@
 # renderer
 A rendering engine written in CPP.
+This is a CPU based renderer which was produced as part of my coursework for my Graphics unit. It is nowhere near optimised and the code represents a lot of effort and a push to work towards a deadline. Therefore, I make no guaranties about the correctness, code styles or optimisation (in fact, it is very poorly optimised, one ray traced frame will take several hours). 
+
+You can find a bit more info about it (and a video) [on my portfolio](https://www.charliehaslam.info/graphics-details.html)
+
+![portfolio-1](https://github.com/Keywarn/renderer/assets/43956629/ad38a7c5-8ed2-4ebb-8cae-c0023d12e319)
 
 ## Code
 
